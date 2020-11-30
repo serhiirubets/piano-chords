@@ -15,6 +15,7 @@ import {allScales, majorFlat, majorSharp, minorSharp, minorTypesNameMapping} fro
 import MuiAlert from '@material-ui/lab/Alert';
 import {useGlobalStyles} from "../App";
 import {TestPianoComponent} from "./screen/test-piano-component";
+import {ScaleSelector} from "./screen/scale-selector";
 
 
 export interface TestScreenProps {
@@ -25,6 +26,7 @@ export type TestType = 'playNotes|nameScale|listenAndName';
 
 export const TestScreen = (props: TestScreenProps) => {
     const [testType, setTestType] = useState('playNotes');
+    const [scalesToCheck, setScalesToCheck] = useState(allScales);
     const [guessedScale, setGuessedScale] = useState()
     const [advancedMinorTypes, setAdvancedMinorTypes] = useState();
     const [showScaleType, setShowScaleType] = useState(false);
@@ -35,7 +37,7 @@ export const TestScreen = (props: TestScreenProps) => {
 
     const classes = useGlobalStyles();
     const runTestRound = () => {
-        const scaleToGuess = getRandomScale()
+        const scaleToGuess = getRandomScale(testType, scalesToCheck);
         const minorToGuess = getMinorType(advancedMinorTypes)
         setIsAnswerDisplayed(false);
         setRandomScale(scaleToGuess)
@@ -64,10 +66,10 @@ export const TestScreen = (props: TestScreenProps) => {
         <div className={classes.testContentArea}>
             <div>
                 <div>
-
                     {
                         (guessedScale && randomScale) && ((randomScale === guessedScale) ?
-                            <Alert severity="success">Ты абсолютно и безоговорочно прав! Даже Шопен с тобой бы согласился :)</Alert> :
+                            <Alert severity="success">Ты абсолютно и безоговорочно прав! Даже Шопен с тобой бы
+                                согласился :)</Alert> :
                             <Alert severity="error">Увы! Этих тональностей понапридумывано столько, что немудрено и
                                 ошибиться</Alert>)
                     }
@@ -77,19 +79,23 @@ export const TestScreen = (props: TestScreenProps) => {
                                         minorType={randomMinor}
                                         isAnswerDisplayed={isAnswerDisplayed}></TestPianoComponent>
                     {
-                        testType !== 'playNotes' &&
-                        <QuintTreeButtons onScaleSelect={(scale) => setGuessedScale(scale)}></QuintTreeButtons>
+                        testType !== 'playNotes' ?
+                            <QuintTreeButtons onScaleSelect={(scale) => setGuessedScale(scale)}></QuintTreeButtons> :
+                            <ScaleSelector selectedScales = {scalesToCheck} setSelectedScales={setScalesToCheck}></ScaleSelector>
                     }
 
                 </div>
                 }
             </div>
-            <Card className={classes.thickCard}>
+            <Card className={classes.thinCard}>
                 <CardContent>
                     <Typography className={classes.title} color="textPrimary" gutterBottom>
                         Тип теста
                     </Typography>
-                    <RadioGroup value={testType} onChange={((event, value) => setTestType(value))}>
+                    <RadioGroup value={testType} onChange={(event, value) => {
+                        setTestType(value);
+                        runTestRound();
+                    }}>
                         <FormControlLabel value="playNotes" control={<Radio/>} label="Проиграй ноты"/>
                         <FormControlLabel value="nameScale" control={<Radio/>} label="Назови тональность"/>
                         <FormControlLabel value="listenAndName" control={<Radio/>}
@@ -99,13 +105,13 @@ export const TestScreen = (props: TestScreenProps) => {
                         <FormControlLabel
                             control={<Checkbox checked={advancedMinorTypes}
                                                onChange={(event, checked) => setAdvancedMinorTypes(checked)}/>}
-                            label="Использовать натуральный и мелодический миноры"
+                            label="Использовать гармонический и мелодический миноры"
                         />
-                        <FormControlLabel
+                        {testType === "playNotes" && <FormControlLabel
                             control={<Checkbox checked={showScaleType}
                                                onChange={(event, checked) => setShowScaleType(checked)}/>}
                             label="Указывать тип тональности в задании"
-                        />
+                        />}
                     </FormGroup>
 
                     <Card className={classes.taskCard}>
@@ -140,9 +146,11 @@ const getRandomInt = (max) => {
 }
 
 
-const getRandomScale = () => {
-    const randomIndex = getRandomInt(allScales.length);
-    const randomScale = allScales[randomIndex]
+const getRandomScale = (exerciseType: string, scalesToCheck: string[]) => {
+    const scales = [...allScales];
+    // console.log(scales)
+    const randomIndex = getRandomInt(scales);
+    const randomScale = scales[randomIndex]
     console.log(randomIndex)
     console.log(randomScale)
     return randomScale

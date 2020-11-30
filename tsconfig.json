@@ -18,9 +18,12 @@
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
     "isolatedModules": true,
-    "noUnusedParameters": false
+    "noUnusedParameters": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
   "include": [
     "src"
-  ]
+  ],
+  "types": ["node", "react-emotion"]
 }

@@ -27,7 +27,7 @@ export const MinorTypeSelector = (props: MinorTypeSelectorProps) => {
     }
     return (
 
-        <Card className={classes.card} variant="outlined">
+        <Card className={classes.thinCard} variant="outlined">
             <CardContent>
                 <Typography className={classes.title} color="textPrimary" gutterBottom>
                     Тип минора

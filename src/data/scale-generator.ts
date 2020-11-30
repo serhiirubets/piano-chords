@@ -17,7 +17,7 @@ export const generateMajorScale = (tonica: number) => {
     ]
 }
 
-export const generateMinorScale = (tonica: number) => {
+export const  generateMinorScale = (tonica: number) => {
     // Тон, полутон, тон, тон, полутон, тон, тон
     return [
         tonica,

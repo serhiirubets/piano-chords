@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom';
 // @ts-ignore
-import {Piano, KeyboardShortcuts, MidiNumbers} from 'react-piano';
+import {Piano, MidiNumbers} from 'react-piano';
 import 'react-piano/dist/styles.css';
 
-import DimensionsProvider from '../piano-core/DimensionsProvider';
 import SoundfontProvider from '../piano-core/SoundfontProvider';
 import {Button, Card, CardContent, Icon, TextField, Typography} from '@material-ui/core';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
@@ -23,11 +22,6 @@ const noteRange = {
     first: MidiNumbers.fromNote('c2'),
     last: MidiNumbers.fromNote('d4'),
 };
-const keyboardShortcuts = KeyboardShortcuts.create({
-    firstNote: noteRange.first,
-    lastNote: noteRange.last,
-    keyboardConfig: KeyboardShortcuts.HOME_ROW,
-});
 
 export interface ResponsivePianoProps {
     selectedScale?: string;
@@ -56,7 +50,7 @@ export const ResponsivePiano = (props: ResponsivePianoProps) => {
         console.log(notesToPlay)
         setActiveNotes([])
         notesToPlay.forEach(midiNumber => {
-            console.log('schedulingh', midiNumber)
+            console.log('scheduling', midiNumber)
             setTimeout(() => {
                 setActiveNotes([midiNumber])
             }, i * noteDuration * 1000)

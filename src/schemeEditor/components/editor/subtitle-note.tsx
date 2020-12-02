@@ -1,7 +1,8 @@
 import React from "react";
 import {ClickAwayListener, Popover, TextField} from "@material-ui/core";
-import {INote, Note} from "../../model/note-data";
+import {INote, Note, PlaybackDuration} from "../../model/note-data";
 import {NoteHand} from "../../model/skeleton-data";
+import {QUADRAT_WIDTH} from "../../model/global-constants";
 
 export interface BlockSchemeNodeProps {
     externalNoteObject: INote;
@@ -41,14 +42,28 @@ export const SubtitleNote = ({externalNoteObject, setExternalNoteObject, index, 
         return top
     }
 
+    const getRelativeLeft = (note:INote) => {
+        if(note.duration === PlaybackDuration.FULL){
+            return {
+                left:0,
+                right:0
+            }
+        }
+        if(note.duration === PlaybackDuration.HALF){
+            return {
+                left: 5+QUADRAT_WIDTH*note.playbackOffset
+            }
+        }
+    }
     return (
         <ClickAwayListener onClickAway={handleClose}>
             <div style={{position:"absolute",
                 marginLeft: "auto",
                 marginRight: "auto",
-                left: 0,
-                right: 0,
-                textAlign: "center",top: getRelativeTop(externalNoteObject), zIndex:index}}>
+                textAlign: "center",
+                top: getRelativeTop(externalNoteObject),
+                zIndex:index,
+                ...getRelativeLeft(externalNoteObject)}}>
                 <span onClick={handleClick}>{externalNoteObject.note}</span>
                 <Popover
                     id={id}

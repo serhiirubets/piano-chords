@@ -1,33 +1,36 @@
 import {NoteHand, SkeletonData} from "../model/skeleton-data";
+import {PlaybackData} from "../model/skeleton-node-data";
+
 
 export const getNotesToPlay = (quadrats: Array<SkeletonData>) => {
-    const notes = new Array<number[]>();
+    const notes = new Array<PlaybackData[][]>();
     console.log(quadrats.length)
     quadrats.forEach(quadrat => {
-        console.log('QUadrat size',quadrat.size )
         for (let i = 0; i < quadrat.size; i++) {
-            const currentBeatNotes = [...quadrat.getNode(NoteHand.LEFT, i).getAllMidiNumbers(),
-                ...quadrat.getNode(NoteHand.RIGHT, i).getAllMidiNumbers()];
-            console.log('Quadrat '+quadrat.id+' note at '+i,currentBeatNotes )
-            console.log('index ', i, 'notes', currentBeatNotes);
+            const currentBeatNotes = [...quadrat.getNode(NoteHand.LEFT, i).getPlaybackData(),
+                ...quadrat.getNode(NoteHand.RIGHT, i).getPlaybackData()]
+                .filter(array => array.length > 0)
+                .flat(3);
             notes.push(currentBeatNotes);
         }
     })
     return notes;
 }
 
-export const playNotes = (notesToPlay, playFunction, noteDuration) => {
-    let i = 1;
-    console.log('Notes to Play', notesToPlay)
-    notesToPlay.forEach(noteOrChord => {
-        const midiNumbers = [...noteOrChord];
-        midiNumbers.forEach(midiNumber =>
-            setTimeout(() => {
-                console.log('playing', notesToPlay)
-                playFunction(midiNumber)
-            }, i * noteDuration * 1000)
-        )
-        i++
-    })
+export const playNotes = (beatsToPlay, playFunction, tempo) => {
+    console.log('Notes to Play', beatsToPlay)
+    const STANDARD_DURATION = tempo * 1;
 
+    for (let i = 0; i <= beatsToPlay.length; i++) {
+        const currentBeat: PlaybackData[] = beatsToPlay[i];
+        if(currentBeat === undefined){
+            continue;
+        }
+        console.log('beat',currentBeat)
+        currentBeat.forEach(playback => {
+            const offset = STANDARD_DURATION * (i+1 + playback.playbackOffset);
+            playFunction(playback.midiNumber, playback.duration, offset);
+        })
+    }
 }
+

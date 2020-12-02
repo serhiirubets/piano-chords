@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import logo from './logo.svg';
 import './App.css';
 import {ResponsivePiano} from "./components/screen/responsive-piano";
 import {QuintTreeButtons} from "./components/screen/quint-tree-buttons";

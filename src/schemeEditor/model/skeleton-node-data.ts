@@ -1,7 +1,5 @@
-import {compareNotes} from "../../data/scale-notes";
 import {NoteHand, NoteType} from "./skeleton-data";
-import {INote, Note} from "./note-data";
-import {Serializable} from "typescript-json-serializer";
+import {Note, PlaybackDuration, PlaybackOffset} from "./note-data";
 
 
 export interface IBlockSchemeNodeData {
@@ -9,6 +7,12 @@ export interface IBlockSchemeNodeData {
     color: string;
     type?: NoteType,
     notes: Note[];
+}
+
+export interface PlaybackData {
+    midiNumber: number;
+    duration: number;
+    playbackOffset: number;
 }
 
 export class SkeletonNodeData implements IBlockSchemeNodeData {
@@ -34,7 +38,7 @@ export class SkeletonNodeData implements IBlockSchemeNodeData {
     }
 
     public static createFromDeserialized(other: IBlockSchemeNodeData) {
-        return  new SkeletonNodeData({
+        return new SkeletonNodeData({
             isPresent: other["_isPresent"],
             color: other["_color"],
             type: other["_type"],
@@ -61,5 +65,25 @@ export class SkeletonNodeData implements IBlockSchemeNodeData {
 
     public getAllMidiNumbers() {
         return this.notes.map(note => note.getMidiNumber());
+    }
+
+    public getPlaybackData() {
+
+        const notesToPlaybackData = (predicate:(a:Note)=>boolean) =>
+            this.notes.filter(predicate)
+                .map( note => {
+                return {
+                    midiNumber: note.getMidiNumber(),
+                    duration: note.duration,
+                    playbackOffset: note.playbackOffset
+                }
+            }
+        )
+
+        const fullNotesData = notesToPlaybackData(note => note.duration === PlaybackDuration.FULL);
+        const firstSixteenth = notesToPlaybackData(note => note.duration === PlaybackDuration.HALF && note.playbackOffset === PlaybackOffset.NONE);
+        const secondSixteenth = notesToPlaybackData(note => note.duration === PlaybackDuration.HALF && note.playbackOffset === PlaybackOffset.HALF);
+
+        return fullNotesData.length > 0 ? [fullNotesData] : [firstSixteenth, secondSixteenth];
     }
 }

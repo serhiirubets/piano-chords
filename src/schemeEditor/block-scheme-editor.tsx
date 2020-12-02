@@ -33,6 +33,7 @@ import RotateLeftRoundedIcon from '@material-ui/icons/RotateLeftRounded';
 import PlaylistPlayRoundedIcon from '@material-ui/icons/PlaylistPlayRounded';
 import {serialize} from "typescript-json-serializer";
 import {BAIntroScheme, BAIntroSchemeString} from "./resources/BA-intro-recording";
+import {HelpDialog} from "./components/help-screen";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -69,7 +70,7 @@ export const BlockSchemeEditor = (props: BlockSchemeEditorProps) => {
                 <CardContent>
                     <Typography className={classes.title} color="textPrimary" gutterBottom>
                         Редактор блок схем
-                    </Typography>
+                    </Typography><HelpDialog/>
                     <BlockSchemeGrid quadrats={quadrats} setQuadrats={(data) => setQuadrats(data)}
                                      quadratSize={quadratSize} noteDuration={noteDuration}></BlockSchemeGrid>
                     {/*<div style={{flexDirection: "row", display: "flex", width: '100%', flexWrap: "wrap"}}>*/}

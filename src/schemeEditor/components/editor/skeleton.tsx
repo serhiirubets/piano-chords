@@ -2,13 +2,16 @@ import {useGlobalStyles} from "../../../App";
 import React, {useState} from "react";
 import {SkeletonData, NoteHand} from "../../model/skeleton-data";
 import {SkeletonNode} from "./skeleton-node";
+import {SkeletonNodeData} from "../../model/skeleton-node-data";
 
 export interface BlockSchemeSkeletonProps {
     blockSchemeData: SkeletonData;
-    setBlockSchemeData: any;
+    setBlockSchemeData: any
 }
 
 export const Skeleton = ({blockSchemeData, setBlockSchemeData}: BlockSchemeSkeletonProps) => {
+    const [selected,setSelected] = useState<Array<SkeletonNodeData>>();
+
     return (
             <div>
                 <div style={{display: "flex", flexDirection: "row"}}>

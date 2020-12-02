@@ -84,7 +84,7 @@ export const SkeletonNode = ({data, setData, handType}: BlockSchemeNodeProps) =>
 
         const updateNoteStateBasedOnSubtitle = (updatedObject: Note, index: number) => {
             const updatedNotesArray = [...notes];
-            updatedNotesArray[index][0] = updatedObject;
+            updatedNotesArray[index] = updatedObject;
             updatedNotesArray.sort(Note.compareByMidiNumbers);
             setNotes(updatedNotesArray);
 

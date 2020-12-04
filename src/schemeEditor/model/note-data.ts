@@ -1,40 +1,40 @@
 // @ts-ignore
 import {MidiNumbers} from 'react-piano';
-import {JsonProperty, Serializable} from 'typescript-json-serializer';
-import {IBlockSchemeNodeData} from "./skeleton-node-data";
+import {v4 as uuid} from 'uuid';
 
 export enum PlaybackDuration {
-    FULL= 1,
-    HALF=0.5
+    FULL = 1,
+    HALF = 0.5
 }
 
 export enum PlaybackOffset {
-    NONE= 0,
-    HALF=0.5
+    NONE = 0,
+    HALF = 0.5
 }
 
 
-
 export interface INote {
+    // id: string;
     note: string;
     applicature?: string;
     octave: number;
     getMidiNumber: () => number
     duration: PlaybackDuration;
     playbackOffset: PlaybackOffset;
-    // getPlaybackData: () => PlaybackData
 }
 
 export class Note implements INote {
+    public readonly id = uuid()
     private _note: string;
     private _applicature?: string;
     private _octave: number;
-    private _duration: PlaybackDuration;
-    private _playbackOffset: PlaybackOffset;
+    private _duration: number;
+    private _playbackOffset: number;
 
     public static compareByMidiNumbers = (a: INote, b: INote) => a.getMidiNumber() - b.getMidiNumber();
 
-    constructor(initData: { note: string, octave: number, applicature?: string , duration?:PlaybackDuration, playbackOffset?: PlaybackOffset}) {
+    constructor(initData: { note: string, octave: number, applicature?: string, duration?: number, playbackOffset?: PlaybackOffset, id?: string }) {
+        // this.id = initData.id || uuid;
         this._note = initData.note;
         this._applicature = initData.applicature;
         this._octave = initData.octave;
@@ -44,6 +44,7 @@ export class Note implements INote {
 
     public static createFromDeserialized(other: INote) {
         return new Note({
+            id: other["id"],
             note: other["_note"],
             applicature: other["_applicature"],
             octave: other["_octave"],

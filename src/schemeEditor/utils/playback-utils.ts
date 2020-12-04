@@ -9,9 +9,9 @@ export const getNotesToPlay = (quadrats: Array<SkeletonData>) => {
         for (let i = 0; i < quadrat.size; i++) {
             const currentBeatNotes = [...quadrat.getNode(NoteHand.LEFT, i).getPlaybackData(),
                 ...quadrat.getNode(NoteHand.RIGHT, i).getPlaybackData()]
-                .filter(array => array.length > 0)
                 .flat(3);
             notes.push(currentBeatNotes);
+            console.log(currentBeatNotes)
         }
     })
     return notes;

@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "react"
+import React, {useContext, useEffect, useState} from "react"
 import {
     Button,
     Card,
-    CardContent,
-    createStyles,
+    CardContent, Checkbox,
+    createStyles, FormControlLabel,
     Grid,
     Slider,
     TextField,
@@ -31,9 +31,11 @@ import StopRoundedIcon from '@material-ui/icons/StopRounded';
 import SaveRoundedIcon from '@material-ui/icons/SaveRounded';
 import RotateLeftRoundedIcon from '@material-ui/icons/RotateLeftRounded';
 import PlaylistPlayRoundedIcon from '@material-ui/icons/PlaylistPlayRounded';
-import {serialize} from "typescript-json-serializer";
-import {BAIntroScheme, BAIntroSchemeString} from "./resources/BA-intro-recording";
+import PublishRoundedIcon from '@material-ui/icons/PublishRounded';
+import {BAIntroSchemeString} from "./resources/BA-intro-recording";
 import {HelpDialog} from "./components/help-screen";
+import {EditorSettings} from "./model/settings-data";
+import Download from '@axetroy/react-download';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -54,15 +56,34 @@ export const BlockSchemeEditor = (props: BlockSchemeEditorProps) => {
     const classes = useGlobalStyles();
     const localClasses = useStyles();
     const [noteDuration, setNoteDuration] = useState(0.25);
-    const [quadratSize, setQuadratSize] = useState(QUADRAT_SIZE);
+    const [showApplicature, setShowApplicature] = useState(true);
+    const [quadratSize, setQuadratSize] = useState(8);
     const [quadrats, setQuadrats] = useState([new SkeletonData(quadratSize)]);
-    const [saveName, setSaveName] = useState("Temp");
+    const [saveName, setSaveName] = useState("Новая блок-схема");
 
+    let fileReader;
 
     const handleNoteDurationChange = (event: any, newValue: number | number[]) => {
         setNoteDuration((newValue as number) * -1);
         console.log(newValue as number)
     };
+
+    const handleSaveFileRead = (e) => {
+        const stringifiedData = fileReader.result;
+        console.log(stringifiedData)
+        const memorizedScheme = stringifiedData ? JSON.parse(stringifiedData) : [];
+        let validatedBlockScheme = memorizedScheme.map(maybeQuad => {
+            return SkeletonData.createFromDeserialized(maybeQuad);
+        });
+        setQuadrats(validatedBlockScheme)
+    }
+
+    const handleSaveFileSelected = (e) => {
+        const file = e.target.files[0]
+        fileReader = new FileReader();
+        fileReader.onloadend = handleSaveFileRead
+        fileReader.readAsText(file)
+    }
 
     return (
         <div style={{flexDirection: "row", display: "flex"}}>
@@ -73,22 +94,6 @@ export const BlockSchemeEditor = (props: BlockSchemeEditorProps) => {
                     </Typography><HelpDialog/>
                     <BlockSchemeGrid quadrats={quadrats} setQuadrats={(data) => setQuadrats(data)}
                                      quadratSize={quadratSize} noteDuration={noteDuration}></BlockSchemeGrid>
-                    {/*<div style={{flexDirection: "row", display: "flex", width: '100%', flexWrap: "wrap"}}>*/}
-                    {/*    {*/}
-                    {/*        quadrats.map((element, index) => {*/}
-                    {/*            return <SkeletonWrapper blockSchemeData={element} setBlockSchemeData={(data) => {*/}
-                    {/*                const items = [...quadrats];*/}
-                    {/*                items[index] = data;*/}
-                    {/*                setQuadrats(items);*/}
-                    {/*            }}/>*/}
-                    {/*        })*/}
-                    {/*    }*/}
-
-                    {/*    <button style={{width: 240, height: 80, border: "2px solid black", padding: 30}}*/}
-                    {/*            onClick={() => setQuadrats([...quadrats, new BlockSchemeSkeletonData(quadratSize)])}>*/}
-                    {/*        <PlaylistAddRoundedIcon></PlaylistAddRoundedIcon>*/}
-                    {/*    </button>*/}
-                    {/*</div>*/}
                 </CardContent>
             </Card>
 
@@ -105,51 +110,46 @@ export const BlockSchemeEditor = (props: BlockSchemeEditorProps) => {
                         </AccordionSummary>
                         <AccordionDetails>
                             <Grid container direction="column" spacing={1}>
-                                <TextField label="Имя сохранения"
-                                           style={{margin: 5}}
-                                           onChange={(event) => {
-                                               setSaveName(event.target.value)
-                                           }}></TextField>
-                                <Tooltip title="Временно, пока не реализовано по-человечески">
+
+                                <Download file={`${saveName}.json`}
+                                          content={JSON.stringify(quadrats, null, 2)}
+                                          >
                                     <Button
                                         variant="outlined"
                                         startIcon={<SaveRoundedIcon/>}
-                                        onClick={() => {
-                                            const data = JSON.stringify(quadrats)
-                                            localStorage.setItem(saveName, data)
-                                        }}>
-                                        Сохранить в кеш
+                                        style={{width: "100%"}}>
+                                        Сохранить
                                     </Button>
-                                </Tooltip>
-                                <Tooltip title="Временно, пока не реализовано по-человечески">
+                                </Download>
+                                <label htmlFor="upload-photo">
+                                    <input
+                                        style={{display: 'none'}}
+                                        id="upload-photo"
+                                        name="upload-photo"
+                                        type="file"
+                                        onChange={(e) => handleSaveFileSelected(e)}
+                                    />
                                     <Button
                                         variant="outlined"
-                                        startIcon={<RotateLeftRoundedIcon/>}
-                                        onClick={() => {
-                                            const stringifiedData = localStorage.getItem(saveName);
-                                            const memorizedScheme = stringifiedData ? JSON.parse(stringifiedData) : [];
-                                            let validatedBlockScheme = memorizedScheme.map(maybeQuad => {
-                                                return SkeletonData.createFromDeserialized(maybeQuad);
-                                            });
-                                            setQuadrats(validatedBlockScheme);
-                                        }}>
-                                        Загрузить из кеша
+                                        startIcon={<PublishRoundedIcon/>}
+                                        component="span"
+                                        style={{width:'100%'}}
+                                    >
+                                        Загрузить
                                     </Button>
-                                </Tooltip>
-                                <Tooltip title="Временно, пока не реализовано по-человечески">
-                                    <Button
-                                        variant="outlined"
-                                        startIcon={<PlaylistPlayRoundedIcon/>}
-                                        onClick={() => {
-                                            const restoredScheme = JSON.parse(BAIntroSchemeString);
-                                            let validatedBABlockScheme = restoredScheme.map(maybeQuad => {
-                                                return SkeletonData.createFromDeserialized(maybeQuad);
-                                            });
-                                            setQuadrats(validatedBABlockScheme);
-                                        }}>
-                                        Загрузить демо
-                                    </Button>
-                                </Tooltip>
+                                </label>
+                                <Button
+                                    variant="outlined"
+                                    startIcon={<PlaylistPlayRoundedIcon/>}
+                                    onClick={() => {
+                                        const restoredScheme = JSON.parse(BAIntroSchemeString);
+                                        let validatedBABlockScheme = restoredScheme.map(maybeQuad => {
+                                            return SkeletonData.createFromDeserialized(maybeQuad);
+                                        });
+                                        setQuadrats(validatedBABlockScheme);
+                                    }}>
+                                    Загрузить демо
+                                </Button>
                             </Grid>
                         </AccordionDetails>
                     </Accordion>
@@ -221,6 +221,23 @@ export const BlockSchemeEditor = (props: BlockSchemeEditorProps) => {
                                        defaultValue={quadratSize}
                                        onChange={(event => setQuadratSize(Number(event.target.value)))}
                                        disabled={true}/>
+                        </AccordionDetails>
+                    </Accordion>
+                    <Accordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon/>}
+                        >
+                            <Typography className={localClasses.heading}>Отображение</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <FormControlLabel
+                                value="top"
+                                control={<Checkbox
+                                    checked={showApplicature}
+                                    onChange={(e) => setShowApplicature(e.target.checked)}
+                                />}
+                                label="Показывать аппликатуру"></FormControlLabel>
+
                         </AccordionDetails>
                     </Accordion>
 

@@ -1,13 +1,13 @@
 import React from "react";
 import {ClickAwayListener, Popover, TextField} from "@material-ui/core";
-import {INote, Note, PlaybackDuration} from "../../model/note-data";
+import {INote, Note, PlaybackDuration, PlaybackOffset} from "../../model/note-data";
 import {NoteHand} from "../../model/skeleton-data";
 import {QUADRAT_WIDTH} from "../../model/global-constants";
 
 export interface BlockSchemeNodeProps {
     externalNoteObject: INote;
     setExternalNoteObject: any;//(INote, number) => SetStateAction<INote>;
-    index:number;
+    index: number;
     handType: NoteHand;
 }
 
@@ -27,43 +27,47 @@ export const SubtitleNote = ({externalNoteObject, setExternalNoteObject, index, 
 
     const handleNoteUpdate = (data: Partial<INote>) => {
         const updatedNote = new Note({
+            // id: externalNoteObject.id,
             note: data.note || externalNoteObject.note,
             octave: data.octave || externalNoteObject.octave,
-            applicature: data.applicature || externalNoteObject.applicature
+            applicature: data.applicature || externalNoteObject.applicature,
+            duration: externalNoteObject.duration,
+            playbackOffset: externalNoteObject.playbackOffset
         });
         setExternalNoteObject(updatedNote)
 
     }
 
-    const getRelativeTop = (note:INote) => {
-        const rightHandTop  = 60-(externalNoteObject.getMidiNumber()-48)*2.5;
-        const leftHandTop  = (60-externalNoteObject.getMidiNumber())*2.5;
+    const getRelativeTop = (note: INote) => {
+        const rightHandTop = 60 - (externalNoteObject.getMidiNumber() - 48) * 2.5;
+        const leftHandTop = (60 - externalNoteObject.getMidiNumber()) * 2.5;
         const top = handType === NoteHand.RIGHT ? rightHandTop : leftHandTop;
         return top
     }
 
-    const getRelativeLeft = (note:INote) => {
-        if(note.duration === PlaybackDuration.FULL){
+    const getRelativeLeft = (note: INote) => {
+        if (note.duration === PlaybackDuration.FULL && note.playbackOffset === PlaybackOffset.NONE) {
             return {
-                left:0,
-                right:0
+                left: 0,
+                right: 0
             }
-        }
-        if(note.duration === PlaybackDuration.HALF){
+        } else {
             return {
-                left: 5+QUADRAT_WIDTH*note.playbackOffset
+                left: 5 + QUADRAT_WIDTH * note.playbackOffset
             }
         }
     }
     return (
         <ClickAwayListener onClickAway={handleClose}>
-            <div style={{position:"absolute",
+            <div style={{
+                position: "absolute",
                 marginLeft: "auto",
                 marginRight: "auto",
                 textAlign: "center",
                 top: getRelativeTop(externalNoteObject),
-                zIndex:index,
-                ...getRelativeLeft(externalNoteObject)}}>
+                zIndex: 10+index,
+                ...getRelativeLeft(externalNoteObject)
+            }}>
                 <span onClick={handleClick}>{externalNoteObject.note}</span>
                 <Popover
                     id={id}

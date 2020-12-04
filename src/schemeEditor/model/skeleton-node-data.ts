@@ -46,7 +46,6 @@ export class SkeletonNodeData implements IBlockSchemeNodeData {
         })
     }
 
-
     get color() {
         return this._color
     }
@@ -68,22 +67,13 @@ export class SkeletonNodeData implements IBlockSchemeNodeData {
     }
 
     public getPlaybackData() {
-
-        const notesToPlaybackData = (predicate:(a:Note)=>boolean) =>
-            this.notes.filter(predicate)
-                .map( note => {
+        return this.notes
+            .map( note => {
                 return {
                     midiNumber: note.getMidiNumber(),
                     duration: note.duration,
                     playbackOffset: note.playbackOffset
                 }
-            }
-        )
-
-        const fullNotesData = notesToPlaybackData(note => note.duration === PlaybackDuration.FULL);
-        const firstSixteenth = notesToPlaybackData(note => note.duration === PlaybackDuration.HALF && note.playbackOffset === PlaybackOffset.NONE);
-        const secondSixteenth = notesToPlaybackData(note => note.duration === PlaybackDuration.HALF && note.playbackOffset === PlaybackOffset.HALF);
-
-        return fullNotesData.length > 0 ? [fullNotesData] : [firstSixteenth, secondSixteenth];
+            })
     }
 }

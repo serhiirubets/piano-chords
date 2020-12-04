@@ -1,10 +1,8 @@
 import {SkeletonNodeData, IBlockSchemeNodeData} from "./skeleton-node-data";
-import {QUADRAT_SIZE} from "./global-constants";
 import {v4 as uuid} from 'uuid';
-import {Serializable} from "typescript-json-serializer";
 
 export class SkeletonData {
-    public id = uuid();
+    public readonly id = uuid();
     private _size = 8;
 
     private _right = new Array<SkeletonNodeData>(this._size);
@@ -74,6 +72,11 @@ export enum NoteType {
 export enum NoteHand {
     LEFT = 'left',
     RIGHT = 'right'
+}
+
+export interface TripletData {
+    startIndex:number;
+    length:number;
 }
 
 /*

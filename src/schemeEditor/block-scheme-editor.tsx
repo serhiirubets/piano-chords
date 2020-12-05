@@ -113,7 +113,7 @@ export const BlockSchemeEditor = (props: BlockSchemeEditorProps) => {
 
                                 <Download file={`${saveName}.json`}
                                           content={JSON.stringify(quadrats, null, 2)}
-                                          >
+                                >
                                     <Button
                                         variant="outlined"
                                         startIcon={<SaveRoundedIcon/>}
@@ -133,7 +133,7 @@ export const BlockSchemeEditor = (props: BlockSchemeEditorProps) => {
                                         variant="outlined"
                                         startIcon={<PublishRoundedIcon/>}
                                         component="span"
-                                        style={{width:'100%'}}
+                                        style={{width: '100%'}}
                                     >
                                         Загрузить
                                     </Button>
@@ -202,7 +202,15 @@ export const BlockSchemeEditor = (props: BlockSchemeEditorProps) => {
                                                     </IconButton>
                                                 </Grid>
                                             </Grid>
-
+                                            <Tooltip title={"Пока что не реализовано"}>
+                                                <FormControlLabel
+                                                    value="top"
+                                                    control={<Checkbox
+                                                        checked={showApplicature}
+                                                        onChange={(e) => setShowApplicature(e.target.checked)}
+                                                    />}
+                                                    label="Различать оперение по громкости"></FormControlLabel>
+                                            </Tooltip>
                                         </div>
                                     </div>
                                 )}

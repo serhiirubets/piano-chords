@@ -1,5 +1,5 @@
 import {NoteHand, NoteType} from "./skeleton-data";
-import {Note, PlaybackDuration, PlaybackOffset} from "./note-data";
+import {Note} from "./note-data";
 
 
 export interface IBlockSchemeNodeData {
@@ -13,6 +13,7 @@ export interface PlaybackData {
     midiNumber: number;
     duration: number;
     playbackOffset: number;
+    gain:number;
 }
 
 export class SkeletonNodeData implements IBlockSchemeNodeData {
@@ -25,8 +26,8 @@ export class SkeletonNodeData implements IBlockSchemeNodeData {
     constructor(initData: IBlockSchemeNodeData) {
         this._isPresent = initData.isPresent || false;
         this._notes = initData.notes;
-        this._color = initData.color || 'red';
         this._type = initData.type || NoteType.REGULAR;
+        this._color = initData.color || 'red';
     }
 
     public static createEmpty(handType: NoteHand) {
@@ -59,7 +60,13 @@ export class SkeletonNodeData implements IBlockSchemeNodeData {
     }
 
     get type() {
-        return this._type
+        const isAnyFeatherNote =  this._notes.filter(note => note.noteType === NoteType.FEATHER).length  > 0;
+        return isAnyFeatherNote ? NoteType.FEATHER : NoteType.REGULAR;
+    }
+
+    public calculateColor( handType:NoteHand) {
+        return handType === NoteHand.LEFT ? "green" :
+            this.type === NoteType.FEATHER ? "#2196f3": "red";
     }
 
     public getAllMidiNumbers() {
@@ -72,7 +79,8 @@ export class SkeletonNodeData implements IBlockSchemeNodeData {
                 return {
                     midiNumber: note.getMidiNumber(),
                     duration: note.duration,
-                    playbackOffset: note.playbackOffset
+                    playbackOffset: note.playbackOffset,
+                    gain:note.noteType === NoteType.FEATHER ? 0.3 : 1
                 }
             })
     }

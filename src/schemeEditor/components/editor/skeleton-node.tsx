@@ -10,7 +10,7 @@ import {TripletHandlerProps} from "./skeleton";
 import {v4 as uuid} from 'uuid';
 
 export interface BlockSchemeNodeProps {
-    data: IBlockSchemeNodeData;
+    data: SkeletonNodeData;
     setData: any;
     handType: NoteHand;
     onSelect?: any;
@@ -149,7 +149,7 @@ export const SkeletonNode = ({
     const writeNodeState = () => {
         const updatedData = new SkeletonNodeData({
             isPresent: notes.length > 0,
-            color: data.color,
+            color: data.calculateColor(handType),
             notes: [...notes] || []
         });
 
@@ -163,12 +163,14 @@ export const SkeletonNode = ({
             const updatedNotesArray = [...notes];
             updatedNotesArray[index] = updatedObject;
             updatedNotesArray.sort(Note.compareByMidiNumbers);
+            updatedNotesArray.forEach(note => note.noteType = updatedObject.noteType)
             setNotes(updatedNotesArray);
+            console.log(updatedObject)
             console.log('updated notes', updatedNotesArray)
 
             const updatedData = new SkeletonNodeData({
                 isPresent: updatedNotesArray.length > 0,
-                color: data.color,
+                color: data.calculateColor(handType),
                 notes: [...updatedNotesArray] || []
             });
             setData(updatedData);
@@ -202,7 +204,7 @@ export const SkeletonNode = ({
                 {
                     height: DOT_WIDTH / 2,
                     width: DOT_WIDTH / 2,
-                    backgroundColor: data.color,
+                    backgroundColor: data.calculateColor(handType),
                     borderRadius: "50%",
                     opacity: data.isPresent && !isEditState ? 100 : 0,
                     position: "absolute",
@@ -217,7 +219,7 @@ export const SkeletonNode = ({
                 {
                     height: DOT_WIDTH / 2,
                     width: 15,
-                    backgroundColor: data.color,
+                    backgroundColor:data.calculateColor(handType),
                     borderRadius: "50%",
                     opacity: data.isPresent && !isEditState ? 100 : 0,
                     position: "absolute",
@@ -238,7 +240,7 @@ export const SkeletonNode = ({
                     {
                         height: DOT_WIDTH * note.duration,
                         width: DOT_WIDTH * note.duration,
-                        backgroundColor: data.color,
+                        backgroundColor: data.calculateColor(handType),
                         borderRadius: "50%",
                         opacity: data.isPresent && !isEditState ? 100 : 0,
                         position: "absolute",
@@ -337,7 +339,7 @@ export const SkeletonNode = ({
                                 {
                                     height: DOT_WIDTH,
                                     width: DOT_WIDTH,
-                                    backgroundColor: data.color,
+                                    backgroundColor: data.calculateColor(handType),
                                     borderRadius: "50%",
                                     opacity: data.isPresent && !isEditState ? 100 : 0,
                                     position: "absolute",

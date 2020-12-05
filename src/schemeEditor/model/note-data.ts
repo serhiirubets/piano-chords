@@ -1,6 +1,7 @@
 // @ts-ignore
 import {MidiNumbers} from 'react-piano';
 import {v4 as uuid} from 'uuid';
+import {NoteType} from "./skeleton-data";
 
 export enum PlaybackDuration {
     FULL = 1,
@@ -21,6 +22,7 @@ export interface INote {
     getMidiNumber: () => number
     duration: PlaybackDuration;
     playbackOffset: PlaybackOffset;
+    noteType:NoteType;
 }
 
 export class Note implements INote {
@@ -30,11 +32,12 @@ export class Note implements INote {
     private _octave: number;
     private _duration: number;
     private _playbackOffset: number;
+    private _noteType: NoteType;
 
     public static compareByMidiNumbers = (a: INote, b: INote) => a.getMidiNumber() - b.getMidiNumber();
 
-    constructor(initData: { note: string, octave: number, applicature?: string, duration?: number, playbackOffset?: PlaybackOffset, id?: string }) {
-        // this.id = initData.id || uuid;
+    constructor(initData: { note: string, octave: number, applicature?: string, duration?: number, playbackOffset?: PlaybackOffset, noteType?: NoteType, id?:string }) {
+        this._noteType = initData.noteType || NoteType.REGULAR;
         this._note = initData.note;
         this._applicature = initData.applicature;
         this._octave = initData.octave;
@@ -44,12 +47,12 @@ export class Note implements INote {
 
     public static createFromDeserialized(other: INote) {
         return new Note({
-            id: other["id"],
             note: other["_note"],
             applicature: other["_applicature"],
             octave: other["_octave"],
             duration: other["_duration"],
-            playbackOffset: other["_playbackOffset"]
+            playbackOffset: other["_playbackOffset"],
+            noteType: other["_noteType"]
         })
     }
 
@@ -71,6 +74,14 @@ export class Note implements INote {
 
     get playbackOffset() {
         return this._playbackOffset;
+    }
+
+    get noteType() {
+        return this._noteType;
+    }
+
+    set noteType(type) {
+        this._noteType = type;
     }
 
 

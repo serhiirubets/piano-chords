@@ -1,8 +1,17 @@
 import React from "react";
-import {ClickAwayListener, Popover, TextField} from "@material-ui/core";
+import {
+    ClickAwayListener,
+    FormControlLabel,
+    Popover,
+    Switch,
+    TextField,
+    Typography,
+    withStyles
+} from "@material-ui/core";
 import {INote, Note, PlaybackDuration, PlaybackOffset} from "../../model/note-data";
-import {NoteHand} from "../../model/skeleton-data";
+import {NoteHand, NoteType} from "../../model/skeleton-data";
 import {QUADRAT_WIDTH} from "../../model/global-constants";
+import {blue, red} from "@material-ui/core/colors";
 
 export interface BlockSchemeNodeProps {
     externalNoteObject: INote;
@@ -10,6 +19,20 @@ export interface BlockSchemeNodeProps {
     index: number;
     handType: NoteHand;
 }
+
+const FeatherSwitch = withStyles({
+    switchBase: {
+        color: red[500],
+        '&$checked': {
+            color: blue[500],
+        },
+        '&$checked + $track': {
+            backgroundColor: blue[300],
+        },
+    },
+    checked: {},
+    track: {color: red[500],},
+})(Switch);
 
 export const SubtitleNote = ({externalNoteObject, setExternalNoteObject, index, handType}: BlockSchemeNodeProps) => {
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
@@ -27,13 +50,14 @@ export const SubtitleNote = ({externalNoteObject, setExternalNoteObject, index, 
 
     const handleNoteUpdate = (data: Partial<INote>) => {
         const updatedNote = new Note({
-            // id: externalNoteObject.id,
             note: data.note || externalNoteObject.note,
             octave: data.octave || externalNoteObject.octave,
             applicature: data.applicature || externalNoteObject.applicature,
             duration: externalNoteObject.duration,
-            playbackOffset: externalNoteObject.playbackOffset
+            playbackOffset: externalNoteObject.playbackOffset,
+            noteType: data.noteType || externalNoteObject.noteType
         });
+        console.log( updatedNote)
         setExternalNoteObject(updatedNote)
 
     }
@@ -65,7 +89,7 @@ export const SubtitleNote = ({externalNoteObject, setExternalNoteObject, index, 
                 marginRight: "auto",
                 textAlign: "center",
                 top: getRelativeTop(externalNoteObject),
-                zIndex: 10+index,
+                zIndex: 10 + index,
                 ...getRelativeLeft(externalNoteObject)
             }}>
                 <span onClick={handleClick}>{externalNoteObject.note}</span>
@@ -110,18 +134,29 @@ export const SubtitleNote = ({externalNoteObject, setExternalNoteObject, index, 
                                        }}
                             />
                         </div>
-                        <TextField style={{paddingRight: 10, width: 100}}
-                                   defaultValue={externalNoteObject.applicature}
-                                   id="standard-number"
-                                   label="Аппликатура"
-                                   InputLabelProps={{
-                                       shrink: true,
-                                   }}
-                                   inputProps={{width: 50}}
-                                   onChange={event => {
-                                       handleNoteUpdate({applicature: event.target.value})
-                                   }}
-                        />
+                        <div style={{padding: 10, display: "flex", flexDirection: "row"}}>
+                            <TextField style={{paddingRight: 10, width: 70}}
+                                       defaultValue={externalNoteObject.applicature}
+                                       id="standard-number"
+                                       label="Аппликатура"
+                                       InputLabelProps={{
+                                           shrink: true,
+                                       }}
+                                       inputProps={{width: 50}}
+                                       onChange={event => {
+                                           handleNoteUpdate({applicature: event.target.value})
+                                       }}
+                            />
+                            {handType === NoteHand.RIGHT && <FormControlLabel
+                                control={<FeatherSwitch checked={externalNoteObject.noteType===NoteType.FEATHER}
+                                                        onChange={(event) => {
+                                                            handleNoteUpdate({noteType:event.target.checked ? NoteType.FEATHER: NoteType.REGULAR})
+                                                        }}></FeatherSwitch>}
+                                labelPlacement="top"
+                                label={<Typography
+                                    style={{color: "gray", fontSize: "small"}}>Оперение</Typography>}
+                            />}
+                        </div>
                     </div>
                 </Popover>
             </div>

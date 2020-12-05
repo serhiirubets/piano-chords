@@ -29,7 +29,7 @@ export const playNotes = (beatsToPlay, playFunction, tempo) => {
         console.log('beat',currentBeat)
         currentBeat.forEach(playback => {
             const offset = STANDARD_DURATION * (i+1 + playback.playbackOffset);
-            playFunction(playback.midiNumber, playback.duration, offset);
+            playFunction(playback.midiNumber, offset, {duration: playback.duration, gain:playback.gain});
         })
     }
 }

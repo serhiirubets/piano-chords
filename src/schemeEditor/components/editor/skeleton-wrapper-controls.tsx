@@ -1,6 +1,9 @@
 import React, {useState} from "react";
-import {Button, Tooltip} from "@material-ui/core";
+import {Button, TextField, Tooltip, Typography} from "@material-ui/core";
 import IconButton from '@material-ui/core/IconButton';
+import {
+    SortableHandle,
+} from 'react-sortable-hoc';
 
 import PlayArrowRoundedIcon from '@material-ui/icons/PlayArrowRounded';
 import FileCopyRoundedIcon from '@material-ui/icons/FileCopyRounded';
@@ -13,13 +16,27 @@ export interface BlockSchemeSkeletonWrapperProps {
     onStartPlaying: any;
     onStopPlaying: any;
     onCopy: any;
-    onDragNDrop: any;
     onClear: any;
     isDisplayed: boolean;
 }
 
-export const SkeletonWrapperControls = ({onStartPlaying, onStopPlaying, onCopy, onDragNDrop, isDisplayed, onClear}: BlockSchemeSkeletonWrapperProps) => {
+export const SkeletonWrapperControls = ({onStartPlaying, onStopPlaying, onCopy, isDisplayed, onClear}: BlockSchemeSkeletonWrapperProps) => {
     const [isPlaying, setIsPlaying] = useState(false);
+    const [isBeingDragged, setIsBeingDragged] = useState(false);
+
+    const GridDragNDropHandle =
+        SortableHandle(() => <OpenWithRoundedIcon
+            onMouseDown={handleDragStart}
+            onMouseUp={handleDragStop}
+            color={isBeingDragged ? "primary" : "action"}
+            className={DRAGGABLE_CLASSNAME}/>)
+
+    const handleDragStart = () => {
+        setIsBeingDragged(true)
+    }
+    const handleDragStop = () => {
+        setIsBeingDragged(false)
+    }
 
     return (
         <div style={blockSchemeStyle}>
@@ -50,7 +67,7 @@ export const SkeletonWrapperControls = ({onStartPlaying, onStopPlaying, onCopy, 
                 </Tooltip>
 
                 <Tooltip title="Нажать и удерживать чтоб переместить" placement="top">
-                    <OpenWithRoundedIcon color="action" className={DRAGGABLE_CLASSNAME}/>
+                    <GridDragNDropHandle/>
                 </Tooltip>
 
                 <Tooltip title="Удалить квадрат" placement="top">

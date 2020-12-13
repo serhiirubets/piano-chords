@@ -17,19 +17,20 @@ export const getNotesToPlay = (quadrats: Array<SkeletonData>) => {
     return notes;
 }
 
-export const playNotes = (beatsToPlay, playFunction, tempo) => {
+export const playNotes = (beatsToPlay, playFunction, tempo, doDistinguishFeatherGain) => {
     console.log('Notes to Play', beatsToPlay)
     const STANDARD_DURATION = tempo * 1;
+    const getGain = (beatPlayback) => doDistinguishFeatherGain ? beatPlayback.gain : 1
 
     for (let i = 0; i <= beatsToPlay.length; i++) {
         const currentBeat: PlaybackData[] = beatsToPlay[i];
-        if(currentBeat === undefined){
+        if (currentBeat === undefined) {
             continue;
         }
-        console.log('beat',currentBeat)
+        console.log('beat', currentBeat)
         currentBeat.forEach(playback => {
-            const offset = STANDARD_DURATION * (i+1 + playback.playbackOffset);
-            playFunction(playback.midiNumber, offset, {duration: playback.duration, gain:playback.gain});
+            const offset = STANDARD_DURATION * (i + 1 + playback.playbackOffset);
+            playFunction(playback.midiNumber, offset, {duration: playback.duration, gain: getGain(playback)});
         })
     }
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext} from "react";
 import {
     ClickAwayListener,
     FormControlLabel,
@@ -12,12 +12,14 @@ import {INote, Note, PlaybackDuration, PlaybackOffset} from "../../model/note-da
 import {NoteHand, NoteType} from "../../model/skeleton-data";
 import {QUADRAT_WIDTH} from "../../model/global-constants";
 import {blue, red} from "@material-ui/core/colors";
+import {SettingsContext} from "../../context/settings-context";
 
 export interface BlockSchemeNodeProps {
     externalNoteObject: INote;
     setExternalNoteObject: any;//(INote, number) => SetStateAction<INote>;
     index: number;
     handType: NoteHand;
+    chord?: INote[]
 }
 
 const FeatherSwitch = withStyles({
@@ -34,18 +36,22 @@ const FeatherSwitch = withStyles({
     track: {color: red[500],},
 })(Switch);
 
-export const SubtitleNote = ({externalNoteObject, setExternalNoteObject, index, handType}: BlockSchemeNodeProps) => {
+export const SubtitleNote = ({externalNoteObject, setExternalNoteObject, index, handType, chord}: BlockSchemeNodeProps) => {
+    const SYMBOL_HEIGHT_PX = 14;
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-
+    const {settings} = useContext(SettingsContext)
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
+    console.log('Initializing note object', open)
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
-
     };
+
     const handleClose = () => {
+        console.log('Clicking away')
         setAnchorEl(null);
+        // setIsPopupOpen(false)
     };
 
     const handleNoteUpdate = (data: Partial<INote>) => {
@@ -57,7 +63,7 @@ export const SubtitleNote = ({externalNoteObject, setExternalNoteObject, index, 
             playbackOffset: externalNoteObject.playbackOffset,
             noteType: data.noteType || externalNoteObject.noteType
         });
-        console.log( updatedNote)
+        console.log(updatedNote)
         setExternalNoteObject(updatedNote)
 
     }
@@ -67,6 +73,29 @@ export const SubtitleNote = ({externalNoteObject, setExternalNoteObject, index, 
         const leftHandTop = (60 - externalNoteObject.getMidiNumber()) * 2.5;
         const top = handType === NoteHand.RIGHT ? rightHandTop : leftHandTop;
         return top
+    }
+
+    const getRelativeTopInsideChord = (note: INote, chord: INote[]) => {
+        let top;
+        chord.sort(Note.compareByMidiNumbers);
+        const chordRootTop = getRelativeTop(chord[0]);
+        const noteIndex = chord.indexOf(note);
+        if (noteIndex === 0) {
+            return chordRootTop;
+        } else {
+            const mathEvaluatedTop = getRelativeTop(note);
+            const prevNoteTop = getRelativeTop(chord[noteIndex - 1]);
+            const relativeTop = prevNoteTop - SYMBOL_HEIGHT_PX;
+
+            console.log('note', note.note + note.octave)
+            console.log('prev note top', prevNoteTop)
+            console.log('top including notes',relativeTop )
+            console.log('correct top', mathEvaluatedTop)
+            console.log('used', mathEvaluatedTop < relativeTop ? mathEvaluatedTop : relativeTop)
+
+            return mathEvaluatedTop < relativeTop ? mathEvaluatedTop : relativeTop;
+        }
+
     }
 
     const getRelativeLeft = (note: INote) => {
@@ -88,11 +117,21 @@ export const SubtitleNote = ({externalNoteObject, setExternalNoteObject, index, 
                 marginLeft: "auto",
                 marginRight: "auto",
                 textAlign: "center",
-                top: getRelativeTop(externalNoteObject),
+                top: chord ? getRelativeTopInsideChord(externalNoteObject, chord) : getRelativeTop(externalNoteObject),
                 zIndex: 10 + index,
                 ...getRelativeLeft(externalNoteObject)
             }}>
-                <span onClick={handleClick}>{externalNoteObject.note}</span>
+
+                {settings.displayApplicature && <Typography style={{
+                    pointerEvents: "none",
+                    fontSize: "small",
+                    position:"absolute",
+                    top:-7,
+                    right:5,
+                    color: "#6833b1"
+                }}>{externalNoteObject.applicature}</Typography>}
+                <Typography style={{fontSize: "1em", lineHeight: 1.6, fontFamily:"sans-serif", fontWeight:600}}
+                            onClick={handleClick}>{externalNoteObject.note}</Typography>
                 <Popover
                     id={id}
                     open={open}
@@ -148,9 +187,9 @@ export const SubtitleNote = ({externalNoteObject, setExternalNoteObject, index, 
                                        }}
                             />
                             {handType === NoteHand.RIGHT && <FormControlLabel
-                                control={<FeatherSwitch checked={externalNoteObject.noteType===NoteType.FEATHER}
+                                control={<FeatherSwitch checked={externalNoteObject.noteType === NoteType.FEATHER}
                                                         onChange={(event) => {
-                                                            handleNoteUpdate({noteType:event.target.checked ? NoteType.FEATHER: NoteType.REGULAR})
+                                                            handleNoteUpdate({noteType: event.target.checked ? NoteType.FEATHER : NoteType.REGULAR})
                                                         }}></FeatherSwitch>}
                                 labelPlacement="top"
                                 label={<Typography

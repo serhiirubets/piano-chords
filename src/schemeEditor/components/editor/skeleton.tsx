@@ -100,7 +100,7 @@ export const Skeleton = ({blockSchemeData, setBlockSchemeData}: BlockSchemeSkele
     }
 
     const isPartOfTriplet = (index: number) => {
-        return triplets.filter(triplet => index > triplet.startIndex && index <= triplet.startIndex + triplet.length-1).length > 0
+        return triplets.filter(triplet => index > triplet.startIndex && index <= triplet.startIndex + triplet.length - 1).length > 0
     }
 
     const handleClearSelection = () => {
@@ -125,7 +125,8 @@ export const Skeleton = ({blockSchemeData, setBlockSchemeData}: BlockSchemeSkele
     const open = Boolean(popoverAnchor);
 
     const rightHandNodes = blockSchemeData?.right.map((item, index) => {
-        return <div ref={elementRefs.current[index]}>
+        return <div ref={elementRefs.current[index]}
+                    key={item.id}>
             <SkeletonNode
                 data={blockSchemeData.getNode(NoteHand.RIGHT, index)}
                 setData={(data) => {

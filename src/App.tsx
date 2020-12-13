@@ -19,22 +19,22 @@ function App() {
         <ThemeProvider theme={theme}>
             <div className="App">
                 <div className={classes.contentArea}>
-                    {/*<Card style={{width:"13vw"}} variant="outlined">*/}
-                    {/*    <CardContent>*/}
-                    {/*        <Typography className={classes.title} color="textPrimary" gutterBottom>*/}
-                    {/*            Режим*/}
-                    {/*        </Typography>*/}
-                    {/*        <RadioGroup value={mode} onChange={(e) => {*/}
-                    {/*            setMode(e.target.value)*/}
-                    {/*        }}>*/}
-                    {/*            <FormControlLabel value="info" control={<Radio/>} label="Обучение"/>*/}
-                    {/*            <FormControlLabel value="challenge" control={<Radio/>} label="Тренировка"/>*/}
-                    {/*            <FormControlLabel value="blockSchemeEditor" control={<Radio/>}*/}
-                    {/*                              label="Редактор блок-схем"/>*/}
-                    {/*        </RadioGroup>*/}
-                    {/*    </CardContent>*/}
+                    {false &&  <Card style={{width:"13vw"}} variant="outlined">
+                        <CardContent>
+                            <Typography className={classes.title} color="textPrimary" gutterBottom>
+                                Режим
+                            </Typography>
+                            <RadioGroup value={mode} onChange={(e) => {
+                                setMode(e.target.value)
+                            }}>
+                                <FormControlLabel value="info" control={<Radio/>} label="Обучение"/>
+                                <FormControlLabel value="challenge" control={<Radio/>} label="Тренировка"/>
+                                <FormControlLabel value="blockSchemeEditor" control={<Radio/>}
+                                                  label="Редактор блок-схем"/>
+                            </RadioGroup>
+                        </CardContent>
 
-                    {/*</Card>*/}
+                    </Card>}
                     <div className={classes.mainContentArea}>
                         {
                             mode === "challenge" &&
@@ -78,7 +78,7 @@ export const useGlobalStyles = makeStyles({
         display: 'flex',
         padding: '10px',
         margin: '10px',
-        width: '25vw'
+        width: '23vw'
     },
     card: {
         display: 'flex',
@@ -93,7 +93,7 @@ export const useGlobalStyles = makeStyles({
         justifyContent: 'center',
         alignItems: 'center',
         flex: 2,
-        width: '75vw',
+        width: '70vw',
         overflow:"scroll"
     },
     fullScreenCard: {
@@ -192,7 +192,11 @@ export const useGlobalStyles = makeStyles({
         alignItems:"center",
         flexDirection:'column',
         flex:1
-    }
+    },
+    accoridionHeading: {
+        fontSize: theme.typography.pxToRem(15),
+        fontWeight: theme.typography.fontWeightRegular,
+    },
 });
 
 export default App;

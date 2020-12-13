@@ -1,8 +1,9 @@
 import {NoteHand, NoteType} from "./skeleton-data";
 import {Note} from "./note-data";
-
+import {v4 as uuid} from 'uuid';
 
 export interface IBlockSchemeNodeData {
+    id:string;
     isPresent: boolean;
     color: string;
     type?: NoteType,
@@ -17,13 +18,14 @@ export interface PlaybackData {
 }
 
 export class SkeletonNodeData implements IBlockSchemeNodeData {
-
+    public readonly id = uuid();
     private _color: string;
     private _notes: Note[];
     private _isPresent: boolean;
     private _type: NoteType;
 
     constructor(initData: IBlockSchemeNodeData) {
+        this.id = initData.id || uuid();
         this._isPresent = initData.isPresent || false;
         this._notes = initData.notes;
         this._type = initData.type || NoteType.REGULAR;
@@ -32,6 +34,7 @@ export class SkeletonNodeData implements IBlockSchemeNodeData {
 
     public static createEmpty(handType: NoteHand) {
         return new SkeletonNodeData({
+            id:uuid(),
             isPresent: false,
             color: handType == NoteHand.LEFT ? "green" : "red",
             notes: new Array<Note>()
@@ -40,6 +43,7 @@ export class SkeletonNodeData implements IBlockSchemeNodeData {
 
     public static createFromDeserialized(other: IBlockSchemeNodeData) {
         return new SkeletonNodeData({
+            id: other["id"],
             isPresent: other["_isPresent"],
             color: other["_color"],
             type: other["_type"],

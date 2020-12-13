@@ -1,13 +1,13 @@
-import {useGlobalStyles} from "../../../App";
-import React, {useEffect, useState} from "react";
-import {ClickAwayListener, TextField} from "@material-ui/core";
-import {IBlockSchemeNodeData, SkeletonNodeData} from "../../model/skeleton-node-data";
+import React, {useContext, useEffect, useState} from "react";
+import {TextField} from "@material-ui/core";
+import {SkeletonNodeData} from "../../model/skeleton-node-data";
 import {NoteHand} from "../../model/skeleton-data";
 import {SubtitleNote} from "./subtitle-note";
 import {Note, PlaybackDuration, PlaybackOffset} from "../../model/note-data";
 import {DOT_WIDTH, QUADRAT_WIDTH} from "../../model/global-constants";
 import {TripletHandlerProps} from "./skeleton";
 import {v4 as uuid} from 'uuid';
+import {SettingsContext} from "../../context/settings-context";
 
 export interface BlockSchemeNodeProps {
     data: SkeletonNodeData;
@@ -31,6 +31,7 @@ export const SkeletonNode = ({
                                  nodeIndex
                              }: BlockSchemeNodeProps) => {
     const NOTE_SUBTITLES_PLACEHOLDER_HEIGHT = 80;
+    const DEFAULT_NODE_SYMBOL = '*';
     const CHORD_NOTE_SEPARATOR = ' ';
     const TRIPLET_NOTE_SEPARATOR = ':';
     const SIXTEENS_NOTE_SEPARATOR = '/';
@@ -39,6 +40,7 @@ export const SkeletonNode = ({
     const [isEditState, setIsEditState] = useState<boolean>(false)
     const [notes, setNotes] = useState<Array<Note>>(new Array<Note>())
     const [contains16th, setContains16th] = useState<boolean>(false)
+    const {settings} = useContext(SettingsContext);
 
 
     useEffect(() => {
@@ -74,11 +76,33 @@ export const SkeletonNode = ({
         }
     }
 
+    const handleFocus = (event) => {
+        if (event.type !== "contextMenu") {
+            setIsEditState(true);
+            focusInternalInputRef();
+        } else {
+            handleRightClick(event)
+        }
+
+    }
+
+    const handleRightClick = (event) => {
+        event.preventDefault()
+        setIsEditState(false)
+        const defaultNote = '*';
+        const defaultNotes = parseInputToTheNotes(defaultNote)
+        if (internalInputRef.current) {
+            internalInputRef.current.value = defaultNote;
+        }
+        console.log("DEFAULT NOTES", defaultNotes)
+        writeNodeState(defaultNotes)
+    }
+
     const handleNoteInput = (event) => {
         if (tripletHandlingProps?.isHostingTriplet) {
             setTripletUntouched(false);
         }
-        const onlyNums = event.target.value.replace(/[^a-gmA-G#:\s\/0-9]/g, '');
+        const onlyNums = event.target.value.replace(/[^a-gmA-G#:\s\/0-9\*]/g, '');
         event.target.value = onlyNums;
 
         parseInputToTheNotes(onlyNums)
@@ -102,6 +126,10 @@ export const SkeletonNode = ({
             const noteChars = maybeSixtheenthNotes.trim().split(CHORD_NOTE_SEPARATOR);
 
             const noteObjectArray = noteChars.map(char => {
+                if (char === DEFAULT_NODE_SYMBOL) {
+                    char = handType === NoteHand.LEFT ? settings.simpleModeLeftHandNote : settings.simpleModeRightHandNote;
+                }
+
                 const octaveMatches = char.match(/[0-9]{1}/g);
                 const defaultOctave = handType == NoteHand.LEFT ? 3 : 4;
 
@@ -144,13 +172,18 @@ export const SkeletonNode = ({
         console.log('noteObjects', notesObjects);
         setContains16th(is16thNotes)
         setNotes(notesObjects)
+
+        return notesObjects;
     }
 
-    const writeNodeState = () => {
+    const writeNodeState = (updatedNotes?: Note[]) => {
+        const notesToWrite = updatedNotes ? updatedNotes : notes;
+
         const updatedData = new SkeletonNodeData({
-            isPresent: notes.length > 0,
+            id: data.id,
+            isPresent: notesToWrite.length > 0,
             color: data.calculateColor(handType),
-            notes: [...notes] || []
+            notes: [...notesToWrite] || []
         });
 
         setData(updatedData);
@@ -165,15 +198,8 @@ export const SkeletonNode = ({
             updatedNotesArray.sort(Note.compareByMidiNumbers);
             updatedNotesArray.forEach(note => note.noteType = updatedObject.noteType)
             setNotes(updatedNotesArray);
-            console.log(updatedObject)
-            console.log('updated notes', updatedNotesArray)
 
-            const updatedData = new SkeletonNodeData({
-                isPresent: updatedNotesArray.length > 0,
-                color: data.calculateColor(handType),
-                notes: [...updatedNotesArray] || []
-            });
-            setData(updatedData);
+            writeNodeState(updatedNotesArray)
 
 
             const inputValueSeparator = contains16th ? SIXTEENS_NOTE_SEPARATOR :
@@ -182,10 +208,16 @@ export const SkeletonNode = ({
             const updatedInputValue = updatedNotesArray.map(noteObject => noteObject.note).join(inputValueSeparator)
             updateInternalInputRefValue(updatedInputValue);
         }
+
+        const isChord = notesArray.length > 1 && notesArray.every(note => note.playbackOffset === PlaybackOffset.NONE);
+
         return notesArray.map((noteObject, index) => {
-            return <SubtitleNote externalNoteObject={noteObject} setExternalNoteObject={(data) => {
-                updateNoteStateBasedOnSubtitle(data, index)
-            }} index={index} handType={handType}></SubtitleNote>
+            return <SubtitleNote externalNoteObject={noteObject}
+                                 key={data.id + noteObject.note + noteObject.octave + index}
+                                 setExternalNoteObject={(data) => {
+                                     updateNoteStateBasedOnSubtitle(data, index)
+                                 }} index={index} handType={handType}
+                                 chord={isChord ? notesArray : undefined}></SubtitleNote>
         })
     }
 
@@ -219,7 +251,7 @@ export const SkeletonNode = ({
                 {
                     height: DOT_WIDTH / 2,
                     width: 15,
-                    backgroundColor:data.calculateColor(handType),
+                    backgroundColor: data.calculateColor(handType),
                     borderRadius: "50%",
                     opacity: data.isPresent && !isEditState ? 100 : 0,
                     position: "absolute",
@@ -284,10 +316,8 @@ export const SkeletonNode = ({
                     rgba(0,0,0,0) 100%)` : "none"
             }} tabIndex={0}
                  onClick={handleSelection}
-                 onFocus={() => {
-                     setIsEditState(true);
-                     focusInternalInputRef();
-                 }}
+                 onContextMenu={handleRightClick}
+                 onFocus={handleFocus}
                  onBlur={() => setIsEditState(false)}
             >
                 <div

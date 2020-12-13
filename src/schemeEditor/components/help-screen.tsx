@@ -39,6 +39,11 @@ export const HelpDialog = () => {
                         'Подписи аплликатуры и октавы',
                         'Оптимизация отображения подписей'].map(item => <Typography>* {item}</Typography>)}
 
+                        <Typography variant={'h6'}>Демо</Typography>
+                    <Typography paragraph={true}>
+                        Краткое демо возможностей редактора доступно по ссылке: https://youtu.be/CeyyCKWdTLM
+                    </Typography>
+
                     <Typography variant={'h6'}>Ввод данных в ячейку</Typography>
                     <Typography paragraph={true}>
                         Для редактирования ячейки блок схемы навести мышь, кликнуть, ввести ноты.

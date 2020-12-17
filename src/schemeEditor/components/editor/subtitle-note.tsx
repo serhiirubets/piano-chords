@@ -13,6 +13,7 @@ import {NoteHand, NoteType} from "../../model/skeleton-data";
 import {QUADRAT_WIDTH} from "../../model/global-constants";
 import {blue, red} from "@material-ui/core/colors";
 import {SettingsContext} from "../../context/settings-context";
+import ClearRoundedIcon from "@material-ui/icons/ClearRounded";
 
 export interface BlockSchemeNodeProps {
     externalNoteObject: INote;
@@ -38,6 +39,7 @@ const FeatherSwitch = withStyles({
 
 export const SubtitleNote = ({externalNoteObject, setExternalNoteObject, index, handType, chord}: BlockSchemeNodeProps) => {
     const SYMBOL_HEIGHT_PX = 14;
+    const labelRef = React.createRef<HTMLDivElement>();
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
     const {settings} = useContext(SettingsContext)
     const open = Boolean(anchorEl);
@@ -51,7 +53,6 @@ export const SubtitleNote = ({externalNoteObject, setExternalNoteObject, index, 
     const handleClose = () => {
         console.log('Clicking away')
         setAnchorEl(null);
-        // setIsPopupOpen(false)
     };
 
     const handleNoteUpdate = (data: Partial<INote>) => {
@@ -130,7 +131,7 @@ export const SubtitleNote = ({externalNoteObject, setExternalNoteObject, index, 
                     right:5,
                     color: "#6833b1"
                 }}>{externalNoteObject.applicature}</Typography>}
-                <Typography style={{fontSize: "1em", lineHeight: 1.6, fontFamily:"sans-serif", fontWeight:600}}
+                <Typography ref={labelRef} style={{fontSize: "1em", lineHeight: 1.6, fontFamily:"sans-serif", fontWeight:600}}
                             onClick={handleClick}>{externalNoteObject.note}</Typography>
                 <Popover
                     id={id}
@@ -147,6 +148,9 @@ export const SubtitleNote = ({externalNoteObject, setExternalNoteObject, index, 
                     }}
                 >
                     <div style={{padding: 10, display: "flex", flexDirection: "column"}}>
+                        <div style={{position:"absolute", right:3, top:3}}>
+                            <ClearRoundedIcon fontSize="small" color="action" onClick={handleClose}/>
+                        </div>
                         <div style={{padding: 10, display: "flex", flexDirection: "row"}}>
                             <TextField style={{paddingRight: 10, width: 50}}
                                        defaultValue={externalNoteObject.note}

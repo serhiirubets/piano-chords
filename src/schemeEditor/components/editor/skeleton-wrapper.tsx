@@ -40,9 +40,6 @@ export const SkeletonWrapper = ({skeletonData, setSkeletonData, quadrats, setQua
         setIsHovered(false)
     }
 
-    const implementLater = () => {
-    }
-
     const handleClearButtonClick = () => {
         const updatedArray = [...quadrats];
         updatedArray.splice(index, 1);
@@ -67,10 +64,10 @@ export const SkeletonWrapper = ({skeletonData, setSkeletonData, quadrats, setQua
                         instrumentName="bright_acoustic_piano"
                         audioContext={audioContext}
                         hostname={soundfontHostname}
-                        render={({ playNote, stopNote, stopAllNotes}) => (
+                        render={({playNote, stopNote, stopAllNotes}) => (
                             <div style={{display: "flex", flexDirection: "row"}}>
-                                { !isNameEdited &&
-                                    <Typography>{skeletonData.id.substr(0, 8)}</Typography>
+                                {!isNameEdited &&
+                                 <Typography>{skeletonData.id.substr(0, 8)}</Typography>
                                 }
                                 <SkeletonWrapperControls onStartPlaying={() => handlePlayButtonClick(playNote)}
                                                          onStopPlaying={() => {
@@ -79,7 +76,9 @@ export const SkeletonWrapper = ({skeletonData, setSkeletonData, quadrats, setQua
                                                          }}
                                                          onCopy={handleCopyButtonClick}
                                                          onClear={handleClearButtonClick}
-                                                         isDisplayed={true}/>
+                                                         isDisplayed={true}
+                                                         onDescriptionChange={() => {
+                                                         }}/>
                             </div>
                         )}/>
                     : (<div style={{height: 40, width: '100%'}}></div>)}

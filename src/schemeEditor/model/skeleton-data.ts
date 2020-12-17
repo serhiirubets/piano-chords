@@ -7,6 +7,7 @@ export class SkeletonData {
 
     private _right = new Array<SkeletonNodeData>(this._size);
     private _left = new Array<SkeletonNodeData>(this._size);
+    private _triplets=new Array<TripletData>()
 
     constructor(quadratSize: number, id?: string) {
         this._size = quadratSize;
@@ -22,6 +23,7 @@ export class SkeletonData {
     public static createFromDeserialized(other: SkeletonData) {
         const data = new SkeletonData(other.size, other.id);
         data._size = other["_size"];
+        data._triplets=other["_triplets"] || [];
         data._right = [...other["_right"]].map(corruptedNodeData => SkeletonNodeData.createFromDeserialized(corruptedNodeData));
         data._left = [...other["_left"]].map(corruptedNodeData => SkeletonNodeData.createFromDeserialized(corruptedNodeData));;
         return data;
@@ -29,6 +31,7 @@ export class SkeletonData {
 
     copyPreservingId() {
         const data = new SkeletonData(this.size, this.id);
+        data._triplets= this._triplets;
         data._right = [...this._right];
         data._left = [...this._left];
         return data;
@@ -61,6 +64,14 @@ export class SkeletonData {
         return this._size;
     }
 
+    set triplets(data) {
+         this._triplets = data;
+    }
+
+    get triplets() {
+        return this._triplets;
+    }
+
 }
 
 
@@ -79,19 +90,3 @@ export interface TripletData {
     length:number;
 }
 
-/*
-{
-    0:{
-        left:{}
-        right:{}
-    }
-
-
-    left:[
-     {note: "b",
-      applicature: "1",
-      octave: 1
-     }
-     ]
-}
- */

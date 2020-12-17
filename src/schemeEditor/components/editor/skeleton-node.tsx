@@ -36,7 +36,6 @@ export const SkeletonNode = ({
     const TRIPLET_NOTE_SEPARATOR = ':';
     const SIXTEENS_NOTE_SEPARATOR = '/';
 
-    const [tripletUntouched, setTripletUntouched] = useState<boolean>(true);
     const [isEditState, setIsEditState] = useState<boolean>(false)
     const [notes, setNotes] = useState<Array<Note>>(new Array<Note>())
     const [contains16th, setContains16th] = useState<boolean>(false)
@@ -44,15 +43,19 @@ export const SkeletonNode = ({
 
 
     useEffect(() => {
-        setNotes(data.notes || new Array())
-    }, [data])
+        const effectiveNotesArray = data.notes || new Array();
+        const effective16thValue = data.notes.filter(note => note.duration === PlaybackDuration.HALF).length > 0;
+        setNotes(effectiveNotesArray)
+        setContains16th(effective16thValue)
 
-    useEffect(() => {
-        if (tripletHandlingProps?.isHostingTriplet && tripletUntouched && internalInputRef.current) {
+        setInternalInputValue(effectiveNotesArray, effective16thValue, tripletHandlingProps?.isHostingTriplet);
+
+        if (tripletHandlingProps?.isHostingTriplet && effectiveNotesArray.length === 0 && internalInputRef.current) {
             console.log('should be focusing div')
             internalInputRef.current.focus();
         }
-    }, [tripletHandlingProps])
+    }, [data, tripletHandlingProps])
+
 
     const internalInputRef = React.createRef<HTMLInputElement>();
     const focusInternalInputRef = () => {
@@ -61,7 +64,7 @@ export const SkeletonNode = ({
             internalInputRef.current.select();
         }
     }
-    const updateInternalInputRefValue = (value: string) => {
+    const writeValueToInternalInput = (value: string) => {
         if (internalInputRef.current) {
             internalInputRef.current.value = value;
         }
@@ -99,12 +102,8 @@ export const SkeletonNode = ({
     }
 
     const handleNoteInput = (event) => {
-        if (tripletHandlingProps?.isHostingTriplet) {
-            setTripletUntouched(false);
-        }
         const onlyNums = event.target.value.replace(/[^a-gmA-G#:\s\/0-9\*]/g, '');
         event.target.value = onlyNums;
-
         parseInputToTheNotes(onlyNums)
     }
 
@@ -114,7 +113,6 @@ export const SkeletonNode = ({
             setNotes([])
             if (tripletHandlingProps?.isHostingTriplet) {
                 tripletHandlingProps.handleTripletRemoval(nodeIndex)
-                setTripletUntouched(true);
             }
             return
         }
@@ -145,7 +143,7 @@ export const SkeletonNode = ({
                         playbackOffset: tripletOr16thIndex * PlaybackOffset.HALF
                     })
                 } else if (isTripletNotes && tripletHandlingProps?.isHostingTriplet) {
-                    const idealDuration = tripletHandlingProps?.tripletLength / 3 >= 1 ? PlaybackDuration.FULL : PlaybackDuration.HALF;
+                    const idealDuration = tripletHandlingProps?.tripletLength / 3 >= 1 ? PlaybackDuration.FULL : 0.6;
                     const lastNodeOffset = tripletHandlingProps?.tripletLength / 3 >= 1 ? Math.ceil(tripletOr16thIndex * tripletHandlingProps.tripletLength! / 3) : Math.floor(tripletOr16thIndex * tripletHandlingProps.tripletLength! / 3)
                     return new Note({
                         id: uuid(),
@@ -189,6 +187,35 @@ export const SkeletonNode = ({
         setData(updatedData);
     }
 
+    const groupBy = function (xs, key) {
+        return xs.reduce(function (rv, x) {
+            (rv[x[key]] = rv[x[key]] || []).push(x);
+            return rv;
+        }, {});
+    };
+
+    function setInternalInputValue(updatedNotesArray: Note[], contains16?: boolean, hostingTriplet?: boolean) {
+        const is16PresentInStateOrInValue = contains16 || contains16th;
+        const isHostingTripleInStateOrValue = hostingTriplet || tripletHandlingProps?.isHostingTriplet;
+        const inputValueSeparator = is16PresentInStateOrInValue ? SIXTEENS_NOTE_SEPARATOR :
+            isHostingTripleInStateOrValue ? TRIPLET_NOTE_SEPARATOR
+                : CHORD_NOTE_SEPARATOR;
+
+        if (isHostingTripleInStateOrValue) {
+            const groupedNotes = groupBy(updatedNotesArray, 'playbackOffset');
+            const tripletParts = Object.keys(groupedNotes)
+                .map(offsetKey => {
+                    const notesForOffset = groupedNotes[offsetKey];
+                    return notesForOffset.map(noteObject => noteObject.note)
+                        .join(CHORD_NOTE_SEPARATOR)
+                })
+            writeValueToInternalInput(tripletParts.join(TRIPLET_NOTE_SEPARATOR));
+            return
+        }
+        const updatedInputValue = updatedNotesArray.map(noteObject => noteObject.note).join(inputValueSeparator)
+        writeValueToInternalInput(updatedInputValue);
+    }
+
     const getSubtitlesElement = () => {
         const notesArray = notes ? [...notes] : [];
 
@@ -200,20 +227,13 @@ export const SkeletonNode = ({
             setNotes(updatedNotesArray);
 
             writeNodeState(updatedNotesArray)
-
-
-            const inputValueSeparator = contains16th ? SIXTEENS_NOTE_SEPARATOR :
-                tripletHandlingProps?.isHostingTriplet ? TRIPLET_NOTE_SEPARATOR
-                    : CHORD_NOTE_SEPARATOR;
-            const updatedInputValue = updatedNotesArray.map(noteObject => noteObject.note).join(inputValueSeparator)
-            updateInternalInputRefValue(updatedInputValue);
+            setInternalInputValue(updatedNotesArray);
         }
 
         const isChord = notesArray.length > 1 && notesArray.every(note => note.playbackOffset === PlaybackOffset.NONE);
 
         return notesArray.map((noteObject, index) => {
             return <SubtitleNote externalNoteObject={noteObject}
-                                 key={data.id + noteObject.note + noteObject.octave + index}
                                  setExternalNoteObject={(data) => {
                                      updateNoteStateBasedOnSubtitle(data, index)
                                  }} index={index} handType={handType}
@@ -265,23 +285,38 @@ export const SkeletonNode = ({
     }
 
     const prepareTripletDotArray = () => {
-        if (tripletHandlingProps) {
-            return notes.map((note, index) => {
-                let offsetLeft = note.playbackOffset * QUADRAT_WIDTH + note.duration * (QUADRAT_WIDTH - DOT_WIDTH * note.duration) / 2 + index * 3 * note.duration;
-                return (<span style={
-                    {
-                        height: DOT_WIDTH * note.duration,
-                        width: DOT_WIDTH * note.duration,
-                        backgroundColor: data.calculateColor(handType),
-                        borderRadius: "50%",
-                        opacity: data.isPresent && !isEditState ? 100 : 0,
-                        position: "absolute",
-                        zIndex: 1,
-                        top: (QUADRAT_WIDTH - (DOT_WIDTH * note.duration)) / 2,
-                        left: offsetLeft
-                    }
-                } onClick={() => setIsEditState(true)}></span>)
-            })
+        if (tripletHandlingProps && notes.length > 0) {
+            const groupedNotes = groupBy(notes, 'playbackOffset');
+            console.log(groupedNotes)
+            return (<div
+                id="triplet-dot-container"
+                style={{
+                    position: "absolute",
+                    width: (QUADRAT_WIDTH + 2) * (tripletHandlingProps ? tripletHandlingProps.tripletLength : 0) - 3 - 10,//including borders
+                    height: QUADRAT_WIDTH,
+                    top: 0,
+                    left: 0,
+                    justifyContent: "space-between",
+                    marginLeft: 5,
+                    marginRight: 5,
+                    alignItems: "center",
+                    zIndex: 10,
+                    display: "flex"
+                }}>
+                {Object.keys(groupedNotes).map(offsetValue => {
+                    const noteDuration = groupedNotes[offsetValue][0].duration;
+                    return <span style={
+                        {
+                            height: DOT_WIDTH * noteDuration,
+                            width: DOT_WIDTH * noteDuration,
+                            backgroundColor: data.calculateColor(handType),
+                            borderRadius: "50%",
+                            opacity: data.isPresent && !isEditState ? 100 : 0,
+
+                        }
+                    } onClick={() => setIsEditState(true)}/>
+                })}
+            </div>)
         }
     }
 
@@ -335,11 +370,11 @@ export const SkeletonNode = ({
                     id="triplet-background"
                     style={{
                         position: "absolute",
-                        width: (QUADRAT_WIDTH + 2) * (tripletHandlingProps ? tripletHandlingProps.tripletLength : 0) - 1,//including borders
+                        width: (QUADRAT_WIDTH + 2) * (tripletHandlingProps ? tripletHandlingProps.tripletLength : 0) - 3,//including borders
                         height: QUADRAT_WIDTH,
                         top: 0,
                         left: 0,
-                        zIndex: isEditState ? 2 : -1,
+                        zIndex: isEditState ? 2 : 0,
                         background: tripletHandlingProps?.isHostingTriplet ? "yellow" : "transparent"
                     }}/>
                 <TextField
@@ -354,7 +389,6 @@ export const SkeletonNode = ({
                     }}
                     onChange={(e) => {
                         handleNoteInput(e)
-                        console.log(notes)
                     }}
                     onBlur={() => {
                         writeNodeState()

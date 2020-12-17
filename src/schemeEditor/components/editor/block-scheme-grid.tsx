@@ -3,61 +3,49 @@ import {SkeletonData} from "../../model/skeleton-data";
 import PlaylistAddRoundedIcon from '@material-ui/icons/PlaylistAddRounded';
 import {SkeletonWrapper} from "./skeleton-wrapper";
 import {Button} from "@material-ui/core";
-import {PRINTABLE_AREA_ID, QUADRAT_WIDTH} from "../../model/global-constants";
 import {SettingsContext} from "../../context/settings-context";
 import {arrayMove, SortableContainer, SortableElement} from "react-sortable-hoc";
 import {QuadratsContext} from "../../context/quadrats-context";
 
-
-export interface BlockSchemeGridProps {
-}
-
-const AddMoreButton = ({onClick}) => (<div key="addMoreButton" style={{}}>
+const AddMoreButton = ({onClick}) => (<div key="addMoreButton" style={{flexBasis:"50%"}}>
     <Button variant="outlined" key="addNewSkeletonButton" style={{height: 284, width: 336}}
             onClick={onClick}>
         <PlaylistAddRoundedIcon color="action" style={{fontSize: 60}}></PlaylistAddRoundedIcon>
     </Button>
 </div>)
 
-const SortableSkeleton = SortableElement(
-    ({item, index, idx, quadrats, setQuadrats}) => {
+const SortableItem = SortableElement(({value, idx}) => {
         const {quads, updateQuads} = useContext(QuadratsContext);
 
-        return <div style={{justifyContent: "center", alignItems: "center"}}>
-            <SkeletonWrapper skeletonData={item}
-                             setSkeletonData={(data) => {
-                                 console.log(quads)
-                                 const items = [...quads];
-                                 items[idx] = data;
-                                 console.log(items)
-                                 updateQuads(items);
-                             }}
+        return (<div style={{flexBasis:"50%"}}>
+            <SkeletonWrapper skeletonData={value} setSkeletonData={(data) => {
+                const quadsCopy = [...quads]
+                quadsCopy[idx] = data;
+                updateQuads(quadsCopy)
+            }}
                              quadrats={quads}
                              setQuadrats={updateQuads}
                              index={idx}/>
-        </div>
+            </div>
+        )
     }
 );
 
-const SortableGrid = SortableContainer(({items, handleItemsChange, quadratSize}) => {
-        return (<div style={{
-            display: "flex",
-            width: "100%",
-            minWidth: "60vw",
-            flexWrap: "wrap",
-            flexDirection: "row",
-            position: "relative"
-        }}>
-            {items.map((element, index) =>
-                <SortableSkeleton idx={index} key={element.id} item={element}/>
-            )}
-            <AddMoreButton onClick={() => {
-                const newQuadrats = [...items, new SkeletonData(quadratSize)]
-                handleItemsChange(newQuadrats)
-            }}/>
-        </div>)
-    }
-)
+const SortableGrid = SortableContainer(({children}) => {
+    const {quads, updateQuads} = useContext(QuadratsContext);
+    const {settings} = useContext(SettingsContext);
+    return <div style={{
+        display: "flex",
+        flexWrap: "wrap",
+        flexDirection: "row",
+    }}>
+        {children.map((value, index) => (
+            <SortableItem key={`item-${value.id}`} index={index} idx={index} value={value}/>
+        ))}
+        <AddMoreButton onClick={()=>updateQuads([...quads, new SkeletonData(settings.quadratSize)])}></AddMoreButton>
+    </div>
+});
+
 
 export const BlockSchemeGrid = () => {
 
@@ -67,15 +55,14 @@ export const BlockSchemeGrid = () => {
     const onSortEnd = ({oldIndex, newIndex}) => {
         updateQuads(arrayMove(quads, oldIndex, newIndex));
     };
+
     return (
-        <SortableGrid distance={QUADRAT_WIDTH}
-                      items={quads}
-                      onSortEnd={onSortEnd}
-                      axis={"xy"}
-                      handleItemsChange={(newItems) => {
-                          updateQuads(newItems)
-                      }}
-                      quadratSize={settings.quadratSize}
+        <SortableGrid
+            useDragHandle
+            children={quads}
+            onSortEnd={onSortEnd}
+            axis={"xy"}
+            quadratSize={settings.quadratSize}
         ></SortableGrid>
     )
 }

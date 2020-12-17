@@ -17,10 +17,11 @@ export interface BlockSchemeSkeletonWrapperProps {
     onStopPlaying: any;
     onCopy: any;
     onClear: any;
+    onDescriptionChange: any;
     isDisplayed: boolean;
 }
 
-export const SkeletonWrapperControls = ({onStartPlaying, onStopPlaying, onCopy, isDisplayed, onClear}: BlockSchemeSkeletonWrapperProps) => {
+export const SkeletonWrapperControls = ({onStartPlaying, onStopPlaying, onCopy, isDisplayed, onClear, onDescriptionChange}: BlockSchemeSkeletonWrapperProps) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [isBeingDragged, setIsBeingDragged] = useState(false);
 
@@ -42,6 +43,9 @@ export const SkeletonWrapperControls = ({onStartPlaying, onStopPlaying, onCopy, 
         <div style={blockSchemeStyle}>
             {isDisplayed &&
             <div style={{alignItems: "center", display: "flex", flexDirection: "row"}}>
+                {/*<TextField*/}
+                {/*    onChange={onDescriptionChange}>*/}
+                {/*</TextField>*/}
                 {isPlaying ?
                     <Tooltip title="Остановить квадрат">
                         <IconButton size="small" onClick={() => {

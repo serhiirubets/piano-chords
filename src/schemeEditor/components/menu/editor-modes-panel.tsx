@@ -25,13 +25,12 @@ export const EditorModesSettingsPanel = () => {
         updateSettings({...settings, ...value})
     }
 
-    let fileReader;
 
     return (<Accordion>
         <AccordionSummary
             expandIcon={<ExpandMoreIcon/>}
         >
-            <Typography className={classes.accoridionHeading}>Режимы</Typography>
+            <Typography className={classes.accoridionHeading}>Упрощенный ввод</Typography>
         </AccordionSummary>
         <AccordionDetails>
             <Grid direction="column">
@@ -40,10 +39,11 @@ export const EditorModesSettingsPanel = () => {
                         <FormControlLabel
                             value="top"
                             control={<Checkbox
+                                disabled
                                 checked={settings.simpleMode}
                                 onChange={(e) => partialUpdateSettings({simpleMode: e.target.checked})}
                             />}
-                            label="Заполнить по клику"></FormControlLabel>
+                            label="Заполнить по клику ПКМ"></FormControlLabel>
                     </Grid>
                 </Grid>
                 <Grid item direction="row">

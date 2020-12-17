@@ -21,7 +21,6 @@ export interface BlockSchemeSkeletonProps {
 export const Skeleton = ({blockSchemeData, setBlockSchemeData}: BlockSchemeSkeletonProps) => {
     const [selected, setSelected] = useState<Array<number>>([]);
     const [popoverAnchor, setPopoverAnchor] = React.useState<Element | null>(null);
-    const [triplets, setTriplets] = React.useState<Array<TripletData>>([]);
 
     const elementRefs = useRef(Array.from({length: blockSchemeData.right.length}, () => React.createRef<HTMLDivElement>()));
 
@@ -59,26 +58,30 @@ export const Skeleton = ({blockSchemeData, setBlockSchemeData}: BlockSchemeSkele
             console.log('Focusing first div')
             tripletHostHtmlElement.focus();
         }
-        setTriplets([...triplets, {startIndex: firstSelectedNode, length: length}]);
-
+        const updatedBlockSchemeData = blockSchemeData.copyPreservingId();
+        updatedBlockSchemeData.triplets = [...blockSchemeData.triplets, {startIndex: firstSelectedNode, length: length}];
+        setBlockSchemeData(updatedBlockSchemeData)
     }
 
     const handleTripletRemoval = (index: number) => {
-        const tripletContainingIndex = triplets.filter(triplet => triplet.startIndex <= index && index <= triplet.startIndex + triplet.length);
+        const tripletContainingIndex = blockSchemeData.triplets.filter(triplet => triplet.startIndex <= index && index <= triplet.startIndex + triplet.length);
         if (tripletContainingIndex.length > 0) {
-            const tripletIndex = triplets.indexOf(tripletContainingIndex[0]);
-            const updatedValue = [...triplets];
-            updatedValue.splice(tripletIndex, 1)
-            setTriplets(updatedValue);
+            const tripletIndex = blockSchemeData.triplets.indexOf(tripletContainingIndex[0]);
+            const updatedValue = [...blockSchemeData.triplets];
+            updatedValue.splice(tripletIndex, 1);
+
+            const updatedBlockSchemeData = blockSchemeData.copyPreservingId();
+            updatedBlockSchemeData.triplets = updatedValue;
+            setBlockSchemeData(updatedBlockSchemeData)
         }
     }
 
     const isHostingTriplet = (index: number) => {
-        return triplets.filter(triplet => triplet.startIndex === index).length > 0
+        return blockSchemeData.triplets.filter(triplet => triplet.startIndex === index).length > 0
     }
 
     const getTripletByIndex = (index: number) => {
-        const maybeTriplet = triplets
+        const maybeTriplet = blockSchemeData.triplets
             .filter(triplet => triplet.startIndex === index);
         return maybeTriplet.length > 0 ?
             maybeTriplet[0] :
@@ -100,7 +103,7 @@ export const Skeleton = ({blockSchemeData, setBlockSchemeData}: BlockSchemeSkele
     }
 
     const isPartOfTriplet = (index: number) => {
-        return triplets.filter(triplet => index > triplet.startIndex && index <= triplet.startIndex + triplet.length - 1).length > 0
+        return blockSchemeData.triplets.filter(triplet => index > triplet.startIndex && index <= triplet.startIndex + triplet.length - 1).length > 0
     }
 
     const handleClearSelection = () => {

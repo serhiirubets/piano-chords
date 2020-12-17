@@ -29,6 +29,7 @@ import {EditorSettings} from "../../model/editor-settings-data";
 import {QuadratsContext} from "../../context/quadrats-context";
 import {EditorModesSettingsPanel} from "./editor-modes-panel";
 import {EditorExportPanel} from "./editor-export-panel";
+import {PlaybackPanel} from "./playback-panel";
 
 
 export interface EditorSettingsPanelProps {
@@ -48,10 +49,7 @@ export const EditorSettingsPanel = ({quadrats, setQuadrats}: EditorSettingsPanel
 
     let fileReader;
 
-    const handleNoteDurationChange = (event: any, newValue: number | number[]) => {
-        partialUpdateSettings({playbackTempo: (newValue as number) * -1});
-        console.log(newValue as number)
-    };
+
 
     const handleSaveFileRead = (e) => {
         const stringifiedData = fileReader.result;
@@ -76,85 +74,23 @@ export const EditorSettingsPanel = ({quadrats, setQuadrats}: EditorSettingsPanel
                 <Typography className={classes.title} color="textPrimary" gutterBottom>
                     Панель управления
                 </Typography>
-                <SaveLoadSettingsPanel quadrats={quadrats} setQuadrats={setQuadrats}/>
-                <EditorExportPanel/>
-                <Accordion>
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon/>}
-                    >
-                        <Typography className={classes.accoridionHeading}>Воспроизведение</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <SoundfontProvider
-                            instrumentName="bright_acoustic_piano"
-                            audioContext={audioContext}
-                            hostname={soundfontHostname}
-                            render={({playNote, stopNote, stopAllNotes}) => (
-
-                                <div className={classes.cardRow}>
-                                    <div className={classes.cardColumn}>
-                                        <div style={{display: "flex", flexDirection: "row"}}>
-                                            <SpeedRoundedIcon></SpeedRoundedIcon>
-                                            <Typography id="discrete-slider" gutterBottom>
-                                                Темп
-                                            </Typography>
-                                        </div>
-                                        <Slider
-                                            style={{width: '100%'}}
-                                            onChange={handleNoteDurationChange}
-                                            defaultValue={-0.25}
-                                            step={0.05}
-                                            marks
-                                            min={-1}
-                                            max={-0.05}
-                                        />
-                                        <Grid container alignItems="center" direction="row">
-                                            <Grid item>
-                                                <IconButton
-                                                    onClick={() => {
-                                                        console.log('onPlaying', quads.length)
-                                                        playNotes(getNotesToPlay(quads), playNote, settings.playbackTempo, settings.alterGainForFeather)
-                                                    }}>
-                                                    <PlayArrowRoundedIcon fontSize="large"/>
-                                                </IconButton>
-                                            </Grid>
-                                            <Grid item>
-                                                <IconButton onClick={() => {
-                                                    stopNote();
-                                                    stopAllNotes();
-                                                }}>
-                                                    <StopRoundedIcon fontSize="large"/>
-                                                </IconButton>
-                                            </Grid>
-                                        </Grid>
-                                        <FormControlLabel
-                                            value="top"
-                                            control={<Checkbox
-                                                checked={settings.alterGainForFeather}
-                                                onChange={(e) => partialUpdateSettings({alterGainForFeather: e.target.checked})}
-                                            />}
-                                            label="Различать оперение по громкости"></FormControlLabel>
-                                    </div>
-                                </div>
-                            )}
-                        />
-                    </AccordionDetails>
-                </Accordion>
+                <SaveLoadSettingsPanel/>
+                <PlaybackPanel/>
                 <EditorModesSettingsPanel/>
-                <Accordion>
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon/>}
-                    >
-                        <Typography className={classes.accoridionHeading}>Структура</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <TextField className={classes.textInputPadding}
-                                   label="Размер квадрата"
-                                   defaultValue={settings.quadratSize}
-                                   onChange={(event => partialUpdateSettings({quadratSize: Number(event.target.value)}))}
-                                   disabled={true}/>
-                    </AccordionDetails>
-                </Accordion>
+                {/*<Accordion>*/}
+                {/*    <AccordionSummary*/}
+                {/*        expandIcon={<ExpandMoreIcon/>}*/}
+                {/*    >*/}
+                {/*        <Typography className={classes.accoridionHeading}>Структура</Typography>*/}
+                {/*    </AccordionSummary>*/}
+                {/*    <AccordionDetails>*/}
+                {/*        <TextField className={classes.textInputPadding}*/}
+                {/*                   label="Размер квадрата"*/}
+                {/*                   defaultValue={settings.quadratSize}*/}
+                {/*                   onChange={(event => partialUpdateSettings({quadratSize: Number(event.target.value)}))}*/}
+                {/*                   disabled={true}/>*/}
+                {/*    </AccordionDetails>*/}
+                {/*</Accordion>*/}
                 <Accordion>
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon/>}
@@ -172,7 +108,7 @@ export const EditorSettingsPanel = ({quadrats, setQuadrats}: EditorSettingsPanel
 
                     </AccordionDetails>
                 </Accordion>
-
+                {/*<EditorExportPanel/>*/}
             </CardContent>
         </Card>
     )

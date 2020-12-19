@@ -17,7 +17,7 @@ const AddMoreButton = ({onClick}) => (<div key="addMoreButton" style={{flexBasis
 const SortableItem = SortableElement(({value, idx}) => {
         const {quads, updateQuads} = useContext(QuadratsContext);
 
-        return (<div style={{flexBasis:"50%"}}>
+        return (<div style={{flexBasis:"50%", justifyContent:"center", alignItems:"center"}}>
             <SkeletonWrapper skeletonData={value} setSkeletonData={(data) => {
                 const quadsCopy = [...quads]
                 quadsCopy[idx] = data;

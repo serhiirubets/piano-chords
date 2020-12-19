@@ -1,26 +1,9 @@
-import {
-    Card,
-    CardContent,
-    Checkbox,
-    FormControlLabel,
-    Grid,
-    Slider,
-    TextField,
-    Tooltip,
-    Typography
-} from "@material-ui/core";
+import {Card, CardContent, Checkbox, FormControlLabel, Typography} from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import {SkeletonData} from "../../model/skeleton-data";
-import SoundfontProvider from "../../../components/piano-core/SoundfontProvider";
-import {audioContext, soundfontHostname} from "../../model/global-constants";
-import SpeedRoundedIcon from "@material-ui/icons/SpeedRounded";
-import IconButton from "@material-ui/core/IconButton";
-import {getNotesToPlay, playNotes} from "../../utils/playback-utils";
-import PlayArrowRoundedIcon from "@material-ui/icons/PlayArrowRounded";
-import StopRoundedIcon from "@material-ui/icons/StopRounded";
 import React, {useContext} from "react";
 import {useGlobalStyles} from "../../../App";
 import {SettingsContext} from "../../context/settings-context";
@@ -28,16 +11,10 @@ import {SaveLoadSettingsPanel} from "./save-load-settings-panel";
 import {EditorSettings} from "../../model/editor-settings-data";
 import {QuadratsContext} from "../../context/quadrats-context";
 import {EditorModesSettingsPanel} from "./editor-modes-panel";
-import {EditorExportPanel} from "./editor-export-panel";
 import {PlaybackPanel} from "./playback-panel";
 
 
-export interface EditorSettingsPanelProps {
-    quadrats: Array<SkeletonData>;
-    setQuadrats: any
-}
-
-export const EditorSettingsPanel = ({quadrats, setQuadrats}: EditorSettingsPanelProps) => {
+export const EditorSettingsPanel = () => {
     const {settings, updateSettings} = useContext(SettingsContext);
     const {quads, updateQuads} = useContext(QuadratsContext);
 
@@ -58,7 +35,7 @@ export const EditorSettingsPanel = ({quadrats, setQuadrats}: EditorSettingsPanel
         let validatedBlockScheme = memorizedScheme.map(maybeQuad => {
             return SkeletonData.createFromDeserialized(maybeQuad);
         });
-        setQuadrats(validatedBlockScheme)
+        updateQuads(validatedBlockScheme)
     }
 
     const handleSaveFileSelected = (e) => {
@@ -71,6 +48,7 @@ export const EditorSettingsPanel = ({quadrats, setQuadrats}: EditorSettingsPanel
     return (
         <Card className={classes.controlPanelCard}>
             <CardContent>
+                <div style={{position:'sticky'}}>
                 <Typography className={classes.title} color="textPrimary" gutterBottom>
                     Панель управления
                 </Typography>
@@ -105,9 +83,9 @@ export const EditorSettingsPanel = ({quadrats, setQuadrats}: EditorSettingsPanel
                                 onChange={(e) => partialUpdateSettings({displayApplicature: e.target.checked})}
                             />}
                             label="Показывать аппликатуру"></FormControlLabel>
-
                     </AccordionDetails>
                 </Accordion>
+                </div>
                 {/*<EditorExportPanel/>*/}
             </CardContent>
         </Card>

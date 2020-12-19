@@ -94,11 +94,9 @@ export const SaveLoadSettingsPanel = () => {
                 </label>
                 <hr/>
                 <hr/>
-
                 <FormControl>
                     <InputLabel id="demo-simple-select-label">Имя демо-файла</InputLabel>
                     <Select
-
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={demoFile}

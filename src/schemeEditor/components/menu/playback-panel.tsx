@@ -21,6 +21,7 @@ import {getNotesToPlay, playNotes} from "../../utils/playback-utils";
 import PlayArrowRoundedIcon from "@material-ui/icons/PlayArrowRounded";
 import StopRoundedIcon from "@material-ui/icons/StopRounded";
 import {QuadratsContext} from "../../context/quadrats-context";
+import {PlaybackModule} from "./playback-module";
 
 export interface SaveLoadSettingsPanelProps {
 }
@@ -46,11 +47,6 @@ export const PlaybackPanel = () => {
             <Typography className={classes.accoridionHeading}>Воспроизведение</Typography>
         </AccordionSummary>
         <AccordionDetails>
-            <SoundfontProvider
-                instrumentName="bright_acoustic_piano"
-                audioContext={audioContext}
-                hostname={soundfontHostname}
-                render={({playNote, stopNote, stopAllNotes}) => (
 
                     <div className={classes.cardRow}>
                         <div className={classes.cardColumn}>
@@ -69,25 +65,7 @@ export const PlaybackPanel = () => {
                                 min={-1}
                                 max={-0.05}
                             />
-                            <Grid container alignItems="center" direction="row">
-                                <Grid item>
-                                    <IconButton
-                                        onClick={() => {
-                                            console.log('onPlaying', quads.length)
-                                            playNotes(getNotesToPlay(quads), playNote, settings.playbackTempo, settings.alterGainForFeather)
-                                        }}>
-                                        <PlayArrowRoundedIcon fontSize="large"/>
-                                    </IconButton>
-                                </Grid>
-                                <Grid item>
-                                    <IconButton onClick={() => {
-                                        stopNote();
-                                        stopAllNotes();
-                                    }}>
-                                        <StopRoundedIcon fontSize="large"/>
-                                    </IconButton>
-                                </Grid>
-                            </Grid>
+                            <PlaybackModule/>
                             <FormControlLabel
                                 value="top"
                                 control={<Checkbox
@@ -98,7 +76,6 @@ export const PlaybackPanel = () => {
                         </div>
                     </div>
                 )}
-            />
         </AccordionDetails>
     </Accordion>)
 }

@@ -19,7 +19,7 @@ function App() {
         <ThemeProvider theme={theme}>
             <div className="App">
                 <div className={classes.contentArea}>
-                    {false &&  <Card style={{width:"13vw"}} variant="outlined">
+                    {false && <Card style={{width: "13vw"}} variant="outlined">
                         <CardContent>
                             <Typography className={classes.title} color="textPrimary" gutterBottom>
                                 Режим
@@ -56,8 +56,7 @@ function App() {
                         }
                         {
                             mode === 'blockSchemeEditor' &&
-                            <BlockSchemeEditor>
-                            </BlockSchemeEditor>
+                            <BlockSchemeEditor/>
                         }
                     </div>
                 </div>
@@ -78,7 +77,11 @@ export const useGlobalStyles = makeStyles({
         display: 'flex',
         padding: '10px',
         margin: '10px',
-        width: '23vw'
+        width: '23vw',
+        height: "100%",
+        position: 'fixed',
+        right: 0,
+        top: 0
     },
     card: {
         display: 'flex',
@@ -94,7 +97,12 @@ export const useGlobalStyles = makeStyles({
         alignItems: 'center',
         flex: 2,
         width: '70vw',
-        overflow:"scroll"
+        flexDirection: "column",
+        overflowY: "scroll",
+        position: 'absolute',
+        height: "100%",
+        top:0,
+        left:20
     },
     fullScreenCard: {
         display: 'flex',
@@ -102,7 +110,7 @@ export const useGlobalStyles = makeStyles({
         margin: '10px',
         justifyContent: 'center',
         alignItems: 'center',
-        width:'100%',
+        width: '100%',
         flex: 2,
         minWidth: "200px"
 
@@ -111,6 +119,7 @@ export const useGlobalStyles = makeStyles({
         display: 'flex',
         flexDirection: "row",
         justifyContent: "space-between",
+        margin:10
     },
     cardColumn: {
         display: 'flex',
@@ -143,7 +152,8 @@ export const useGlobalStyles = makeStyles({
         backgroundColor: '#2c2c2c',
         display: 'flex',
         padding: '10px',
-        minHeight: '100vh'
+        minHeight: '100vh',
+        position: "relative"
     },
     testContentArea: {
         display: 'flex',
@@ -182,16 +192,16 @@ export const useGlobalStyles = makeStyles({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    blockSchemeNode:{
-        width:'30px',
-        height:'30px',
+    blockSchemeNode: {
+        width: '30px',
+        height: '30px',
         borderStyle: 'solid',
-        borderColor:'black',
-        borderWidth:'1px',
-        alignContent:'center',
-        alignItems:"center",
-        flexDirection:'column',
-        flex:1
+        borderColor: 'black',
+        borderWidth: '1px',
+        alignContent: 'center',
+        alignItems: "center",
+        flexDirection: 'column',
+        flex: 1
     },
     accoridionHeading: {
         fontSize: theme.typography.pxToRem(15),

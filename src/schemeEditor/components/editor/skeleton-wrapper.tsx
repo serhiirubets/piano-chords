@@ -26,7 +26,7 @@ export const SkeletonWrapper = ({skeletonData, setSkeletonData, quadrats, setQua
     const {settings} = useContext(SettingsContext);
     const blockSchemeStyle = {
         marginTop: "30px",
-        marginLeft: "10px",
+        marginLeft: "40px",
         marginRight: "10px",
         justifyContent: "center",
         maxWidth: 360
@@ -66,14 +66,14 @@ export const SkeletonWrapper = ({skeletonData, setSkeletonData, quadrats, setQua
                         hostname={soundfontHostname}
                         render={({playNote, stopNote, stopAllNotes}) => (
                             <div style={{display: "flex", flexDirection: "row"}}>
-                                {!isNameEdited &&
-                                 <Typography>{skeletonData.id.substr(0, 8)}</Typography>
-                                }
+                                {/*{!isNameEdited &&*/}
+                                {/* <Typography>{skeletonData.id.substr(0, 8)}</Typography>*/}
+                                {/*}*/}
                                 <SkeletonWrapperControls onStartPlaying={() => handlePlayButtonClick(playNote)}
                                                          onStopPlaying={() => {
                                                              stopNote();
                                                              stopAllNotes();
-                                                         }}
+                                                          }}
                                                          onCopy={handleCopyButtonClick}
                                                          onClear={handleClearButtonClick}
                                                          isDisplayed={true}

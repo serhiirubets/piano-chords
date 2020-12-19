@@ -107,10 +107,16 @@ export const SubtitleNote = ({externalNoteObject, setExternalNoteObject, index, 
             }
         } else {
             return {
-                left: 5 + QUADRAT_WIDTH * note.playbackOffset
+                left: QUADRAT_WIDTH/2 + QUADRAT_WIDTH * note.playbackOffset
             }
         }
     }
+    const transformFlatSign = (note:INote) => {
+        return note.note.length > 1 && note.note.endsWith('b') ?
+            note.note.substr(0, note.note.length -1) + '♭' :
+            note.note;
+    }
+
     return (
         <ClickAwayListener onClickAway={handleClose}>
             <div style={{
@@ -132,7 +138,7 @@ export const SubtitleNote = ({externalNoteObject, setExternalNoteObject, index, 
                     color: "#6833b1"
                 }}>{externalNoteObject.applicature}</Typography>}
                 <Typography ref={labelRef} style={{fontSize: "1em", lineHeight: 1.6, fontFamily:"sans-serif", fontWeight:600}}
-                            onClick={handleClick}>{externalNoteObject.note}</Typography>
+                            onClick={handleClick}>{transformFlatSign(externalNoteObject)}</Typography>
                 <Popover
                     id={id}
                     open={open}

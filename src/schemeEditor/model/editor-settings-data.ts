@@ -7,5 +7,6 @@ export interface EditorSettings {
 
     simpleMode:boolean;
     simpleModeLeftHandNote:string,
-    simpleModeRightHandNote:string
+    simpleModeRightHandNote:string,
+
 }

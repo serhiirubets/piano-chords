@@ -37,7 +37,7 @@ export const SkeletonNode = ({
     const SIXTEENS_NOTE_SEPARATOR = '/';
 
     const [isEditState, setIsEditState] = useState<boolean>(false)
-    const [notes, setNotes] = useState<Array<Note>>(new Array<Note>())
+     const [notes, setNotes] = useState<Array<Note>>(new Array<Note>())
     const [contains16th, setContains16th] = useState<boolean>(false)
     const {settings} = useContext(SettingsContext);
 
@@ -47,11 +47,10 @@ export const SkeletonNode = ({
         const effective16thValue = data.notes.filter(note => note.duration === PlaybackDuration.HALF).length > 0;
         setNotes(effectiveNotesArray)
         setContains16th(effective16thValue)
+        // setInternalInputValue(effectiveNotesArray, effective16thValue, tripletHandlingProps?.isHostingTriplet);
 
-        setInternalInputValue(effectiveNotesArray, effective16thValue, tripletHandlingProps?.isHostingTriplet);
 
         if (tripletHandlingProps?.isHostingTriplet && effectiveNotesArray.length === 0 && internalInputRef.current) {
-            console.log('should be focusing div')
             internalInputRef.current.focus();
         }
     }, [data, tripletHandlingProps])
@@ -97,7 +96,6 @@ export const SkeletonNode = ({
         if (internalInputRef.current) {
             internalInputRef.current.value = defaultNote;
         }
-        console.log("DEFAULT NOTES", defaultNotes)
         writeNodeState(defaultNotes)
     }
 
@@ -106,7 +104,6 @@ export const SkeletonNode = ({
         event.target.value = onlyNums;
         parseInputToTheNotes(onlyNums)
     }
-
 
     const parseInputToTheNotes = (input: string) => {
         if (input.length === 0) {
@@ -183,7 +180,7 @@ export const SkeletonNode = ({
             color: data.calculateColor(handType),
             notes: [...notesToWrite] || []
         });
-
+        setNotes(notesToWrite);
         setData(updatedData);
     }
 
@@ -204,11 +201,13 @@ export const SkeletonNode = ({
         if (isHostingTripleInStateOrValue) {
             const groupedNotes = groupBy(updatedNotesArray, 'playbackOffset');
             const tripletParts = Object.keys(groupedNotes)
+                .sort()
                 .map(offsetKey => {
                     const notesForOffset = groupedNotes[offsetKey];
                     return notesForOffset.map(noteObject => noteObject.note)
                         .join(CHORD_NOTE_SEPARATOR)
                 })
+            console.log('Triplet text parts',tripletParts)
             writeValueToInternalInput(tripletParts.join(TRIPLET_NOTE_SEPARATOR));
             return
         }

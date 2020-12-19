@@ -72,7 +72,7 @@ export const BlockSchemeGrid = () => {
         }
         updateQuads(newQuadratState)
     }
-//TODO: make sesizable
+
     return (
         <div style={{display: "flex", width: "100%", flexWrap: "wrap"}}>
             <div style={{position: "relative"}} id={PRINTABLE_AREA_ID}>

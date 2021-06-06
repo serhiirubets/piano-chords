@@ -1,26 +1,14 @@
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import {Button, CardContent, Checkbox, FormControlLabel, Grid, Slider, TextField, Typography} from "@material-ui/core";
+import {Checkbox, FormControlLabel, Slider, Typography} from "@material-ui/core";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
-import SaveRoundedIcon from "@material-ui/icons/SaveRounded";
-import PublishRoundedIcon from "@material-ui/icons/PublishRounded";
-import PlaylistPlayRoundedIcon from "@material-ui/icons/PlaylistPlayRounded";
-import {BAIntroSchemeString} from "../../resources/BA-intro-recording";
-import {SkeletonData} from "../../model/skeleton-data";
 import Accordion from "@material-ui/core/Accordion";
 import React, {useContext} from "react";
 import {useGlobalStyles} from "../../../App";
-import Download from '@axetroy/react-download';
 import {SettingsContext} from "../../context/settings-context";
 import {EditorSettings} from "../../model/editor-settings-data";
-import SoundfontProvider from "../../../components/piano-core/SoundfontProvider";
-import {audioContext, soundfontHostname} from "../../model/global-constants";
 import SpeedRoundedIcon from "@material-ui/icons/SpeedRounded";
-import IconButton from "@material-ui/core/IconButton";
-import {getNotesToPlay, playNotes} from "../../utils/playback-utils";
-import PlayArrowRoundedIcon from "@material-ui/icons/PlayArrowRounded";
-import StopRoundedIcon from "@material-ui/icons/StopRounded";
-import {QuadratsContext} from "../../context/quadrats-context";
+import {BarContext} from "../../context/bar-context";
 import {PlaybackModule} from "./playback-module";
 
 export interface SaveLoadSettingsPanelProps {
@@ -28,7 +16,7 @@ export interface SaveLoadSettingsPanelProps {
 
 export const PlaybackPanel = () => {
     const {settings, updateSettings} = useContext(SettingsContext);
-    const {quads, updateQuads} = useContext(QuadratsContext);
+    const {bars, updateBars} = useContext(BarContext);
     const classes = useGlobalStyles();
 
     const partialUpdateSettings = (value: Partial<EditorSettings>) => {
@@ -75,7 +63,7 @@ export const PlaybackPanel = () => {
                                 label="Различать оперение по громкости"></FormControlLabel>
                         </div>
                     </div>
-                )}
+
         </AccordionDetails>
     </Accordion>)
 }

@@ -8,7 +8,7 @@ import IconButton from "@material-ui/core/IconButton";
 import {getNotesToPlay, playNotes} from "../../utils/playback-utils";
 import PlayArrowRoundedIcon from "@material-ui/icons/PlayArrowRounded";
 import StopRoundedIcon from "@material-ui/icons/StopRounded";
-import {QuadratsContext} from "../../context/quadrats-context";
+import {BarContext} from "../../context/bar-context";
 
 export interface PlaybackModuleProps {
     iconColor?:string;
@@ -16,7 +16,7 @@ export interface PlaybackModuleProps {
 
 export const PlaybackModule = ({iconColor}:PlaybackModuleProps) => {
     const {settings, updateSettings} = useContext(SettingsContext);
-    const {quads, updateQuads} = useContext(QuadratsContext);
+    const {bars, updateBars} = useContext(BarContext);
     const classes = useGlobalStyles();
 
     return (
@@ -31,8 +31,8 @@ export const PlaybackModule = ({iconColor}:PlaybackModuleProps) => {
                         <Grid item>
                             <IconButton
                                 onClick={() => {
-                                    console.log('onPlaying', quads.length)
-                                    playNotes(getNotesToPlay(quads), playNote, settings.playbackTempo, settings.alterGainForFeather)
+                                    console.log('onPlaying', bars.length)
+                                    playNotes(getNotesToPlay(bars), playNote, settings.playbackTempo, settings.alterGainForFeather)
                                 }}>
                                 <PlayArrowRoundedIcon fontSize="large" style={{fill:iconColor}}/>
                             </IconButton>

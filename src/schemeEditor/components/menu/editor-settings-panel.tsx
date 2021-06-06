@@ -1,22 +1,22 @@
-import {Card, CardContent, Checkbox, FormControlLabel, Typography} from "@material-ui/core";
+import {Card, CardContent, Checkbox, FormControlLabel, TextField, Typography} from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
-import {SkeletonData} from "../../model/skeleton-data";
+import {SkeletonData} from "../../model/deprecated/skeleton-data";
 import React, {useContext} from "react";
 import {useGlobalStyles} from "../../../App";
 import {SettingsContext} from "../../context/settings-context";
 import {SaveLoadSettingsPanel} from "./save-load-settings-panel";
 import {EditorSettings} from "../../model/editor-settings-data";
-import {QuadratsContext} from "../../context/quadrats-context";
+import {BarContext} from "../../context/bar-context";
 import {EditorModesSettingsPanel} from "./editor-modes-panel";
 import {PlaybackPanel} from "./playback-panel";
 
 
 export const EditorSettingsPanel = () => {
     const {settings, updateSettings} = useContext(SettingsContext);
-    const {quads, updateQuads} = useContext(QuadratsContext);
+    const {bars, updateBars} = useContext(BarContext);
 
     const classes = useGlobalStyles();
 
@@ -33,9 +33,9 @@ export const EditorSettingsPanel = () => {
         console.log(stringifiedData)
         const memorizedScheme = stringifiedData ? JSON.parse(stringifiedData) : [];
         let validatedBlockScheme = memorizedScheme.map(maybeQuad => {
-            return SkeletonData.createFromDeserialized(maybeQuad);
+            // return SkeletonData.createFromDeserialized(maybeQuad);
         });
-        updateQuads(validatedBlockScheme)
+        updateBars(validatedBlockScheme)
     }
 
     const handleSaveFileSelected = (e) => {
@@ -55,20 +55,20 @@ export const EditorSettingsPanel = () => {
                 <SaveLoadSettingsPanel/>
                 <PlaybackPanel/>
                 <EditorModesSettingsPanel/>
-                {/*<Accordion>*/}
-                {/*    <AccordionSummary*/}
-                {/*        expandIcon={<ExpandMoreIcon/>}*/}
-                {/*    >*/}
-                {/*        <Typography className={classes.accoridionHeading}>Структура</Typography>*/}
-                {/*    </AccordionSummary>*/}
-                {/*    <AccordionDetails>*/}
-                {/*        <TextField className={classes.textInputPadding}*/}
-                {/*                   label="Размер квадрата"*/}
-                {/*                   defaultValue={settings.quadratSize}*/}
-                {/*                   onChange={(event => partialUpdateSettings({quadratSize: Number(event.target.value)}))}*/}
-                {/*                   disabled={true}/>*/}
-                {/*    </AccordionDetails>*/}
-                {/*</Accordion>*/}
+                <Accordion>
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon/>}
+                    >
+                        <Typography className={classes.accoridionHeading}>Структура</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <TextField className={classes.textInputPadding}
+                                   label="Размер квадрата"
+                                   defaultValue={settings.quadratSize}
+                                   onChange={(event => partialUpdateSettings({quadratSize: Number(event.target.value)}))}
+                                   disabled={false}/>
+                    </AccordionDetails>
+                </Accordion>
                 <Accordion>
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon/>}

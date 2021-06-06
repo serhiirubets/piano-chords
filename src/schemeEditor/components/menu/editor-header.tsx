@@ -19,7 +19,7 @@ import {useGlobalStyles} from "../../../App";
 import Download from '@axetroy/react-download';
 import {SettingsContext} from "../../context/settings-context";
 import {EditorSettings} from "../../model/editor-settings-data";
-import {QuadratsContext} from "../../context/quadrats-context";
+import {BarContext} from "../../context/bar-context";
 import html2canvas from "html2canvas";
 import {ImageCompression, jsPDF} from "jspdf";
 import {PRINTABLE_AREA_ID} from "../../model/global-constants";
@@ -30,15 +30,20 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             flexGrow: 1,
-            top: 0,
-            left:30,
+            // top: -20,
+            // left:-30,
+            // position:"sticky",
             position:"fixed",
-            paddingLeft:10,
-            paddingRight:10,
+            top:0,
+            left:0,
+            paddingLeft:0,
+            paddingRight:20,
+            // maxHeight:100,
             width: 'inherit',
             boxShadow: "0px 10px 18px -5px #888888",
             zIndex:5,
             backgroundColor: "#D65F24",
+            alignSelf:"flex-start"
         },
         menuButton: {
             marginRight: theme.spacing(2),

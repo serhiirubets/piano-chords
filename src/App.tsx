@@ -1,11 +1,7 @@
 import React, {useState} from 'react';
 import './App.css';
-import {ResponsivePiano} from "./components/screen/responsive-piano";
-import {QuintTreeButtons} from "./components/screen/quint-tree-buttons";
 import theme from "./core/theme-provider";
 import {Card, CardContent, FormControlLabel, Radio, RadioGroup, ThemeProvider, Typography} from '@material-ui/core';
-import {MinorTypeSelector} from "./components/screen/minor-type-selector";
-import {TestScreen} from "./components/test-screen";
 import {makeStyles} from "@material-ui/core/styles";
 import {BlockSchemeEditor} from "./schemeEditor/block-scheme-editor";
 
@@ -19,48 +15,10 @@ function App() {
         <ThemeProvider theme={theme}>
             <div className="App">
                 <div className={classes.contentArea}>
-                    {false && <Card style={{width: "13vw"}} variant="outlined">
-                        <CardContent>
-                            <Typography className={classes.title} color="textPrimary" gutterBottom>
-                                Режим
-                            </Typography>
-                            <RadioGroup value={mode} onChange={(e) => {
-                                setMode(e.target.value)
-                            }}>
-                                <FormControlLabel value="info" control={<Radio/>} label="Обучение"/>
-                                <FormControlLabel value="challenge" control={<Radio/>} label="Тренировка"/>
-                                <FormControlLabel value="blockSchemeEditor" control={<Radio/>}
-                                                  label="Редактор блок-схем"/>
-                            </RadioGroup>
-                        </CardContent>
-
-                    </Card>}
                     <div className={classes.mainContentArea}>
-                        {
-                            mode === "challenge" &&
-                            <TestScreen></TestScreen>
-                        }
-                        {mode === 'info' &&
-                        <div className={classes.centeredContent}>
-                            <div className={classes.cardRow}>
-                                <QuintTreeButtons
-                                    onScaleSelect={scale => setSelectedScale(scale)}></QuintTreeButtons>
-                                <MinorTypeSelector onMinorTypeChange={mType => setMinorType(mType)}/>
-                            </div>
-                            <div className={classes.centeredContent}>
-                                <ResponsivePiano selectedScale={selectedScale} minorType={minorType}
-                                                 showNotesOnStart={true}
-                                                 isTestMode={false}/>
-                            </div>
-                        </div>
-                        }
-                        {
-                            mode === 'blockSchemeEditor' &&
-                            <BlockSchemeEditor/>
-                        }
+                        <BlockSchemeEditor/>
                     </div>
                 </div>
-
             </div>
         </ThemeProvider>
     );
@@ -91,8 +49,9 @@ export const useGlobalStyles = makeStyles({
     },
     thickCard: {
         display: 'flex',
-        padding: '10px',
-        margin: '10px',
+        // padding: '10px',
+        paddingTop: 0,
+        // margin: '10px',
         justifyContent: 'center',
         alignItems: 'center',
         flex: 2,
@@ -101,8 +60,8 @@ export const useGlobalStyles = makeStyles({
         overflowY: "scroll",
         position: 'absolute',
         height: "100%",
-        top:0,
-        left:20
+        top: 0,
+        left: 20
     },
     fullScreenCard: {
         display: 'flex',
@@ -119,7 +78,7 @@ export const useGlobalStyles = makeStyles({
         display: 'flex',
         flexDirection: "row",
         justifyContent: "space-between",
-        margin:10
+        margin: 10
     },
     cardColumn: {
         display: 'flex',

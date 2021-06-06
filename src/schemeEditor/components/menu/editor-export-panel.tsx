@@ -9,7 +9,7 @@ import {useGlobalStyles} from "../../../App";
 import Download from '@axetroy/react-download';
 import {SettingsContext} from "../../context/settings-context";
 import {EditorSettings} from "../../model/editor-settings-data";
-import {QuadratsContext} from "../../context/quadrats-context";
+import {BarContext} from "../../context/bar-context";
 import html2canvas from "html2canvas";
 import {ImageCompression, jsPDF} from "jspdf";
 import {PRINTABLE_AREA_ID} from "../../model/global-constants";
@@ -19,7 +19,7 @@ export interface SaveLoadSettingsPanelProps {
 
 export const EditorExportPanel = () => {
     const {settings} = useContext(SettingsContext);
-    const {quads} = useContext(QuadratsContext);
+    const {bars} = useContext(BarContext);
     const classes = useGlobalStyles();
 
     const printDocument = async () => {

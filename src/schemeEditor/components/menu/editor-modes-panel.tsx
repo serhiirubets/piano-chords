@@ -6,7 +6,7 @@ import SaveRoundedIcon from "@material-ui/icons/SaveRounded";
 import PublishRoundedIcon from "@material-ui/icons/PublishRounded";
 import PlaylistPlayRoundedIcon from "@material-ui/icons/PlaylistPlayRounded";
 import {BAIntroSchemeString} from "../../resources/BA-intro-recording";
-import {SkeletonData} from "../../model/skeleton-data";
+import {SkeletonData} from "../../model/deprecated/skeleton-data";
 import Accordion from "@material-ui/core/Accordion";
 import React, {useContext} from "react";
 import {useGlobalStyles} from "../../../App";

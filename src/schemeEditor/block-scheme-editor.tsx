@@ -5,28 +5,34 @@ import {useGlobalStyles} from "../App";
 import {BlockSchemeGrid} from "./components/editor/block-scheme-grid";
 import {EditorSettingsPanel} from "./components/menu/editor-settings-panel";
 import {SettingsContextProvider} from "./context/settings-context";
-import {QuadratsContext, QuadratsContextProvider} from "./context/quadrats-context";
+import {BarContext, BarContextProvider} from "./context/bar-context";
 import {EditorHeader} from "./components/menu/editor-header";
 
 
 export const BlockSchemeEditor = () => {
     const classes = useGlobalStyles();
-    const {quads, updateQuads} = useContext(QuadratsContext);
+    const {bars, updateBars} = useContext(BarContext);
 
     return (
         <div style={{flexDirection: "row", display: "flex"}}>
             <SettingsContextProvider>
-                <QuadratsContextProvider>
+                <BarContextProvider>
                     <Card className={classes.thickCard}>
-                            <EditorHeader/>
-                        <CardContent style={{width: "100%", alignItems: "flex-start", overflowY:"scroll", scrollPadding:"250"}}>
+                        <EditorHeader/>
+                        <CardContent style={{
+                            width: "inherit",
+                            alignItems: "flex-start",
+                            overflowY: "scroll",
+                            scrollPadding:200
+
+                        }}>
 
                             {/*<ScrollableTabs/>*/}
                             <BlockSchemeGrid></BlockSchemeGrid>
                         </CardContent>
-                    </Card>
+                    </Card>f
                     <EditorSettingsPanel/>
-                </QuadratsContextProvider>
+                </BarContextProvider>
             </SettingsContextProvider>
         </div>
     )

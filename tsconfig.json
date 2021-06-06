@@ -6,7 +6,8 @@
       "esnext"
     ],
     "allowSyntheticDefaultImports": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react",
     "moduleResolution": "node",
     "noEmit": true,
     "skipLibCheck": true,
@@ -25,5 +26,5 @@
   "include": [
     "src"
   ],
-  "types": ["node", "react-emotion"]
+  "types": ["node", "react-emotion","@emotion/core", "@emotion/react", "@emotion/react/types/css-prop"]
 }

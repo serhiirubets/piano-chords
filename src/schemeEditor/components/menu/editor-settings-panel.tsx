@@ -12,6 +12,7 @@ import {EditorSettings} from "../../model/editor-settings-data";
 import {BarContext} from "../../context/bar-context";
 import {EditorModesSettingsPanel} from "./editor-modes-panel";
 import {PlaybackPanel} from "./playback-panel";
+import {SkeletonNodeData} from "../../model/deprecated/skeleton-node-data";
 
 
 export const EditorSettingsPanel = () => {
@@ -24,8 +25,45 @@ export const EditorSettingsPanel = () => {
         updateSettings({...settings, ...value})
     }
 
-    let fileReader;
+    const recalculateBars = (newBarSize: number) => {
+        // if (newBarSize < 1){
+        //     return;
+        // }
+        const rightHandCombined = new Array<SkeletonNodeData>()
+        const leftHandCombined = new Array<SkeletonNodeData>()
+        const newBars = new Array<SkeletonData>();
 
+        const chunkArray = (array: Array<SkeletonNodeData>, chunkSize: number) => {
+            return Array(Math.ceil(array.length / chunkSize)).fill(new SkeletonNodeData()).map((_, i) => array.slice(i * chunkSize, i * chunkSize + chunkSize))
+        }
+
+        const mergeIntoArray = (target, values) => {
+            for (let i = 0; i < target.length; i++) {
+                if (values[i] != undefined) {
+                    target[i] = values[i];
+                }
+            }
+        }
+
+        bars.forEach(bar => {
+            rightHandCombined.push(...bar.right);
+            leftHandCombined.push(...bar.left);
+        })
+
+        const rightHandChunks = chunkArray(rightHandCombined, newBarSize);
+        const leftHandChunks = chunkArray(leftHandCombined, newBarSize);
+
+        for (let i = 0; i < rightHandChunks.length; i++) {
+            const newSkeletonData = new SkeletonData(newBarSize)
+            mergeIntoArray(newSkeletonData.right, rightHandChunks[i]);
+            mergeIntoArray(newSkeletonData.left, leftHandChunks[i]);
+            newBars.push(newSkeletonData)
+        }
+
+        updateBars(newBars)
+    }
+
+    let fileReader;
 
 
     const handleSaveFileRead = (e) => {
@@ -48,43 +86,47 @@ export const EditorSettingsPanel = () => {
     return (
         <Card className={classes.controlPanelCard}>
             <CardContent>
-                <div style={{position:'sticky'}}>
-                <Typography className={classes.title} color="textPrimary" gutterBottom>
-                    Панель управления
-                </Typography>
-                <SaveLoadSettingsPanel/>
-                <PlaybackPanel/>
-                <EditorModesSettingsPanel/>
-                <Accordion>
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon/>}
-                    >
-                        <Typography className={classes.accoridionHeading}>Структура</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <TextField className={classes.textInputPadding}
-                                   label="Размер квадрата"
-                                   defaultValue={settings.quadratSize}
-                                   onChange={(event => partialUpdateSettings({quadratSize: Number(event.target.value)}))}
-                                   disabled={false}/>
-                    </AccordionDetails>
-                </Accordion>
-                <Accordion>
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon/>}
-                    >
-                        <Typography className={classes.accoridionHeading}>Отображение</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <FormControlLabel
-                            value="top"
-                            control={<Checkbox
-                                checked={settings.displayApplicature}
-                                onChange={(e) => partialUpdateSettings({displayApplicature: e.target.checked})}
-                            />}
-                            label="Показывать аппликатуру"></FormControlLabel>
-                    </AccordionDetails>
-                </Accordion>
+                <div style={{position: 'sticky'}}>
+                    <Typography className={classes.title} color="textPrimary" gutterBottom>
+                        Панель управления
+                    </Typography>
+                    <SaveLoadSettingsPanel/>
+                    <PlaybackPanel/>
+                    <EditorModesSettingsPanel/>
+                    <Accordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon/>}
+                        >
+                            <Typography className={classes.accoridionHeading}>Структура</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <TextField className={classes.textInputPadding}
+                                       label="Размер квадрата"
+                                       defaultValue={settings.quadratSize}
+                                       onChange={(event) => {
+                                           const newQuadratSize = Number(event.target.value);
+                                           partialUpdateSettings({quadratSize: newQuadratSize});
+                                           recalculateBars(newQuadratSize);
+                                       }}
+                                       disabled={false}/>
+                        </AccordionDetails>
+                    </Accordion>
+                    <Accordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon/>}
+                        >
+                            <Typography className={classes.accoridionHeading}>Отображение</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <FormControlLabel
+                                value="top"
+                                control={<Checkbox
+                                    checked={settings.displayApplicature}
+                                    onChange={(e) => partialUpdateSettings({displayApplicature: e.target.checked})}
+                                />}
+                                label="Показывать аппликатуру"></FormControlLabel>
+                        </AccordionDetails>
+                    </Accordion>
                 </div>
                 {/*<EditorExportPanel/>*/}
             </CardContent>

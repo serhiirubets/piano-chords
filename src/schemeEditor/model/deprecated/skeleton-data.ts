@@ -1,18 +1,19 @@
 import {SkeletonNodeData, IBlockSchemeNodeData} from "./skeleton-node-data";
 import {v4 as uuid} from 'uuid';
-import {Note} from "../note-data";
 
 export class SkeletonData {
     public readonly id = uuid();
-    public readonly size = 8;
+    public triplets=new Array<TripletData>()
 
+    public right;
+    public left;
+
+    public readonly size;
     constructor(size) {
         this.size = size;
+        this.right = new Array<SkeletonNodeData>(this.size).fill(new SkeletonNodeData());
+        this.left = new Array<SkeletonNodeData>(this.size).fill(new SkeletonNodeData());
     }
-
-    public readonly right = new Array<SkeletonNodeData>(this.size).fill(new SkeletonNodeData());
-    public readonly left = new Array<SkeletonNodeData>(this.size).fill(new SkeletonNodeData());
-    public readonly triplets=new Array<TripletData>()
 }
 
 export enum HandType {

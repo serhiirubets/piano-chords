@@ -1,8 +1,8 @@
 import React, {useState} from "react";
-import {QuadratContextData} from "../model/deprecated/quadrat-context-data";
+import {BarContextData} from "../model/deprecated/bar-context-data";
 import {SkeletonData} from "../model/deprecated/skeleton-data";
 
-const defaultSettings :QuadratContextData= {
+const defaultSettings :BarContextData= {
     bars:[new SkeletonData(8)],
     updateBars:(newValue) =>{},
     barSize:8,

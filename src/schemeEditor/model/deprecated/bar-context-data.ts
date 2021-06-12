@@ -1,6 +1,6 @@
 import {SkeletonData} from "./skeleton-data";
 
-export interface QuadratContextData {
+export interface BarContextData {
     bars: SkeletonData[];
     updateBars: (newQuads: SkeletonData[]) => any;
 

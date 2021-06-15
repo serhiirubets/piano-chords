@@ -1,6 +1,6 @@
 import {HandType, SkeletonData} from "../model/deprecated/skeleton-data";
 import {PlaybackData} from "../model/deprecated/skeleton-node-data";
-import {Note} from "../model/note-data";
+import {INote, Note} from "../model/note-data";
 import {MidiNumbers} from 'react-piano';
 import {getPlaybackData} from "./skeleton-node-utils";
 
@@ -9,7 +9,7 @@ export const getNotesToPlay = (bars: Array<SkeletonData>) => {
     const notes = new Array<PlaybackData[]>();
     bars.forEach(quadrat => {
         for (let i = 0; i < quadrat.size; i++) {
-            const currentBeatNotes : PlaybackData[] = [...getPlaybackData(quadrat.left[i]),
+            const currentBeatNotes: PlaybackData[] = [...getPlaybackData(quadrat.left[i]),
                 ...getPlaybackData(quadrat.right[i])]
                 .flat(3);
             notes.push(currentBeatNotes);
@@ -34,7 +34,7 @@ export const playNotes = (beatsToPlay, playFunction, tempo, doDistinguishFeather
     }
 }
 
-export const getMidiNumber = (noteData: Note) => {
+export const getMidiNumber = (noteData: INote) => {
     const isSharp = noteData.note.endsWith('#');
     const isFlat = noteData.note.length === 2 && noteData.note.endsWith('b')
     const midiModifier = isSharp ? 1 : isFlat ? -1 : 0;
@@ -43,7 +43,40 @@ export const getMidiNumber = (noteData: Note) => {
     return midiNumber + midiModifier
 }
 
-const getNoteRoot = (note: string) => {
+export const getNoteRoot = (note: string) => {
     return note.length == 2 ? note.substr(0, 1) : note;
 }
 
+
+export const compareByMidiNumbers = (a: INote, b: INote) => getMidiNumber(a) - getMidiNumber(b);
+
+export const isChord = (notes: Note[]) => {
+    const groupBy = (list, keyGetter) => {
+        const map = new Map();
+        list.forEach((item) => {
+            const key = keyGetter(item);
+            const collection = map.get(key);
+            if (!collection) {
+                map.set(key, [item]);
+            } else {
+                collection.push(item);
+            }
+        });
+        return map;
+    }
+
+    // const groupedNotes = notes.reduce((r, a) => {
+    //     r[a.playbackOffset] = [...r[a.playbackOffset] || [], a];
+    //     return r;
+    // }, {});
+
+    const groupNotes = groupBy(notes, note => note.playbackOffset)
+    let anyGroup = false;
+    groupNotes.forEach(value => {
+        if(value.length > 1){
+            anyGroup = true;
+        }
+    } )
+
+    return anyGroup
+}

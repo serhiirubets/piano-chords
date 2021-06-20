@@ -1,12 +1,24 @@
 /** @jsx jsx */
 import React from "react";
 import {jsx} from "@emotion/react/macro";
-import {INote} from "../../model/note-data";
+import {INote, Note, NoteType} from "../../model/note-data";
 import {HandType} from "../../model/deprecated/skeleton-data";
 import {SkeletonNodeData} from "../../model/deprecated/skeleton-node-data";
 import {QUADRAT_WIDTH} from "../../model/global-constants";
 import {compareByMidiNumbers, getMidiNumber, isChord} from "../../utils/playback-utils";
 import {HandMidiSummary} from "./skeleton";
+import {
+    ClickAwayListener,
+    FormControlLabel,
+    Popover,
+    Switch,
+    TextField,
+    Typography,
+    withStyles
+} from "@material-ui/core";
+import {blue, red} from "@material-ui/core/colors";
+import ClearRoundedIcon from "@material-ui/icons/ClearRounded";
+import {getOriginalText} from "../../utils/skeleton-node-utils";
 
 
 export interface NodeSubtitleProps {
@@ -15,71 +27,201 @@ export interface NodeSubtitleProps {
     setExternalNoteObject?: any;//(INote, number) => SetStateAction<INote>;
     index?: number;
     handType?: HandType;
-    chord?: INote[]
+    chord?: INote[],
+    setNotes: any;
 }
 
-// const FeatherSwitch = withStyles({
-//     switchBase: {
-//         color: red[500],
-//         '&$checked': {
-//             color: blue[500],
-//         },
-//         '&$checked + $track': {
-//             backgroundColor: blue[300],
-//         },
-//     },
-//     checked: {},
-//     track: {color: red[500],},
-// })(Switch);
+const FeatherSwitch = withStyles({
+    switchBase: {
+        color: red[500],
+        '&$checked': {
+            color: blue[500],
+        },
+        '&$checked + $track': {
+            backgroundColor: blue[300],
+        },
+    },
+    checked: {},
+    track: {color: red[500],},
+})(Switch);
 
 
-export const NodeSubtitle = ({nodeData, midiSummary}: NodeSubtitleProps) => {
+export interface NoteContextMenuProps {
+    note: INote;
+    setNote: any;
+    hand: HandType;
+}
+
+const NoteContextMenu = ({note, onUpdateNote, hand, anchorEl, onClose}) => {
+    console.log('note in context menu', note)
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
+
+    const handleNoteUpdate = (data: Partial<INote>) => {
+        const updatedNote = new Note({
+            note: data.note || note.note,
+            octave: data.octave || note.octave,
+            applicature: data.applicature || note.applicature,
+            duration: note.duration,
+            playbackOffset: note.playbackOffset,
+            noteType: data.noteType || note.noteType
+        });
+        console.log('updating note in popover', updatedNote)
+        onUpdateNote(updatedNote)
+
+    }
+
+    return (
+        <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={onClose}
+            anchorOrigin={{
+                vertical: 'center',
+                horizontal: 'right',
+            }}
+            transformOrigin={{
+                vertical: 'center',
+                horizontal: 'left',
+            }}
+        >
+            <div style={{padding: 10, display: "flex", flexDirection: "column"}}>
+                <div style={{position: "absolute", right: 3, top: 3}}>
+                    <ClearRoundedIcon fontSize="small" color="action" onClick={onClose}/>
+                </div>
+                <div style={{padding: 10, display: "flex", flexDirection: "row"}}>
+                    <TextField style={{paddingRight: 10, width: 50}}
+                               defaultValue={note.note}
+                               label="Нота"
+                               InputLabelProps={{
+                                   shrink: true,
+                               }}
+                               inputProps={{maxLength: 4}}
+                               onChange={event => {
+                                   handleNoteUpdate({note: event.target.value})
+                               }}
+                    />
+
+                    <TextField style={{paddingRight: 10, width: 50}}
+                               defaultValue={note.octave}
+                               label="Октава"
+                               type="number"
+                               InputLabelProps={{
+                                   shrink: true,
+                               }}
+                               inputProps={{maxLength: 4}}
+                               onChange={event => {
+                                   handleNoteUpdate({octave: Number(event.target.value)})
+                               }}
+                    />
+                </div>
+                <div style={{padding: 10, display: "flex", flexDirection: "row"}}>
+                    <TextField style={{paddingRight: 10, width: 70}}
+                               defaultValue={note.applicature}
+                               label="Аппликатура"
+                               InputLabelProps={{
+                                   shrink: true,
+                               }}
+                               inputProps={{width: 50}}
+                               onChange={event => {
+                                   handleNoteUpdate({applicature: event.target.value})
+                               }}
+                    />
+                    {hand === HandType.RIGHT && <FormControlLabel
+                        control={<FeatherSwitch checked={note.noteType === NoteType.FEATHER}
+                                                onChange={(event) => {
+                                                    handleNoteUpdate({noteType: event.target.checked ? NoteType.FEATHER : NoteType.REGULAR})
+                                                }}></FeatherSwitch>}
+                        labelPlacement="top"
+                        label={<Typography
+                            style={{color: "gray", fontSize: "small"}}>Оперение</Typography>}
+                    />}
+                </div>
+            </div>
+        </Popover>
+    )
+}
+
+const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight}) => {
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [isHovered, setIsHovered] = React.useState<boolean>(false);
+    const handlePopoverClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const transformFlatSign = (note: INote) => {
+        return note.note.length > 1 && note.note.endsWith('b') ?
+            note.note.substr(0, note.note.length - 1) + '♭' :
+            note.note;
+    }
+
+
+    return (
+        <ClickAwayListener onClickAway={handlePopoverClose}>
+            <div>
+                <div
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    css={{
+                        overflow: "wrap",
+                        display: "inline-block",
+                        position: "absolute",
+                        // height: `${fontHeight * 0.7}px`,
+                        top: height,
+                        left: 0,
+                        right: 0,
+                        fontFamily: "serif",
+                        fontSize: `${fontHeight}px`,
+                        fontWeight: "bold",
+                        border: isHovered ? "solid 1px black" : "none"
+                    }}
+                    onClick={handleClick}>{transformFlatSign(note)}</div>
+                <NoteContextMenu note={note}
+                                 anchorEl={anchorEl}
+                                 hand={hand}
+                                 onUpdateNote={onUpdateNote}
+                                 onClose={handlePopoverClose}
+                ></NoteContextMenu>
+
+            </div>
+        </ClickAwayListener>)
+}
+
+export const NodeSubtitle = ({nodeData, midiSummary, setNotes}: NodeSubtitleProps) => {
     const MAX_HEIGHT = QUADRAT_WIDTH * 1.75;
     const RECOMMENDED_SCALE = MAX_HEIGHT / 30; //30 =2.5 octaves
     const FONT_HEIGHT = 18;
     const HAND_MULTIPLIER = midiSummary.hand === HandType.RIGHT ? -1 : 1;
     const optimalScale = (MAX_HEIGHT - FONT_HEIGHT) / Math.abs(midiSummary.lowestMidi - midiSummary.higestMidi)
-    const labelRef = React.createRef<HTMLDivElement>();
-    // const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-    // const open = Boolean(anchorEl);
-    // const id = open ? 'simple-popover' : undefined;
 
-    // const getSingleNoteRelativeTop = (note: INote) => {
-    //     const scale = RECOMMENDED_SCALE <= optimalScale ? RECOMMENDED_SCALE : optimalScale;
-    //     const baseTopLevel = midiSummary.hand === HandType.RIGHT ? MAX_HEIGHT : 0;
-    //     const baseBottomLevel = midiSummary.hand === HandType.RIGHT ? MAX_HEIGHT * 0.1 : MAX_HEIGHT * 0.9;
-    //     const noteDiff = midiSummary.hand === HandType.RIGHT ?
-    //     const relativeNoteHeight = (getMidiNumber(note) - midiSummary.lowestMidi) * scale;
-    //     const relativeNoteTop = baseBottomLevel + relativeNoteHeight;
-    //     return baseTopLevel + HAND_MULTIPLIER * relativeNoteTop + HAND_MULTIPLIER * FONT_HEIGHT;
-    // }
     const getSingleNoteRelativeTop = (note: INote) => {
         const scale = RECOMMENDED_SCALE <= optimalScale ? RECOMMENDED_SCALE : optimalScale;
         const calculationAttributes = midiSummary.hand === HandType.RIGHT ?
             getSingleNoteRelativeRightHand :
             getSingleNoteRelativeLeftHand;
 
-        const relativeNoteTop = calculationAttributes.baseBottomLevel + calculationAttributes.noteDeltaCalculation(note,scale);
+        const relativeNoteTop = calculationAttributes.baseBottomLevel + calculationAttributes.noteDeltaCalculation(note, scale);
         return calculationAttributes.baseTopLevel + HAND_MULTIPLIER * relativeNoteTop + HAND_MULTIPLIER * FONT_HEIGHT;
     }
-
 
     const getSingleNoteRelativeRightHand = {
         baseTopLevel: MAX_HEIGHT,
         baseBottomLevel: MAX_HEIGHT * 0.1,
-        noteDeltaCalculation:(note, scale) => (getMidiNumber(note) - midiSummary.lowestMidi) * scale
+        noteDeltaCalculation: (note, scale) => (getMidiNumber(note) - midiSummary.lowestMidi) * scale
     }
 
     const getSingleNoteRelativeLeftHand = {
         baseTopLevel: 0,
-        baseBottomLevel: -1*MAX_HEIGHT*0.2,
+        baseBottomLevel: -1 * MAX_HEIGHT * 0.2,
         noteDeltaCalculation: (note, scale) => (midiSummary.higestMidi - getMidiNumber(note)) * scale
     }
 
-
     const getChordNoteHeights = (chord: INote[]) => {
-        const highNotes = ['b', 'd', 'f'];
-        const lowNotes = ['g'];
         const chordTops = chord
             .sort(compareByMidiNumbers)
             .map(note => {
@@ -98,9 +240,6 @@ export const NodeSubtitle = ({nodeData, midiSummary}: NodeSubtitleProps) => {
                 chordTops[i] = chordTops[i - 1] + HAND_MULTIPLIER * FONT_HEIGHT * 0.7;
             }
         }
-
-        console.log('tops', chordTops)
-
         return chordTops;
     }
 
@@ -114,27 +253,21 @@ export const NodeSubtitle = ({nodeData, midiSummary}: NodeSubtitleProps) => {
     }
 
 
-    // const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    //     setAnchorEl(event.currentTarget);
-    // };
-    //
-    // const handleClose = () => {
-    //     console.log('Clicking away')
-    //     setAnchorEl(null);
-    // };
+    const handleUpdateOfNode = (oldNote: Note) => (newNote: Note) => {
+        const updatedNotes = [...nodeData.notes];
+        const indexOfOldNote = updatedNotes.indexOf(oldNote);
+        const updatedNotes2 = updatedNotes[indexOfOldNote] = newNote
+        console.log('ion', indexOfOldNote)
+        console.log('nn', newNote)
+        console.log('un2', updatedNotes2)
+        setNotes(updatedNotes, getOriginalText(updatedNotes))
 
-
-    const transformFlatSign = (note: INote) => {
-        return note.note.length > 1 && note.note.endsWith('b') ?
-            note.note.substr(0, note.note.length - 1) + '♭' :
-            note.note;
     }
 
     const constainsChords = isChord(nodeData.notes);
-    console.log('is chord', constainsChords)
     return (
         <div>
-            {/*<ClickAwayListener>*/}
+
             <div>
                 <div css={{
                     minHeight: MAX_HEIGHT,
@@ -146,21 +279,18 @@ export const NodeSubtitle = ({nodeData, midiSummary}: NodeSubtitleProps) => {
                 }}>{
                     nodeData.notes
                         .sort((first, second) => getMidiNumber(second) - getMidiNumber(first))
-                        .map(note => <span css={{
-                            display: "block",
-                            position: "absolute",
-                            top: constainsChords ? getChordNoteRelativeTop(note, nodeData.notes) : getSingleNoteRelativeTop(note),
-                            left: 0,
-                            right: 0,
-                            fontFamily: "serif",
-                            fontSize: `${FONT_HEIGHT}px`,
-                            fontWeight: "bold"
-                        }}>{transformFlatSign(note)}</span>)
+                        .map(note => <NodeSubtitleItem
+                                note={note}
+                                onUpdateNote={handleUpdateOfNode(note)}
+                                hand={nodeData.hand}
+                                height={constainsChords ? getChordNoteRelativeTop(note, nodeData.notes) : getSingleNoteRelativeTop(note)}
+                                fontHeight={FONT_HEIGHT}
+                            ></NodeSubtitleItem>
+                        )
                 }
                 </div>
 
             </div>
-            {/*</ClickAwayListener>*/}
         </div>
     )
 }

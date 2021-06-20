@@ -9,7 +9,7 @@ export enum PlaybackDuration {
 
 export enum PlaybackOffset {
     NONE = 0,
-    HALF = 0.5
+    HALF = 0.5,
 }
 
 export enum NoteType {
@@ -18,11 +18,9 @@ export enum NoteType {
 }
 
 export interface INote {
-    // id: string;
     note: string;
     applicature?: string;
     octave: number;
-    // getMidiNumber: () => number
     duration: PlaybackDuration;
     playbackOffset: PlaybackOffset;
     noteType:NoteType;

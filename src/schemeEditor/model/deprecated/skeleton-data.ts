@@ -22,7 +22,7 @@ export enum HandType {
 }
 
 export interface TripletData {
-    startIndex:number;
+    start:number;
     length:number;
 }
 

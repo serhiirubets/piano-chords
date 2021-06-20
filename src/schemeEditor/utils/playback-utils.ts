@@ -3,6 +3,7 @@ import {PlaybackData} from "../model/deprecated/skeleton-node-data";
 import {INote, Note} from "../model/note-data";
 import {MidiNumbers} from 'react-piano';
 import {getPlaybackData} from "./skeleton-node-utils";
+import {groupBy} from "./js-utils";
 
 
 export const getNotesToPlay = (bars: Array<SkeletonData>) => {
@@ -50,26 +51,8 @@ export const getNoteRoot = (note: string) => {
 
 export const compareByMidiNumbers = (a: INote, b: INote) => getMidiNumber(a) - getMidiNumber(b);
 
+
 export const isChord = (notes: Note[]) => {
-    const groupBy = (list, keyGetter) => {
-        const map = new Map();
-        list.forEach((item) => {
-            const key = keyGetter(item);
-            const collection = map.get(key);
-            if (!collection) {
-                map.set(key, [item]);
-            } else {
-                collection.push(item);
-            }
-        });
-        return map;
-    }
-
-    // const groupedNotes = notes.reduce((r, a) => {
-    //     r[a.playbackOffset] = [...r[a.playbackOffset] || [], a];
-    //     return r;
-    // }, {});
-
     const groupNotes = groupBy(notes, note => note.playbackOffset)
     let anyGroup = false;
     groupNotes.forEach(value => {

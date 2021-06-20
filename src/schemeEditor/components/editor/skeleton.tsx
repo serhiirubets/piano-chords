@@ -1,33 +1,15 @@
 /** @jsx jsx */
-import React, {useCallback, useContext, useEffect, useRef, useState} from "react";
+import React, {useCallback, useContext, useState} from "react";
 import {css, jsx} from "@emotion/react/macro";
 import {SkeletonNode} from "./skeleton-node";
 import {BarContext} from "../../context/bar-context";
-import {HandType} from "../../model/deprecated/skeleton-data";
-import {Note} from "../../model/note-data";
+import {HandType, TripletData} from "../../model/deprecated/skeleton-data";
+import {Note, NoteType} from "../../model/note-data";
 import {SkeletonNodeData} from "../../model/deprecated/skeleton-node-data";
 import {NodeSubtitle} from "./node-subtitle";
 import {getMidiNumber} from "../../utils/playback-utils";
-
-function useOutsideAlerter(ref, callback) {
-    useEffect(() => {
-        /**
-         * Alert if clicked on outside of element
-         */
-        function handleClickOutside(event) {
-            if (ref.current && !ref.current.contains(event.target)) {
-                callback()
-            }
-        }
-
-        // Bind the event listener
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            // Unbind the event listener on clean up
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [ref]);
-}
+import {ClickAwayListener, ListItemText, Menu, MenuItem} from "@material-ui/core";
+import {distinct} from "../../utils/js-utils";
 
 export enum NodeSelectionMode {
     NONE = "0000",
@@ -38,9 +20,41 @@ export enum NodeSelectionMode {
 }
 
 export interface HandMidiSummary {
-    lowestMidi:number;
-    higestMidi:number;
-    hand:HandType;
+    lowestMidi: number;
+    higestMidi: number;
+    hand: HandType;
+}
+
+export interface TripletHandlingProps {
+    isHostingTriplet: boolean,
+    tripletDuration: number,
+    handleClearTriplet: (index: number) => void
+}
+
+
+const isHostingTriplet = (triplets: TripletData[], idx: number) => {
+    return triplets.filter(triplet => triplet.start === idx).length > 0
+}
+
+const isPartOfTriplet = (triplets: TripletData[], index: number) => {
+    return getTripletByIndex(triplets, index) !== null
+}
+
+const getTripletByIndex = (triplets: TripletData[], idx: number): TripletData | null => {
+
+    const maybeTriplet = triplets
+        .filter(triplet => triplet.start <= idx && idx < triplet.start + triplet.length);
+    return maybeTriplet.length > 0 ?
+        maybeTriplet[0] :
+        null;
+}
+
+const getTripletDurationByIndex = (triplets: TripletData[], index: number) => {
+    const maybeTriplet = getTripletByIndex(triplets, index);
+
+    if (maybeTriplet) {
+        return maybeTriplet.length;
+    }
 }
 
 export const Skeleton = ({skeletonIndex}) => {
@@ -49,11 +63,8 @@ export const Skeleton = ({skeletonIndex}) => {
     const skeletonData = bars[skeletonIndex]
     const [selectedNodes, setSelectedNodes] = useState<number[]>(new Array<number>());
     const [activeNodeIndex, setActiveNodeIndex] = useState<number | null>(null);
-    const wrapperDivRef = useRef<HTMLDivElement>(null);
 
-    useOutsideAlerter(wrapperDivRef, () => {
-        setSelectedNodes([])
-    });
+    const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const getSelectionMode = (idx: number) => {
         if (!selectedNodes.includes(idx)) {
@@ -110,13 +121,20 @@ export const Skeleton = ({skeletonIndex}) => {
 
     }, [selectedNodes, activeNodeIndex])
 
-    console.log(skeletonData)
     const setNote = useCallback((hand: HandType, index: number) => {
         return (notes: Note[], originalText: string) => {
-            console.log('notes update', notes)
+
+            const isAnyFeather = notes.some(note => note.noteType === NoteType.FEATHER);
+
+            const preTransformedNotes = notes.map(note => {
+                note.noteType = isAnyFeather ? NoteType.FEATHER : note.noteType
+                return note
+            })
+
             const skeletonNodeDataData = new SkeletonNodeData({
-                notes: notes,
+                notes: preTransformedNotes,
                 isPresent: notes.length > 0,
+                type: isAnyFeather ? NoteType.FEATHER : NoteType.REGULAR,
                 hand: hand,
                 originalText: originalText
             });
@@ -133,16 +151,16 @@ export const Skeleton = ({skeletonIndex}) => {
         }
     }, [bars, skeletonIndex])
 
-    const getSkeletonMidiSummary = (hand: HandType) =>{
+    const getSkeletonMidiSummary = (hand: HandType) => {
         const handNotes = hand === HandType.RIGHT ? skeletonData.right : skeletonData.left;
         const allMidisInHand = handNotes
             .flatMap(nodeData => nodeData.notes)
             .map(note => getMidiNumber(note));
 
         return {
-            lowestMidi:Math.min(...allMidisInHand),
-            higestMidi:Math.max(...allMidisInHand),
-            hand:hand
+            lowestMidi: Math.min(...allMidisInHand),
+            higestMidi: Math.max(...allMidisInHand),
+            hand: hand
         }
 
     }
@@ -150,42 +168,146 @@ export const Skeleton = ({skeletonIndex}) => {
     const rightHandMidiSummary = getSkeletonMidiSummary(HandType.RIGHT);
     const leftHandMidiSummary = getSkeletonMidiSummary(HandType.LEFT);
 
+    const handleContextMenuClick = (e) => {
+        if (selectedNodes.length > 0) {
+            e.preventDefault()
+            setMenuAnchorEl(e.currentTarget)
+        }
+    }
+
+    const handleMenuClose = (e) => {
+        setMenuAnchorEl(null);
+    }
+
+    const isNotTripletEligible = () => {
+        if (selectedNodes.length !== 2 && selectedNodes.length !== 4) {
+            return true;
+        }
+
+        if (selectedNodes.some(index => isPartOfTriplet(skeletonData.triplets, index))) {
+            return true;
+        }
+
+        return selectedNodes
+            .sort()
+            .map((value, i) => (selectedNodes[i + 1] - value))
+            .some(value => value > 1);
+    }
+
+
+    const initiateTriplet = () => {
+        const tripletData: TripletData = {start: Math.min(...selectedNodes), length: selectedNodes.length}
+        const updatedSkeleton = JSON.parse(JSON.stringify(bars[skeletonIndex]));
+        const updatedTriplets = [...updatedSkeleton.triplets, tripletData]
+            .filter(distinct);
+
+        updatedSkeleton.triplets = updatedTriplets;
+
+        const updatedBars = [...bars];
+        updatedBars[skeletonIndex] = updatedSkeleton;
+        updateBars(updatedBars)
+
+        setSelectedNodes([])
+        setMenuAnchorEl(null)
+    }
+
+    const clearTriplet = (hostIndex: number) => {
+        const tripletDataToRemove = getTripletByIndex(skeletonData.triplets, hostIndex);
+        if (!tripletDataToRemove) {
+            console.log('not found triplet data by index', hostIndex)
+            return;
+        }
+
+        const indexOfTriplet = skeletonData.triplets.indexOf(tripletDataToRemove);
+
+        if (indexOfTriplet < 0) {
+            console.log('not found triplet data ', tripletDataToRemove)
+            return;
+        }
+
+        const updatedSkeleton = JSON.parse(JSON.stringify(bars[skeletonIndex]));
+        updatedSkeleton.right[hostIndex] = new SkeletonNodeData();
+        updatedSkeleton.triplets.splice(indexOfTriplet, 1);
+
+        const updatedBars = [...bars];
+        updatedBars[skeletonIndex] = updatedSkeleton;
+        updateBars(updatedBars)
+    }
+
+
+    const getTripletProps = (idx: number): TripletHandlingProps => {
+        return {
+            isHostingTriplet: isHostingTriplet(skeletonData.triplets, idx),
+            tripletDuration: getTripletDurationByIndex(skeletonData.triplets, idx) || 0,
+            handleClearTriplet: clearTriplet
+        }
+    }
+
     return (
         <div>
-            <div css={styles.wrapper} ref={wrapperDivRef}>
-                <div className="rightHandRow" css={styles.row}>
-                    {skeletonData.right
-                        .map((noteData, idx) => <div css={styles.tempBox} key={skeletonIndex + '-r-' + idx +'-wrapper'}>
-                                <NodeSubtitle nodeData={noteData} midiSummary={rightHandMidiSummary}></NodeSubtitle>
-                                <SkeletonNode data={noteData}
-                                              setData={setNote(HandType.RIGHT, idx)}
-                                              skeletonIndex={skeletonIndex}
-                                              handType={HandType.RIGHT}
-                                              nodeIndex={idx}
-                                              key={skeletonIndex + '-r-' + idx}
-                                              selectionMode={getSelectionMode(idx)}
-                                              onSelect={(event) => handleNodeSelected(event, idx)}
-                                ></SkeletonNode>
-                            </div>
-                        )}
-                </div>
+            <ClickAwayListener onClickAway={() => {
+                setSelectedNodes([]);
+                setMenuAnchorEl(null);
+            }}>
+                <div css={styles.wrapper}>
+                    <div className="rightHandRow" css={styles.row}>
+                        {skeletonData.right
+                            .map((noteData, idx) => <div css={styles.tempBox}
+                                                         key={`${skeletonIndex}-r-${idx}-wrapper`}>
+                                    <NodeSubtitle nodeData={noteData}
+                                                  midiSummary={rightHandMidiSummary}
+                                                  setNotes={setNote(HandType.RIGHT, idx)}
+                                    ></NodeSubtitle>
+                                    <div key={`${skeletonIndex}-r-${idx}-contextHandler`}
+                                         onContextMenu={handleContextMenuClick}>
+                                        <SkeletonNode data={noteData}
+                                                      setData={setNote(HandType.RIGHT, idx)}
+                                                      skeletonIndex={skeletonIndex}
+                                                      handType={HandType.RIGHT}
+                                                      nodeIndex={idx}
+                                                      key={skeletonIndex + '-r-' + idx}
+                                                      selectionMode={getSelectionMode(idx)}
+                                                      onSelect={(event) => handleNodeSelected(event, idx)}
+                                                      tripletProps={getTripletProps(idx)}
+                                        ></SkeletonNode>
+                                    </div>
+                                </div>
+                            )}
+                    </div>
 
-                <div className="leftHandRow" css={styles.row}>
-                    {skeletonData.left
-                        .map((noteData, idx) =>
-                            <div css={styles.tempBox} key={skeletonIndex + '-l-' + idx +'-wrapper'}>
-                                <SkeletonNode data={noteData}
-                                              setData={setNote(HandType.LEFT, idx)}
-                                              skeletonIndex={skeletonIndex}
-                                              handType={HandType.LEFT}
-                                              nodeIndex={idx}
-                                              selectionMode={NodeSelectionMode.NONE}
-                                              key={skeletonIndex + '-l-' + idx}></SkeletonNode>
-                                <NodeSubtitle nodeData={noteData} midiSummary={leftHandMidiSummary}></NodeSubtitle>
-                            </div>
-                        )}
+                    <div className="leftHandRow" css={styles.row}>
+                        {skeletonData.left
+                            .map((noteData, idx) =>
+                                <div css={styles.tempBox} key={`${skeletonIndex}-l-${idx}-contextHandler`}>
+                                    <SkeletonNode data={noteData}
+                                                  setData={setNote(HandType.LEFT, idx)}
+                                                  skeletonIndex={skeletonIndex}
+                                                  handType={HandType.LEFT}
+                                                  nodeIndex={idx}
+                                                  selectionMode={NodeSelectionMode.NONE}
+                                                  key={skeletonIndex + '-l-' + idx}></SkeletonNode>
+                                    <NodeSubtitle nodeData={noteData}
+                                                  midiSummary={leftHandMidiSummary}
+                                                  setNotes={setNote(HandType.LEFT, idx)}></NodeSubtitle>
+                                </div>
+                            )}
+                    </div>
+                    <Menu
+                        id="simple-menu"
+                        anchorEl={menuAnchorEl}
+                        keepMounted
+                        open={Boolean(menuAnchorEl)}
+                        onClose={handleMenuClose}
+                    >
+                        <MenuItem disabled={isNotTripletEligible()} onClick={initiateTriplet}>
+                            <ListItemText primary="Триоль"/>
+                        </MenuItem>
+                        <MenuItem onClick={handleMenuClose}>
+                            <ListItemText>Редактировать</ListItemText>
+                        </MenuItem>
+                    </Menu>
                 </div>
-            </div>
+            </ClickAwayListener>
         </div>
     )
 }
@@ -198,5 +320,5 @@ const styles = {
     flex-direction: row;`,
     tempBox: css`
     position:relative;
-    border:dotted blue 1px`
+    border:dotted blue 0px`
 }

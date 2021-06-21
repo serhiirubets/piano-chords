@@ -1,12 +1,12 @@
 /** @jsx jsx */
 import React from "react";
 import {jsx} from "@emotion/react/macro";
-import {INote, Note, NoteType} from "../../model/note-data";
+import {INote, Note, NoteType, PlaybackDuration, PlaybackOffset} from "../../model/note-data";
 import {HandType} from "../../model/deprecated/skeleton-data";
 import {SkeletonNodeData} from "../../model/deprecated/skeleton-node-data";
 import {QUADRAT_WIDTH} from "../../model/global-constants";
 import {compareByMidiNumbers, getMidiNumber, isChord} from "../../utils/playback-utils";
-import {HandMidiSummary} from "./skeleton";
+import {HandMidiSummary, TripletHandlingProps} from "./skeleton";
 import {
     ClickAwayListener,
     FormControlLabel,
@@ -19,6 +19,8 @@ import {
 import {blue, red} from "@material-ui/core/colors";
 import ClearRoundedIcon from "@material-ui/icons/ClearRounded";
 import {getOriginalText} from "../../utils/skeleton-node-utils";
+import {groupBy} from "../../utils/js-utils";
+import {getTripletEffectiveParameters} from "../../utils/triplet-utils";
 
 
 export interface NodeSubtitleProps {
@@ -29,6 +31,7 @@ export interface NodeSubtitleProps {
     handType?: HandType;
     chord?: INote[],
     setNotes: any;
+    tripletProps?: TripletHandlingProps
 }
 
 const FeatherSwitch = withStyles({
@@ -143,7 +146,7 @@ const NoteContextMenu = ({note, onUpdateNote, hand, anchorEl, onClose}) => {
     )
 }
 
-const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight}) => {
+const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizontalOffset}) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [isHovered, setIsHovered] = React.useState<boolean>(false);
     const handlePopoverClose = () => {
@@ -156,10 +159,17 @@ const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight}) => {
 
     const transformFlatSign = (note: INote) => {
         return note.note.length > 1 && note.note.endsWith('b') ?
-            note.note.substr(0, note.note.length - 1) + '♭' :
-            note.note;
+            {
+                note: note.note.substr(0, note.note.length - 1),
+                isFlat: true
+            } :
+            {
+                note: note.note,
+                isFlat: false
+            }
     }
 
+    const noteRenderTextData = transformFlatSign(note);
 
     return (
         <ClickAwayListener onClickAway={handlePopoverClose}>
@@ -171,28 +181,29 @@ const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight}) => {
                         overflow: "wrap",
                         display: "inline-block",
                         position: "absolute",
-                        // height: `${fontHeight * 0.7}px`,
+                        height: `${fontHeight * 0.7}px`,
                         top: height,
-                        left: 0,
-                        right: 0,
                         fontFamily: "serif",
                         fontSize: `${fontHeight}px`,
                         fontWeight: "bold",
-                        border: isHovered ? "solid 1px black" : "none"
+                        border: isHovered ? "solid 1px black" : "none",
+                        ...horizontalOffset
                     }}
-                    onClick={handleClick}>{transformFlatSign(note)}</div>
+                    onClick={handleClick}>
+                    {transformFlatSign(note).note}
+                    {transformFlatSign(note).isFlat && <sup css={{fontSize: fontHeight * 0.6}}>♭</sup>}
+                </div>
                 <NoteContextMenu note={note}
                                  anchorEl={anchorEl}
                                  hand={hand}
                                  onUpdateNote={onUpdateNote}
                                  onClose={handlePopoverClose}
                 ></NoteContextMenu>
-
             </div>
         </ClickAwayListener>)
 }
 
-export const NodeSubtitle = ({nodeData, midiSummary, setNotes}: NodeSubtitleProps) => {
+export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: NodeSubtitleProps) => {
     const MAX_HEIGHT = QUADRAT_WIDTH * 1.75;
     const RECOMMENDED_SCALE = MAX_HEIGHT / 30; //30 =2.5 octaves
     const FONT_HEIGHT = 18;
@@ -224,16 +235,11 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes}: NodeSubtitleProp
     const getChordNoteHeights = (chord: INote[]) => {
         const chordTops = chord
             .sort(compareByMidiNumbers)
-            .map(note => {
-                console.log(note.note, getSingleNoteRelativeTop(note))
-                return getSingleNoteRelativeTop(note)
-            });
+            .map(note => getSingleNoteRelativeTop(note));
 
-        const isSpreadRequired = chordTops.slice(1)
-            .map((item, index) => {
-                return item - chordTops[index]
-            })
-            .filter(distance => distance < FONT_HEIGHT).length > 1;
+        const isSpreadRequired = chordTops
+            .map((value, i) => (chordTops[i + 1] - value))
+            .some(value => value < FONT_HEIGHT / 2);
 
         if (isSpreadRequired) {
             for (let i = 1; i < chordTops.length; i++) {
@@ -247,9 +253,31 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes}: NodeSubtitleProp
         const chord = allNotes.filter(n => n.playbackOffset === note.playbackOffset);
         chord.sort(compareByMidiNumbers)
         const chordTops = getChordNoteHeights(chord);
-        console.log('chordTops', chordTops)
         const noteIndex = chord.indexOf(note);
         return chordTops[noteIndex];
+    }
+
+    const getNoteHorizontalOffset = (note: INote) => {
+
+        if (note.playbackOffset === PlaybackOffset.NONE && note.duration === PlaybackDuration.HALF) {
+            return {right: QUADRAT_WIDTH / 2 + 1}
+        }
+        if (note.playbackOffset === PlaybackOffset.HALF && note.duration === PlaybackDuration.HALF) {
+            return {left: QUADRAT_WIDTH / 2 + 1}
+        }
+        if (tripletProps) {
+            const paddingOffset = 0.33;
+            const effectiveProps = getTripletEffectiveParameters(tripletProps);
+            const indexOfNoteInTriplet = effectiveProps.standardOffsets.indexOf(note.playbackOffset)
+
+            const middleOffset = (effectiveProps.standardOffsets[2] - effectiveProps.standardOffsets[0])/2
+            const offsetLeft = indexOfNoteInTriplet === 1 ?
+                QUADRAT_WIDTH * ( middleOffset + paddingOffset):
+                QUADRAT_WIDTH * (effectiveProps.standardOffsets[indexOfNoteInTriplet] + paddingOffset);
+            return {left: offsetLeft}
+        }
+
+        return {left: 0, right: 0}
     }
 
 
@@ -257,9 +285,6 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes}: NodeSubtitleProp
         const updatedNotes = [...nodeData.notes];
         const indexOfOldNote = updatedNotes.indexOf(oldNote);
         const updatedNotes2 = updatedNotes[indexOfOldNote] = newNote
-        console.log('ion', indexOfOldNote)
-        console.log('nn', newNote)
-        console.log('un2', updatedNotes2)
         setNotes(updatedNotes, getOriginalText(updatedNotes))
 
     }
@@ -273,8 +298,6 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes}: NodeSubtitleProp
                     minHeight: MAX_HEIGHT,
                     width: QUADRAT_WIDTH,
                     position: "relative",
-                    marginLeft: "auto",
-                    marginRight: "auto",
                     textAlign: "center",
                 }}>{
                     nodeData.notes
@@ -285,6 +308,7 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes}: NodeSubtitleProp
                                 hand={nodeData.hand}
                                 height={constainsChords ? getChordNoteRelativeTop(note, nodeData.notes) : getSingleNoteRelativeTop(note)}
                                 fontHeight={FONT_HEIGHT}
+                                horizontalOffset={getNoteHorizontalOffset(note)}
                             ></NodeSubtitleItem>
                         )
                 }

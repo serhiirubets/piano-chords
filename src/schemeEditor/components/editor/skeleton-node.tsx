@@ -11,6 +11,7 @@ import {getEffectiveNodeColor} from "../../utils/skeleton-node-utils";
 import {NodeSelectionMode, TripletHandlingProps} from "./skeleton";
 import ClearRoundedIcon from '@material-ui/icons/ClearRounded';
 import {groupBy} from "../../utils/js-utils";
+import {getTripletEffectiveParameters} from "../../utils/triplet-utils";
 
 const DISALLOWED_KEYS_PATTERN = /[^a-gmA-G#:\s\/0-9\*]/g
 const SIXTEENS_SEPARATOR = '/'
@@ -29,18 +30,7 @@ export interface BlockSchemeNodeProps {
     tripletProps?: TripletHandlingProps
 }
 
-const getTripletEffectiveParameters = (tripletProps: TripletHandlingProps) => {
-    const is8thTriplet = tripletProps.tripletDuration / 3 >= 1;
-    const idealDuration = is8thTriplet ? PlaybackDuration.FULL : 0.6;
-    const lastNodeOffset = is8thTriplet ? PlaybackDuration.FULL * 3 : PlaybackDuration.FULL;
-    const standardOffsets = [0, tripletProps.tripletDuration / 2 - idealDuration / 2, lastNodeOffset]
 
-    return {
-        is8thTriplet: is8thTriplet,
-        idealDuration: idealDuration,
-        standardOffsets: standardOffsets
-    }
-}
 
 const parseInputToTheNotes = (stringValue: string, defaultOctave: number, tripletProps: TripletHandlingProps): Note[] => {
     if (stringValue.length == 0) {
@@ -151,7 +141,6 @@ const ClearButton = ({onClick}) => {
         }}
 
         onClick={() => {
-            console.log('clearing triplet')
             onClick()
         }}
         onMouseEnter={() => setIsHovered(true)}
@@ -182,6 +171,11 @@ export const SkeletonNode = ({data, setData, nodeIndex, handType, selectionMode,
             setInputText("")
             return;
         }
+
+        if (event.key === 'Enter') {
+            handleSave()
+        }
+
         const filteredValues = event.target.value.replace(DISALLOWED_KEYS_PATTERN, '');
         event.target.value = filteredValues || "";
         setInputText(filteredValues);
@@ -221,7 +215,7 @@ export const SkeletonNode = ({data, setData, nodeIndex, handType, selectionMode,
                 justifyContent: "space-between",
                 alignItems: "center",
                 padding: (QUADRAT_WIDTH - DOT_WIDTH) / 2,
-                opacity:isEditMode?0:100
+                opacity: isEditMode ? 0 : 100
             }}>
 
             {idealTripletValues.standardOffsets.map(offset => {
@@ -273,7 +267,7 @@ export const SkeletonNode = ({data, setData, nodeIndex, handType, selectionMode,
                     tabIndex={0}
                     onClick={handeSelection}
                     onChange={handleNoteInput}
-                    onKeyDown={handleNoteInput}
+                    onKeyUp={handleNoteInput}
                     onBlur={handleSave}
                     value={inputText}
                     // defaultValue={getOriginalText(data.notes)}

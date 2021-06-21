@@ -10,6 +10,7 @@ import {NodeSubtitle} from "./node-subtitle";
 import {getMidiNumber} from "../../utils/playback-utils";
 import {ClickAwayListener, ListItemText, Menu, MenuItem} from "@material-ui/core";
 import {distinct} from "../../utils/js-utils";
+import {getTripletByIndex, getTripletDurationByIndex, isPartOfTriplet} from "../../utils/triplet-utils";
 
 export enum NodeSelectionMode {
     NONE = "0000",
@@ -36,26 +37,7 @@ const isHostingTriplet = (triplets: TripletData[], idx: number) => {
     return triplets.filter(triplet => triplet.start === idx).length > 0
 }
 
-const isPartOfTriplet = (triplets: TripletData[], index: number) => {
-    return getTripletByIndex(triplets, index) !== null
-}
 
-const getTripletByIndex = (triplets: TripletData[], idx: number): TripletData | null => {
-
-    const maybeTriplet = triplets
-        .filter(triplet => triplet.start <= idx && idx < triplet.start + triplet.length);
-    return maybeTriplet.length > 0 ?
-        maybeTriplet[0] :
-        null;
-}
-
-const getTripletDurationByIndex = (triplets: TripletData[], index: number) => {
-    const maybeTriplet = getTripletByIndex(triplets, index);
-
-    if (maybeTriplet) {
-        return maybeTriplet.length;
-    }
-}
 
 export const Skeleton = ({skeletonIndex}) => {
     const {bars, updateBars} = useContext(BarContext);
@@ -257,6 +239,7 @@ export const Skeleton = ({skeletonIndex}) => {
                                     <NodeSubtitle nodeData={noteData}
                                                   midiSummary={rightHandMidiSummary}
                                                   setNotes={setNote(HandType.RIGHT, idx)}
+                                                      tripletProps={getTripletProps(idx)}
                                     ></NodeSubtitle>
                                     <div key={`${skeletonIndex}-r-${idx}-contextHandler`}
                                          onContextMenu={handleContextMenuClick}>

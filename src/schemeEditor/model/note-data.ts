@@ -20,6 +20,7 @@ export enum NoteType {
 export interface INote {
     note: string;
     applicature?: string;
+    displayOctave?:boolean
     octave: number;
     duration: PlaybackDuration;
     playbackOffset: PlaybackOffset;
@@ -30,17 +31,18 @@ export class Note implements INote {
     public readonly id = uuid()
     public note: string;
     public applicature?: string;
+    public displayOctave?: boolean;
     public octave: number;
     public duration: number;
     public playbackOffset: number;
     public noteType: NoteType;
 
-    // public static compareByMidiNumbers = (a: INote, b: INote) => a.getMidiNumber() - b.getMidiNumber();
 
-    constructor(initData: { note: string, octave: number, applicature?: string, duration?: number, playbackOffset?: PlaybackOffset, noteType?: NoteType, id?:string }) {
+    constructor(initData: { note: string, octave: number, displayOctave?:boolean, applicature?: string, duration?: number, playbackOffset?: PlaybackOffset, noteType?: NoteType, id?:string }) {
         this.noteType = initData.noteType || NoteType.REGULAR;
         this.note = initData.note;
         this.applicature = initData.applicature;
+        this.displayOctave = initData.displayOctave;
         this.octave = initData.octave;
         this.duration = initData.duration || PlaybackDuration.FULL;
         this.playbackOffset = initData.playbackOffset || PlaybackOffset.NONE;

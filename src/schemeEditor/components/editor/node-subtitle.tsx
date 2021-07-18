@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import React from "react";
+import React, {useContext} from "react";
 import {jsx} from "@emotion/react/macro";
 import {INote, Note, NoteType, PlaybackDuration, PlaybackOffset} from "../../model/note-data";
 import {HandType} from "../../model/deprecated/skeleton-data";
@@ -8,6 +8,7 @@ import {QUADRAT_WIDTH} from "../../model/global-constants";
 import {compareByMidiNumbers, getMidiNumber, isChord} from "../../utils/playback-utils";
 import {HandMidiSummary, TripletHandlingProps} from "./skeleton";
 import {
+    Checkbox,
     ClickAwayListener,
     FormControlLabel,
     Popover,
@@ -18,9 +19,9 @@ import {
 } from "@material-ui/core";
 import {blue, red} from "@material-ui/core/colors";
 import ClearRoundedIcon from "@material-ui/icons/ClearRounded";
-import {getOriginalText} from "../../utils/skeleton-node-utils";
-import {groupBy} from "../../utils/js-utils";
+import {getOctaveInRussianNotation, getOriginalText} from "../../utils/skeleton-node-utils";
 import {getTripletEffectiveParameters} from "../../utils/triplet-utils";
+import {SettingsContext} from "../../context/settings-context";
 
 
 export interface NodeSubtitleProps {
@@ -64,6 +65,7 @@ const NoteContextMenu = ({note, onUpdateNote, hand, anchorEl, onClose}) => {
         const updatedNote = new Note({
             note: data.note || note.note,
             octave: data.octave || note.octave,
+            displayOctave: data.displayOctave || note.displayOctave,
             applicature: data.applicature || note.applicature,
             duration: note.duration,
             playbackOffset: note.playbackOffset,
@@ -141,12 +143,22 @@ const NoteContextMenu = ({note, onUpdateNote, hand, anchorEl, onClose}) => {
                             style={{color: "gray", fontSize: "small"}}>Оперение</Typography>}
                     />}
                 </div>
+                <FormControlLabel
+                    value="top"
+                    control={<Checkbox
+                        checked={note.displayOctave}
+                        onChange={(e) => handleNoteUpdate({displayOctave: e.target.checked})}
+                    />}
+                    label={<Typography
+                        style={{color: "gray", fontSize: "small"}}>Показывать октаву</Typography>}></FormControlLabel>
+
             </div>
         </Popover>
     )
 }
 
 const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizontalOffset}) => {
+    const {settings} = useContext(SettingsContext)
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [isHovered, setIsHovered] = React.useState<boolean>(false);
     const handlePopoverClose = () => {
@@ -169,8 +181,6 @@ const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizon
             }
     }
 
-    const noteRenderTextData = transformFlatSign(note);
-
     return (
         <ClickAwayListener onClickAway={handlePopoverClose}>
             <div>
@@ -186,12 +196,21 @@ const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizon
                         fontFamily: "serif",
                         fontSize: `${fontHeight}px`,
                         fontWeight: "bold",
+                        cursor:"default",
                         border: isHovered ? "solid 1px black" : "none",
                         ...horizontalOffset
                     }}
                     onClick={handleClick}>
+                    {note.displayOctave && <sup css={{fontSize: fontHeight * 0.7,
+                        color:"#6F2DA8",
+                        zIndex:100,
+                        position:"absolute",
+                        top:"-7px",
+                        left:"-7px"
+                    }}>{getOctaveInRussianNotation(note.octave)}</sup>}
                     {transformFlatSign(note).note}
                     {transformFlatSign(note).isFlat && <sup css={{fontSize: fontHeight * 0.6}}>♭</sup>}
+                    {settings.displayApplicature && <sup css={{fontSize: fontHeight * 0.7, color:"#D65F24"}}>{note.applicature}</sup>}
                 </div>
                 <NoteContextMenu note={note}
                                  anchorEl={anchorEl}
@@ -232,9 +251,13 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: No
         noteDeltaCalculation: (note, scale) => (midiSummary.higestMidi - getMidiNumber(note)) * scale
     }
 
-    const getChordNoteHeights = (chord: INote[]) => {
+    const getChordNoteHeights = (chord: INote[], hand:HandType) => {
+        const comparator= hand === HandType.RIGHT ?
+                compareByMidiNumbers :
+                (a,b) => -1*compareByMidiNumbers(a,b)
+
         const chordTops = chord
-            .sort(compareByMidiNumbers)
+            .sort(comparator)
             .map(note => getSingleNoteRelativeTop(note));
 
         const isSpreadRequired = chordTops
@@ -249,10 +272,10 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: No
         return chordTops;
     }
 
-    const getChordNoteRelativeTop = (note: INote, allNotes: INote[]) => {
+    const getChordNoteRelativeTop = (note: INote, allNotes: INote[], hand:HandType) => {
         const chord = allNotes.filter(n => n.playbackOffset === note.playbackOffset);
         chord.sort(compareByMidiNumbers)
-        const chordTops = getChordNoteHeights(chord);
+        const chordTops = getChordNoteHeights(chord,hand);
         const noteIndex = chord.indexOf(note);
         return chordTops[noteIndex];
     }
@@ -284,7 +307,7 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: No
     const handleUpdateOfNode = (oldNote: Note) => (newNote: Note) => {
         const updatedNotes = [...nodeData.notes];
         const indexOfOldNote = updatedNotes.indexOf(oldNote);
-        const updatedNotes2 = updatedNotes[indexOfOldNote] = newNote
+        updatedNotes[indexOfOldNote] = newNote
         setNotes(updatedNotes, getOriginalText(updatedNotes))
 
     }
@@ -306,7 +329,7 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: No
                                 note={note}
                                 onUpdateNote={handleUpdateOfNode(note)}
                                 hand={nodeData.hand}
-                                height={constainsChords ? getChordNoteRelativeTop(note, nodeData.notes) : getSingleNoteRelativeTop(note)}
+                                height={constainsChords ? getChordNoteRelativeTop(note, nodeData.notes,nodeData.hand) : getSingleNoteRelativeTop(note)}
                                 fontHeight={FONT_HEIGHT}
                                 horizontalOffset={getNoteHorizontalOffset(note)}
                             ></NodeSubtitleItem>

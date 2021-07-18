@@ -28,41 +28,40 @@ export const PlaybackPanel = () => {
         console.log(newValue as number)
     };
 
-    return ( <Accordion>
+    return (<Accordion>
         <AccordionSummary
             expandIcon={<ExpandMoreIcon/>}
         >
-            <Typography className={classes.accoridionHeading}>Воспроизведение</Typography>
+            <Typography className={classes.accordionHeading}>Воспроизведение</Typography>
         </AccordionSummary>
         <AccordionDetails>
-
-                    <div className={classes.cardRow}>
-                        <div className={classes.cardColumn}>
-                            <div style={{display: "flex", flexDirection: "row"}}>
-                                <SpeedRoundedIcon></SpeedRoundedIcon>
-                                <Typography id="discrete-slider" gutterBottom>
-                                    Темп
-                                </Typography>
-                            </div>
-                            <Slider
-                                style={{width: '100%'}}
-                                onChange={handleNoteDurationChange}
-                                defaultValue={-0.25}
-                                step={0.05}
-                                marks
-                                min={-1}
-                                max={-0.05}
-                            />
-                            <PlaybackModule/>
-                            <FormControlLabel
-                                value="top"
-                                control={<Checkbox
-                                    checked={settings.alterGainForFeather}
-                                    onChange={(e) => partialUpdateSettings({alterGainForFeather: e.target.checked})}
-                                />}
-                                label="Различать оперение по громкости"></FormControlLabel>
-                        </div>
+            <div className={classes.cardRow}>
+                <div className={classes.cardColumn}>
+                    <div style={{display: "flex", flexDirection: "row"}}>
+                        <SpeedRoundedIcon></SpeedRoundedIcon>
+                        <Typography id="discrete-slider" gutterBottom>
+                            Темп
+                        </Typography>
                     </div>
+                    <Slider
+                        style={{width: '100%'}}
+                        onChange={handleNoteDurationChange}
+                        defaultValue={-0.25}
+                        step={0.05}
+                        marks
+                        min={-1}
+                        max={-0.05}
+                    />
+                    <PlaybackModule/>
+                    <FormControlLabel
+                        value="top"
+                        control={<Checkbox
+                            checked={settings.alterGainForFeather}
+                            onChange={(e) => partialUpdateSettings({alterGainForFeather: e.target.checked})}
+                        />}
+                        label="Различать оперение по громкости"></FormControlLabel>
+                </div>
+            </div>
 
         </AccordionDetails>
     </Accordion>)

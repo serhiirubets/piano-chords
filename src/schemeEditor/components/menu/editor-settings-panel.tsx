@@ -13,6 +13,7 @@ import {BarContext} from "../../context/bar-context";
 import {EditorModesSettingsPanel} from "./editor-modes-panel";
 import {PlaybackPanel} from "./playback-panel";
 import {SkeletonNodeData} from "../../model/deprecated/skeleton-node-data";
+import {EditorExportPanel} from "./editor-export-panel";
 
 
 export const EditorSettingsPanel = () => {
@@ -26,9 +27,6 @@ export const EditorSettingsPanel = () => {
     }
 
     const recalculateBars = (newBarSize: number) => {
-        // if (newBarSize < 1){
-        //     return;
-        // }
         const rightHandCombined = new Array<SkeletonNodeData>()
         const leftHandCombined = new Array<SkeletonNodeData>()
         const newBars = new Array<SkeletonData>();
@@ -63,25 +61,6 @@ export const EditorSettingsPanel = () => {
         updateBars(newBars)
     }
 
-    let fileReader;
-
-
-    const handleSaveFileRead = (e) => {
-        const stringifiedData = fileReader.result;
-        console.log(stringifiedData)
-        const memorizedScheme = stringifiedData ? JSON.parse(stringifiedData) : [];
-        let validatedBlockScheme = memorizedScheme.map(maybeQuad => {
-            // return SkeletonData.createFromDeserialized(maybeQuad);
-        });
-        updateBars(validatedBlockScheme)
-    }
-
-    const handleSaveFileSelected = (e) => {
-        const file = e.target.files[0]
-        fileReader = new FileReader();
-        fileReader.onloadend = handleSaveFileRead
-        fileReader.readAsText(file)
-    }
 
     return (
         <Card className={classes.controlPanelCard}>
@@ -90,14 +69,17 @@ export const EditorSettingsPanel = () => {
                     <Typography className={classes.title} color="textPrimary" gutterBottom>
                         Панель управления
                     </Typography>
+
                     <SaveLoadSettingsPanel/>
+                    <EditorExportPanel/>
                     <PlaybackPanel/>
-                    <EditorModesSettingsPanel/>
+                    {/*<EditorModesSettingsPanel/>*/}
+
                     <Accordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon/>}
                         >
-                            <Typography className={classes.accoridionHeading}>Структура</Typography>
+                            <Typography className={classes.accordionHeading}>Структура</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <TextField className={classes.textInputPadding}
@@ -115,7 +97,7 @@ export const EditorSettingsPanel = () => {
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon/>}
                         >
-                            <Typography className={classes.accoridionHeading}>Отображение</Typography>
+                            <Typography className={classes.accordionHeading}>Отображение</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <FormControlLabel
@@ -128,7 +110,6 @@ export const EditorSettingsPanel = () => {
                         </AccordionDetails>
                     </Accordion>
                 </div>
-                {/*<EditorExportPanel/>*/}
             </CardContent>
         </Card>
     )

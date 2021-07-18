@@ -47,5 +47,19 @@ export const getOriginalText = (noteArray: Note[]): string => {
 
     console.log('returning text', result)
     return result
+}
 
+
+export const getOctaveInRussianNotation = (octave: number) => {
+    switch (octave){
+        case 0: return "с.к.о"
+        case 1: return "к.о"
+        case 2: return "б.о"
+        case 3: return "м.о"
+        case 4: return "1.о"
+        case 5: return "2.о"
+        case 6: return "3.о"
+        case 7: return "4.о"
+        default: return ""
+    }
 }

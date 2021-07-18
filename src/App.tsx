@@ -69,7 +69,7 @@ export const useGlobalStyles = makeStyles({
         margin: '10px',
         justifyContent: 'center',
         alignItems: 'center',
-        width: '100%',
+        width: '100vw',
         flex: 2,
         minWidth: "200px"
 
@@ -162,10 +162,24 @@ export const useGlobalStyles = makeStyles({
         flexDirection: 'column',
         flex: 1
     },
-    accoridionHeading: {
+    accordionHeading: {
         fontSize: theme.typography.pxToRem(15),
         fontWeight: theme.typography.fontWeightRegular,
     },
+    header:{
+        flexGrow: 1,
+        position:"fixed",
+        top:0,
+        left:0,
+        paddingLeft:0,
+        paddingRight:20,
+        width: 'inherit',
+        height:75,
+        boxShadow: "0px 10px 18px -5px #888888",
+        zIndex:5,
+        backgroundColor: "#D65F24",
+        alignSelf:"flex-start"
+    }
 });
 
 export default App;

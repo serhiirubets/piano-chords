@@ -5,6 +5,9 @@ export class SkeletonData {
     public readonly id = uuid();
     public triplets=new Array<TripletData>()
 
+    public defaultOctaveLeft = 3;
+    public defaultOctaveRight = 4;
+
     public right;
     public left;
 

@@ -285,7 +285,7 @@ export const Skeleton = ({skeletonIndex}) => {
                         <MenuItem disabled={isNotTripletEligible()} onClick={initiateTriplet}>
                             <ListItemText primary="Триоль"/>
                         </MenuItem>
-                        <MenuItem onClick={handleMenuClose}>
+                        <MenuItem disabled onClick={handleMenuClose}>
                             <ListItemText>Редактировать</ListItemText>
                         </MenuItem>
                     </Menu>

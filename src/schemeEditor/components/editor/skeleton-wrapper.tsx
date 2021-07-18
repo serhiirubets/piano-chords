@@ -24,7 +24,7 @@ export const SkeletonWrapper = ({index}: BlockSchemeSkeletonWrapperProps) => {
         marginLeft: "40px",
         marginRight: "10px",
         justifyContent: "center",
-        maxWidth: 360
+        flex:1
     }
 
     const handleMouseEnter = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -55,13 +55,13 @@ export const SkeletonWrapper = ({index}: BlockSchemeSkeletonWrapperProps) => {
 
     return (
         <div style={blockSchemeStyle} onMouseEnter={handleMouseEnter} onMouseLeave={hadleMouseLeave}>
-            <div style={{display: "flex", justifyContent: "flex-end", flexDirection: "row"}}>
+            <div style={{display: "flex", justifyContent: "flex-end", flexDirection: "row", width:"100%"}}>
                 {isHovered ? <SoundfontProvider
                         instrumentName="bright_acoustic_piano"
                         audioContext={audioContext}
                         hostname={soundfontHostname}
                         render={({playNote, stopNote, stopAllNotes}) => (
-                            <div style={{display: "flex", flexDirection: "row"}}>
+                            <div style={{display: "flex", flexDirection: "row",  width:"100%"}}>
                                 <SkeletonWrapperControls onStartPlaying={() => handlePlayButtonClick(playNote)}
                                                          onStopPlaying={() => {
                                                              stopNote();

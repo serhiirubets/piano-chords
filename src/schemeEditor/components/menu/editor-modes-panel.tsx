@@ -30,7 +30,7 @@ export const EditorModesSettingsPanel = () => {
         <AccordionSummary
             expandIcon={<ExpandMoreIcon/>}
         >
-            <Typography className={classes.accoridionHeading}>Упрощенный ввод</Typography>
+            <Typography className={classes.accordionHeading}>Упрощенный ввод</Typography>
         </AccordionSummary>
         <AccordionDetails>
             <Grid direction="column">

@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {jsx} from "@emotion/react/macro";
 import {DOT_WIDTH, QUADRAT_WIDTH, SMALL_DOT_WIDTH} from "../../model/global-constants";
 import {SkeletonNodeData} from "../../model/deprecated/skeleton-node-data";
@@ -7,7 +7,7 @@ import {TextField} from "@material-ui/core";
 import {HandType} from "../../model/deprecated/skeleton-data";
 import {Note, PlaybackDuration, PlaybackOffset} from "../../model/note-data";
 import {SettingsContext} from "../../context/settings-context";
-import {getEffectiveNodeColor} from "../../utils/skeleton-node-utils";
+import {getEffectiveNodeColor, getOriginalText} from "../../utils/skeleton-node-utils";
 import {NodeSelectionMode, TripletHandlingProps} from "./skeleton";
 import ClearRoundedIcon from '@material-ui/icons/ClearRounded';
 import {groupBy} from "../../utils/js-utils";
@@ -29,7 +29,6 @@ export interface BlockSchemeNodeProps {
     skeletonIndex: number;
     tripletProps?: TripletHandlingProps
 }
-
 
 
 const parseInputToTheNotes = (stringValue: string, defaultOctave: number, tripletProps: TripletHandlingProps): Note[] => {
@@ -158,6 +157,9 @@ export const SkeletonNode = ({data, setData, nodeIndex, handType, selectionMode,
             /*NOOP*/
         }
     }
+    useEffect(() => {
+        setInputText(data.originalText || getOriginalText(data.notes))
+    }, [data])
 
     const handeSelection = (event) => {
         if (!event.shiftKey && !event.ctrlKey && !event.metaKey) {
@@ -165,6 +167,11 @@ export const SkeletonNode = ({data, setData, nodeIndex, handType, selectionMode,
         }
         onSelect && onSelect(event);
     };
+
+    const handleFocus = () => {
+        setEditMode(true)
+    };
+
 
     const handleNoteInput = (event) => {
         if (!event.target.value) {
@@ -264,7 +271,8 @@ export const SkeletonNode = ({data, setData, nodeIndex, handType, selectionMode,
                         opacity: isEditMode ? 100 : 0,
                         position: "absolute",
                     }}
-                    tabIndex={0}
+                    tabIndex={1}
+                    onFocus={handleFocus}
                     onClick={handeSelection}
                     onChange={handleNoteInput}
                     onKeyUp={handleNoteInput}

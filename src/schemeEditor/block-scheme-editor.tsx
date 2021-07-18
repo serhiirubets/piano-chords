@@ -7,6 +7,9 @@ import {EditorSettingsPanel} from "./components/menu/editor-settings-panel";
 import {SettingsContextProvider} from "./context/settings-context";
 import {BarContext, BarContextProvider} from "./context/bar-context";
 import {EditorHeader} from "./components/menu/editor-header";
+import {ScrollableTabs} from "./components/tabpanel/tab-panel";
+import {ScrollableTabsButtonAuto} from "./components/tabpanel/scrollable-tabs";
+import {BlockSchemeWhitePage} from "./block-scheme-page";
 
 
 export const BlockSchemeEditor = () => {
@@ -19,19 +22,16 @@ export const BlockSchemeEditor = () => {
                 <BarContextProvider>
                     <Card className={classes.thickCard}>
                         <EditorHeader/>
+
                         <CardContent style={{
                             width: "inherit",
                             alignItems: "flex-start",
-                            overflowY: "scroll",
-                            scrollPadding:200
 
                         }}>
-
-                            {/*<ScrollableTabs/>*/}
-                            <BlockSchemeGrid></BlockSchemeGrid>
+                            <BlockSchemeWhitePage></BlockSchemeWhitePage>
                         </CardContent>
-                    </Card>f
-                    <EditorSettingsPanel/>
+                    </Card>
+                    { true &&<EditorSettingsPanel/>}
                 </BarContextProvider>
             </SettingsContextProvider>
         </div>

@@ -7,10 +7,14 @@ const defaultSettings :EditorSettings= {
     quadratSize: 8,
     displayApplicature:false,
     alterGainForFeather: true,
+    autosave:true,
     simpleMode:true,
     simpleModeLeftHandNote:"c3",
     simpleModeRightHandNote:"c4",
-    defaultOctaves: new Map<HandType, number>([[HandType.RIGHT,4],[HandType.LEFT,3]])
+    defaultOctaves: new Map<HandType, number>([[HandType.RIGHT,4],[HandType.LEFT,3]]),
+    editorElementRef:React.createRef<HTMLDivElement|null>(),
+    isExportingInProgress:false,
+    fileName:"Новая блок-схема"
 }
 
 export const SettingsContext = React.createContext({

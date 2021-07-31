@@ -57,7 +57,6 @@ export interface NoteContextMenuProps {
 }
 
 const NoteContextMenu = ({note, onUpdateNote, hand, anchorEl, onClose}) => {
-    console.log('note in context menu', note)
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
@@ -71,7 +70,6 @@ const NoteContextMenu = ({note, onUpdateNote, hand, anchorEl, onClose}) => {
             playbackOffset: note.playbackOffset,
             noteType: data.noteType || note.noteType
         });
-        console.log('updating note in popover', updatedNote)
         onUpdateNote(updatedNote)
 
     }

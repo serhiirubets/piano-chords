@@ -2,9 +2,6 @@ import {createStyles, IconButton, makeStyles, Theme, Toolbar, Typography, withSt
 import React, {useContext} from "react";
 import {SettingsContext} from "../../context/settings-context";
 import {HelpDialog} from "../help-screen-short";
-import {PlaybackModule} from "./playback-module";
-import StopRoundedIcon from "@material-ui/icons/StopRounded";
-import {ScrollableTabs} from "../tabpanel/tab-panel";
 import {useGlobalStyles} from "../../../App";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -40,7 +37,6 @@ export const EditorHeader = () => {
                 <WhiteTextTypography variant="h6" className={localClasses.title}>
                     {settings.fileName}
                 </WhiteTextTypography>
-                <PlaybackModule iconColor="#e3e3e4"/>
             </Toolbar>
 
         {/*<ScrollableTabsButtonAuto/>*/}

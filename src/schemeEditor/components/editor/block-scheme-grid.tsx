@@ -1,4 +1,4 @@
-import React, {useContext, useRef, useState} from "react"
+import React, {useContext} from "react"
 import {SkeletonData} from "../../model/deprecated/skeleton-data";
 import PlaylistAddRoundedIcon from '@material-ui/icons/PlaylistAddRounded';
 import {SkeletonWrapper} from "./skeleton-wrapper";
@@ -6,11 +6,8 @@ import {Button} from "@material-ui/core";
 import {SettingsContext} from "../../context/settings-context";
 import {arrayMove, SortableContainer, SortableElement} from "react-sortable-hoc";
 import {BarContext} from "../../context/bar-context";
-import {Skeleton} from "./skeleton";
 import {QUADRAT_WIDTH} from "../../model/global-constants";
-import Pdf from "react-to-pdf";
-import {TabPanel} from "@material-ui/lab";
-import {ScrollableTabs} from "../tabpanel/tab-panel";
+
 
 const AddMoreButton = ({onClick, opacity}) => {
     const {settings} = useContext(SettingsContext);
@@ -32,46 +29,60 @@ const AddMoreButton = ({onClick, opacity}) => {
     </div>)
 }
 
-const SortableItem = SortableElement(({value, idx}) => {
-        return (<div css={{
-            flexBasis: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-            flexGrow: 1,
-            display: "flex",
-            flex: 1
-        }}><SkeletonWrapper index={idx}></SkeletonWrapper></div>)
-    }
-);
+const SortableItem = SortableElement(({idx}) =>
+    <div css={{
+        flexBasis: "50%",
+        minWidth: "100px",
+        justifyContent: "center",
+        alignItems: "center",
+    }}><SkeletonWrapper index={idx}></SkeletonWrapper></div>);
 
+const getFlexBasisValue = (barSize:number, isExporting:boolean) =>{
+    if (isExporting){
+        return "40%"
+    }
+    return barSize<8 ? "": "40%"
+}
+
+const getPaddingValue = (barSize:number, isExporting:boolean) =>{
+    if (isExporting){
+        return " 0 5em 0 5em"
+    }
+    return barSize<8 ? "0":" 0 2em 0 2em"
+}
 
 const SortableGrid = SortableContainer(({children}) => {
     const {bars, updateBars} = useContext(BarContext);
     const {settings} = useContext(SettingsContext);
 
-    return (<div
+    return <div
         ref={settings.editorElementRef}
         style={{
             display: "flex",
             flexWrap: "wrap",
             flexDirection: "row",
-            width: "100%"
+            width: "100%",
+            padding: getPaddingValue(settings.quadratSize, settings.isExportingInProgress)
+
         }}>
 
         {children.map((value, index) => {
-                return (<SortableItem key={`item-${value.id}`} index={index} idx={index} value={value}/>)
-            }
-        )}
+            return (
+                <div style={{
+                    flexBasis: getFlexBasisValue(settings.quadratSize, settings.isExportingInProgress),
+                }}>
+                    <SortableItem key={`item-${value.id}`} index={index} idx={index}/>
+                </div>)
+        })}
 
-        <AddMoreButton
+            <AddMoreButton
             onClick={() => {
-                updateBars([...bars, new SkeletonData(settings.quadratSize)])
-            }}
+            updateBars([...bars, new SkeletonData(settings.quadratSize)])
+        }}
             opacity={settings.isExportingInProgress ? 0 : 100}
-        ></AddMoreButton>
-    </div>)
-
-});
+            ></AddMoreButton>
+            </div>
+        });
 
 
 export const BlockSchemeGrid = () => {
@@ -82,11 +93,11 @@ export const BlockSchemeGrid = () => {
     };
 
     return (
-            <SortableGrid
-                useDragHandle
-                children={bars}
-                onSortEnd={onSortEnd}
-                axis={"xy"}
-            ></SortableGrid>
+        <SortableGrid
+            useDragHandle
+            children={bars}
+            onSortEnd={onSortEnd}
+            axis={"xy"}
+        ></SortableGrid>
     )
 }

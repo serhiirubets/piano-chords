@@ -27,7 +27,6 @@ export const getPlaybackData = (data: SkeletonNodeData): PlaybackData[] => {
 }
 
 export const getOriginalText = (noteArray: Note[]): string => {
-    console.log('note array in text', noteArray)
     const chordToString = (notes: Note[]) => {
         return notes.map(note => note.note + note.octave).join(" ")
     }
@@ -37,7 +36,6 @@ export const getOriginalText = (noteArray: Note[]): string => {
     const result = Array.from(notesGroupedByOffset.entries())
         .sort(([k1, v1], [k2, v2]) => (k1 - k2))
         .map(([key, value]) => {
-            console.log('key', key)
             if (key % 0.5 !== 0) {
                 isTriplet = true;
             }
@@ -45,7 +43,6 @@ export const getOriginalText = (noteArray: Note[]): string => {
         })
         .join(isTriplet ? ":" : "/")
 
-    console.log('returning text', result)
     return result
 }
 

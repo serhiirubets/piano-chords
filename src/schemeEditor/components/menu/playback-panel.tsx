@@ -25,7 +25,6 @@ export const PlaybackPanel = () => {
 
     const handleNoteDurationChange = (event: any, newValue: number | number[]) => {
         partialUpdateSettings({playbackTempo: (newValue as number) * -1});
-        console.log(newValue as number)
     };
 
     return (<Accordion>

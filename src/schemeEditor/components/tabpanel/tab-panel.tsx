@@ -88,6 +88,9 @@ export const ScrollableTabs = () => {
 
         const sheetData = sheets.get(activeSheet);
         if (sheetData) {
+            // const updatedSheetData = JSON.parse(JSON.stringify(sheetData));
+            // updatedSheetData.name = newName;
+            // console.log(updatedSheetData)
             const updatedSheets = new Map(sheets)
                 .set(newName, sheetData);
 
@@ -99,15 +102,14 @@ export const ScrollableTabs = () => {
     }
 
     return (
-        <div>
+        // <div>
             <Tabs
                 value={value}
                 onChange={handleChange}
-                indicatorColor="primary"
+                indicatorColor="secondary"
                 textColor="primary"
                 variant="scrollable"
                 scrollButtons="auto"
-
             >
                 {sheetNames
                     .map((sheetName, idx) => <TabElement
@@ -121,6 +123,6 @@ export const ScrollableTabs = () => {
                 <Tab icon={<AddRoundedIcon/>} onClick={handleAdditionOfSheet}/>
             </Tabs>
 
-        </div>
+        // </div>
     );
 }

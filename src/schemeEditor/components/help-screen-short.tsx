@@ -3,14 +3,17 @@ import {
     Dialog,
     DialogContent,
     DialogTitle,
-    Grid,
     Paper,
-    Popover,
-    Table, TableBody, TableCell,
-    TableContainer, TableHead, TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
     Typography
 } from "@material-ui/core";
 import InfoRoundedIcon from '@material-ui/icons/InfoRounded';
+
 export interface HelpDialogProps {
     iconColor?:string;
 }

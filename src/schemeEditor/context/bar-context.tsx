@@ -49,12 +49,10 @@ export const BarContextProvider = (props: any) => {
     }, [sheets, activeSheet])
 
     const updateQuads = (newBars: SkeletonData[]) => {
-        console.log(activeSheet)
         const sheetToUpdate = sheets.get(getActiveSheet());
         const updatedMap = new Map<string, SheetData>(sheets);
         const updatedSheet = sheetToUpdate ? JSON.parse(JSON.stringify(sheetToUpdate)) : defaultSheet
         updatedSheet.bars = newBars;
-        console.log(getActiveSheet())
         updatedMap.set(getActiveSheet(), updatedSheet);
 
         setSheets(updatedMap)

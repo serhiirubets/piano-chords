@@ -11,10 +11,10 @@ import StopRoundedIcon from "@material-ui/icons/StopRounded";
 import {BarContext} from "../../context/bar-context";
 
 export interface PlaybackModuleProps {
-    iconColor?:string;
+    iconColor?: string;
 }
 
-export const PlaybackModule = ({iconColor}:PlaybackModuleProps) => {
+export const PlaybackModule = ({iconColor}: PlaybackModuleProps) => {
     const {settings, updateSettings} = useContext(SettingsContext);
     const {bars, updateBars} = useContext(BarContext);
     const classes = useGlobalStyles();
@@ -26,26 +26,19 @@ export const PlaybackModule = ({iconColor}:PlaybackModuleProps) => {
             hostname={soundfontHostname}
             render={({playNote, stopNote, stopAllNotes}) => (
 
-                <div className={classes.cardRow}>
-                    <Grid container alignItems="center" direction="row">
-                        <Grid item>
-                            <IconButton
-                                onClick={() => {
-                                    console.log('onPlaying', bars.length)
-                                    playNotes(getNotesToPlay(bars), playNote, settings.playbackTempo, settings.alterGainForFeather)
-                                }}>
-                                <PlayArrowRoundedIcon fontSize="large" style={{fill:iconColor}}/>
-                            </IconButton>
-                        </Grid>
-                        <Grid item>
-                            <IconButton onClick={() => {
-                                stopNote();
-                                stopAllNotes();
-                            }}>
-                                <StopRoundedIcon fontSize="large" style={{fill:iconColor}}/>
-                            </IconButton>
-                        </Grid>
-                    </Grid>
+                <div style={{display:"flex", flexDirection: "row"}}>
+                    <IconButton
+                        onClick={() => {
+                            playNotes(getNotesToPlay(bars), playNote, settings.playbackTempo, settings.alterGainForFeather)
+                        }}>
+                        <PlayArrowRoundedIcon fontSize="large" style={{fill: iconColor}}/>
+                    </IconButton>
+                    <IconButton onClick={() => {
+                        stopNote();
+                        stopAllNotes();
+                    }}>
+                        <StopRoundedIcon fontSize="large" style={{fill: iconColor}}/>
+                    </IconButton>
                 </div>
             )}
         />)

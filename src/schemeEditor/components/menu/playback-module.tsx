@@ -1,4 +1,4 @@
-import {Grid} from "@material-ui/core";
+import {Divider, Grid} from "@material-ui/core";
 import React, {useContext} from "react";
 import {useGlobalStyles} from "../../../App";
 import {SettingsContext} from "../../context/settings-context";
@@ -8,15 +8,16 @@ import IconButton from "@material-ui/core/IconButton";
 import {getNotesToPlay, playNotes} from "../../utils/playback-utils";
 import PlayArrowRoundedIcon from "@material-ui/icons/PlayArrowRounded";
 import StopRoundedIcon from "@material-ui/icons/StopRounded";
-import {QuadratsContext} from "../../context/quadrats-context";
+import {BarContext} from "../../context/bar-context";
+import {PrintRounded} from "@material-ui/icons";
 
 export interface PlaybackModuleProps {
-    iconColor?:string;
+    iconColor?: string;
 }
 
-export const PlaybackModule = ({iconColor}:PlaybackModuleProps) => {
+export const PlaybackModule = ({iconColor}: PlaybackModuleProps) => {
     const {settings, updateSettings} = useContext(SettingsContext);
-    const {quads, updateQuads} = useContext(QuadratsContext);
+    const {bars, updateBars} = useContext(BarContext);
     const classes = useGlobalStyles();
 
     return (
@@ -26,26 +27,22 @@ export const PlaybackModule = ({iconColor}:PlaybackModuleProps) => {
             hostname={soundfontHostname}
             render={({playNote, stopNote, stopAllNotes}) => (
 
-                <div className={classes.cardRow}>
-                    <Grid container alignItems="center" direction="row">
-                        <Grid item>
-                            <IconButton
-                                onClick={() => {
-                                    console.log('onPlaying', quads.length)
-                                    playNotes(getNotesToPlay(quads), playNote, settings.playbackTempo, settings.alterGainForFeather)
-                                }}>
-                                <PlayArrowRoundedIcon fontSize="large" style={{fill:iconColor}}/>
-                            </IconButton>
-                        </Grid>
-                        <Grid item>
-                            <IconButton onClick={() => {
-                                stopNote();
-                                stopAllNotes();
-                            }}>
-                                <StopRoundedIcon fontSize="large" style={{fill:iconColor}}/>
-                            </IconButton>
-                        </Grid>
-                    </Grid>
+                <div style={{display:"flex", flexDirection: "row"}}>
+
+                    <IconButton
+                        onClick={() => {
+                            playNotes(getNotesToPlay(bars), playNote, settings.playbackTempo, settings.alterGainForFeather)
+                        }}>
+                        <PlayArrowRoundedIcon fontSize="large" style={{fill: "#176503"}}/>
+                    </IconButton>
+                    <IconButton onClick={() => {
+                        stopNote();
+                        stopAllNotes();
+                    }}>
+                        <StopRoundedIcon fontSize="large" style={{fill: "#ac0707"}}/>
+                    </IconButton>
+
+
                 </div>
             )}
         />)

@@ -5,28 +5,34 @@ import {useGlobalStyles} from "../App";
 import {BlockSchemeGrid} from "./components/editor/block-scheme-grid";
 import {EditorSettingsPanel} from "./components/menu/editor-settings-panel";
 import {SettingsContextProvider} from "./context/settings-context";
-import {QuadratsContext, QuadratsContextProvider} from "./context/quadrats-context";
+import {BarContext, BarContextProvider} from "./context/bar-context";
 import {EditorHeader} from "./components/menu/editor-header";
+import {ScrollableTabs} from "./components/tabpanel/tab-panel";
+import {ScrollableTabsButtonAuto} from "./components/tabpanel/scrollable-tabs";
+import {BlockSchemeWhitePage} from "./block-scheme-page";
 
 
 export const BlockSchemeEditor = () => {
     const classes = useGlobalStyles();
-    const {quads, updateQuads} = useContext(QuadratsContext);
+    const {bars, updateBars} = useContext(BarContext);
 
     return (
         <div style={{flexDirection: "row", display: "flex"}}>
             <SettingsContextProvider>
-                <QuadratsContextProvider>
+                <BarContextProvider>
                     <Card className={classes.thickCard}>
-                            <EditorHeader/>
-                        <CardContent style={{width: "100%", alignItems: "flex-start", overflowY:"scroll", scrollPadding:"250"}}>
+                        <EditorHeader/>
 
-                            {/*<ScrollableTabs/>*/}
-                            <BlockSchemeGrid></BlockSchemeGrid>
+                        <CardContent style={{
+                            width: "inherit",
+                            alignItems: "flex-start",
+
+                        }}>
+                            <BlockSchemeWhitePage></BlockSchemeWhitePage>
                         </CardContent>
                     </Card>
-                    <EditorSettingsPanel/>
-                </QuadratsContextProvider>
+                    { true &&<EditorSettingsPanel/>}
+                </BarContextProvider>
             </SettingsContextProvider>
         </div>
     )

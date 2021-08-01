@@ -1,3 +1,4 @@
+import {HandType} from "./deprecated/skeleton-data";
 
 export interface EditorSettings {
     playbackTempo: number;
@@ -5,8 +6,19 @@ export interface EditorSettings {
     displayApplicature? : boolean;
     alterGainForFeather:boolean;
 
+    autosave:boolean;
     simpleMode:boolean;
-    simpleModeLeftHandNote:string,
-    simpleModeRightHandNote:string,
+    simpleModeLeftHandNote:string;
+    simpleModeRightHandNote:string;
 
+    defaultOctaves: Map<HandType, number>;
+
+    editorElementRef:any;
+    isExportingInProgress:boolean;
+    fileName:string;
+
+}
+
+interface Dictionary<V> {
+    [Key: string]: V;
 }

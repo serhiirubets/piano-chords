@@ -1,68 +1,103 @@
 import React, {useContext} from "react"
-import {SkeletonData} from "../../model/skeleton-data";
+import {SkeletonData} from "../../model/deprecated/skeleton-data";
 import PlaylistAddRoundedIcon from '@material-ui/icons/PlaylistAddRounded';
 import {SkeletonWrapper} from "./skeleton-wrapper";
-import {Button} from "@material-ui/core";
+import {Button, Typography} from "@material-ui/core";
 import {SettingsContext} from "../../context/settings-context";
 import {arrayMove, SortableContainer, SortableElement} from "react-sortable-hoc";
-import {QuadratsContext} from "../../context/quadrats-context";
+import {BarContext} from "../../context/bar-context";
+import {QUADRAT_WIDTH} from "../../model/global-constants";
+import {getFlexBasisValue, getPaddingValue} from "../../utils/rendering-utils";
 
-const AddMoreButton = ({onClick}) => (<div key="addMoreButton" style={{flexBasis:"50%"}}>
-    <Button variant="outlined" key="addNewSkeletonButton" style={{height: 284, width: 336}}
-            onClick={onClick}>
-        <PlaylistAddRoundedIcon color="action" style={{fontSize: 60}}></PlaylistAddRoundedIcon>
-    </Button>
-</div>)
 
-const SortableItem = SortableElement(({value, idx}) => {
-        const {quads, updateQuads} = useContext(QuadratsContext);
+const AddMoreButton = ({onClick, opacity}) => {
+    const {settings} = useContext(SettingsContext);
+    return (<div key="addMoreButton" style={{
+        marginTop: "30px",
+        marginLeft: "0px",
+        marginRight: "10px",
+        justifyContent: "center",
+        opacity: opacity,
+        // display: "none"
+    }}>
+        <Button variant="outlined" key="addNewSkeletonButton"
+                style={{
+                    height: 284,
+                    width: QUADRAT_WIDTH * settings.quadratSize,
+                    opacity: opacity
+                }}
+                onClick={onClick}>
+            <PlaylistAddRoundedIcon color="action" style={{fontSize: 60}}></PlaylistAddRoundedIcon>
+        </Button>
+    </div>)
+}
 
-        return (<div style={{flexBasis:"50%", justifyContent:"center", alignItems:"center"}}>
-            <SkeletonWrapper skeletonData={value} setSkeletonData={(data) => {
-                const quadsCopy = [...quads]
-                quadsCopy[idx] = data;
-                updateQuads(quadsCopy)
-            }}
-                             quadrats={quads}
-                             setQuadrats={updateQuads}
-                             index={idx}/>
-            </div>
-        )
-    }
-);
+const SortableItem = SortableElement(({idx}) =>
+    <div css={{
+        flexBasis: "50%",
+        minWidth: "100px",
+        justifyContent: "center",
+        alignItems: "center",
+    }}><SkeletonWrapper index={idx}></SkeletonWrapper></div>);
+
 
 const SortableGrid = SortableContainer(({children}) => {
-    const {quads, updateQuads} = useContext(QuadratsContext);
+    const {bars, updateBars, activeSheet} = useContext(BarContext);
     const {settings} = useContext(SettingsContext);
-    return <div style={{
-        display: "flex",
-        flexWrap: "wrap",
-        flexDirection: "row",
-    }}>
-        {children.map((value, index) => (
-            <SortableItem key={`item-${value.id}`} index={index} idx={index} value={value}/>
-        ))}
-        <AddMoreButton onClick={()=>updateQuads([...quads, new SkeletonData(settings.quadratSize)])}></AddMoreButton>
+
+    return <div ref={settings.editorElementRef}>
+        <div style={{
+            alignSelf:"right",
+            marginTop:10,
+            display:settings.isExportingInProgress ? "inherit": "none"
+        }}>
+            <Typography variant="h6" style={{fontFamily: "Times New Roman", fontWeight:"bold"}}> {activeSheet}</Typography>
+        </div>
+        <div
+            style={{
+                display: "flex",
+                flexWrap: "wrap",
+                flexDirection: "row",
+                width: "100%",
+                padding: getPaddingValue(settings.quadratSize, settings.isExportingInProgress)
+
+            }}>
+
+            {children.map((value, index) => {
+                return (
+                    <div style={{
+
+                        flexBasis: getFlexBasisValue(settings.quadratSize, settings.isExportingInProgress),
+                    }}>
+                        <SortableItem key={`item-${value.id}`} index={index} idx={index}/>
+                    </div>)
+            })}
+
+            <AddMoreButton
+                onClick={() => {
+                    updateBars([...bars, new SkeletonData(settings.quadratSize)])
+                }}
+                opacity={settings.isExportingInProgress ? 0 : 100}
+            ></AddMoreButton>
+        </div>
     </div>
-});
+
+        });
 
 
 export const BlockSchemeGrid = () => {
-
-    const {settings} = useContext(SettingsContext)
-    const {quads, updateQuads} = useContext(QuadratsContext)
+    const {bars, updateBars} = useContext(BarContext)
 
     const onSortEnd = ({oldIndex, newIndex}) => {
-        updateQuads(arrayMove(quads, oldIndex, newIndex));
+        updateBars(arrayMove(bars, oldIndex, newIndex));
     };
 
     return (
         <SortableGrid
             useDragHandle
-            children={quads}
+            children={bars}
             onSortEnd={onSortEnd}
             axis={"xy"}
-            quadratSize={settings.quadratSize}
         ></SortableGrid>
     )
 }

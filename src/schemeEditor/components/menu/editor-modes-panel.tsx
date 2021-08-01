@@ -1,21 +1,12 @@
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import {Button, Checkbox, FormControlLabel, Grid, TextField, Typography} from "@material-ui/core";
+import {Checkbox, FormControlLabel, Grid, TextField, Typography} from "@material-ui/core";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
-import SaveRoundedIcon from "@material-ui/icons/SaveRounded";
-import PublishRoundedIcon from "@material-ui/icons/PublishRounded";
-import PlaylistPlayRoundedIcon from "@material-ui/icons/PlaylistPlayRounded";
-import {BAIntroSchemeString} from "../../resources/BA-intro-recording";
-import {SkeletonData} from "../../model/skeleton-data";
 import Accordion from "@material-ui/core/Accordion";
 import React, {useContext} from "react";
 import {useGlobalStyles} from "../../../App";
-import Download from '@axetroy/react-download';
 import {SettingsContext} from "../../context/settings-context";
 import {EditorSettings} from "../../model/editor-settings-data";
-
-export interface SaveLoadSettingsPanelProps {
-}
 
 export const EditorModesSettingsPanel = () => {
     const {settings, updateSettings} = useContext(SettingsContext);
@@ -25,12 +16,11 @@ export const EditorModesSettingsPanel = () => {
         updateSettings({...settings, ...value})
     }
 
-
     return (<Accordion>
         <AccordionSummary
             expandIcon={<ExpandMoreIcon/>}
         >
-            <Typography className={classes.accoridionHeading}>Упрощенный ввод</Typography>
+            <Typography className={classes.accordionHeading}>Упрощенный ввод</Typography>
         </AccordionSummary>
         <AccordionDetails>
             <Grid direction="column">

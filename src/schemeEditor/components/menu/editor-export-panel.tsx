@@ -7,8 +7,8 @@ import Accordion from "@material-ui/core/Accordion";
 import React, {useContext} from "react";
 import {useGlobalStyles} from "../../../App";
 import {SettingsContext} from "../../context/settings-context";
+import PdfExporter from "../../../core/pdf-exporter-class";
 
-import PdfExporter from "../core/pdf-exporter-class";
 
 
 export interface SaveLoadSettingsPanelProps {

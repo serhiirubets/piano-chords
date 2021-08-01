@@ -6,11 +6,11 @@ export const getFlexBasisValue = (barSize: number, isExporting: boolean) => {
     if (isExporting) {
         switch (barSize) {
             case 6:
-                return "45%";
+                return "35%";
             case 8:
                 return "35%";
             case 12:
-                return "40%"
+                return "35%"
         }
     }
     return barSize < 8 ? "" : "40%"

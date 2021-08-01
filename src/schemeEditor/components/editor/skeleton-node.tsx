@@ -86,11 +86,11 @@ const computeBackgroundValue = (noteData: SkeletonNodeData, isEditMode: boolean,
 
         const sixteensSeparator = `
            linear-gradient(to top left,
-           rgba(0,0,0,0) 0%,
-           rgba(0,0,0,0) calc(50% - 1px),
-           rgba(0,0,0,1) 50%,
-           rgba(0,0,0,0) calc(50% + 1px),
-           rgba(0,0,0,0) 100%)
+           transparent 0%,
+           transparent calc(50% - 0.5px),
+           black 50%,
+           transparent calc(50% + 0.5px),
+           transparent 100%)
             `
         return [sixteensSeparator, ...noteData.notes.map(note => {
             return `

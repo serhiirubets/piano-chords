@@ -8,7 +8,8 @@ import React, {useContext} from "react";
 import {useGlobalStyles} from "../../../App";
 import {SettingsContext} from "../../context/settings-context";
 
-import Pdf from "react-to-pdf";
+import PdfExporter from "../core/pdf-exporter-class";
+
 
 export interface SaveLoadSettingsPanelProps {
 }
@@ -26,7 +27,7 @@ export const EditorExportPanel = () => {
         <AccordionDetails>
             <Grid container direction="column" spacing={1}>
 
-                <Pdf targetRef={settings.editorElementRef}
+                <PdfExporter targetRef={settings.editorElementRef}
                      filename="block-scheme.pdf"
                      scale={1.5}
                      onComplete={() => updateSettings({...settings,isExportingInProgress:false})}>
@@ -43,7 +44,7 @@ export const EditorExportPanel = () => {
                             Сохранить как PDF
                         </Button>
                     )}
-                </Pdf>
+                </PdfExporter>
             </Grid>
         </AccordionDetails>
     </Accordion>)

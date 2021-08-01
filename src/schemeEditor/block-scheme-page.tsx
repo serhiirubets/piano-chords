@@ -15,8 +15,7 @@ import {PrintRounded} from "@material-ui/icons";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import {getScaleSize, renderToPdf} from "./utils/rendering-utils";
-import {PdfExporter} from "../core/pdf-exporter";
-import PdfExporterClass from "../core/pdf-exporter-class";
+import PdfExporter from "../core/pdf-exporter-class";
 
 
 export const BlockSchemeWhitePage = () => {
@@ -35,7 +34,7 @@ export const BlockSchemeWhitePage = () => {
                     <ScrollableTabs></ScrollableTabs>
                     <div style={{display: "flex", flexDirection: "row"}}>
                         <Divider orientation="vertical" flexItem/>
-                        <PdfExporterClass targetRef={settings.editorElementRef}
+                        <PdfExporter targetRef={settings.editorElementRef}
                                      filename="block-scheme.pdf"
                                      scale={getScaleSize(settings.quadratSize)}
                                           onComplete={() => updateSettings({...settings, isExportingInProgress: false})}>
@@ -51,7 +50,7 @@ export const BlockSchemeWhitePage = () => {
                                 </IconButton>
                             }
 
-                        </PdfExporterClass>
+                        </PdfExporter>
                         <Divider orientation="vertical" flexItem/>
                         <PlaybackModule/>
                     </div>

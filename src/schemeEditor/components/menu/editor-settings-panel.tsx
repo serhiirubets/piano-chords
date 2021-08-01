@@ -20,7 +20,7 @@ export const EditorSettingsPanel = () => {
     const {settings, updateSettings} = useContext(SettingsContext);
     const {bars, updateBars} = useContext(BarContext);
 
-    const [barSize, setBarSize] = useState<number>(bars[0].size);
+    const [barSize, setBarSize] = useState<number>(settings.quadratSize);
     const classes = useGlobalStyles();
 
     const partialUpdateSettings = (value: Partial<EditorSettings>) => {

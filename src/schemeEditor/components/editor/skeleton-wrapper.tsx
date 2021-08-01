@@ -56,7 +56,7 @@ export const SkeletonWrapper = ({index}: BlockSchemeSkeletonWrapperProps) => {
 
     return (
         <div style={{
-            marginTop: "30px",
+            marginTop: "20px",
             marginLeft: "10px",
             marginRight: "10px",
             justifyContent: "center",

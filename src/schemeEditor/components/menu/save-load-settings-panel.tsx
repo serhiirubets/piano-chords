@@ -15,7 +15,6 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import SaveRoundedIcon from "@material-ui/icons/SaveRounded";
 import PublishRoundedIcon from "@material-ui/icons/PublishRounded";
 import PlaylistPlayRoundedIcon from "@material-ui/icons/PlaylistPlayRounded";
-import {BAIntroScheme} from "../../resources/BA-intro-recording";
 import Accordion from "@material-ui/core/Accordion";
 import React, {useCallback, useContext, useEffect, useState} from "react";
 import {useGlobalStyles} from "../../../App";
@@ -29,6 +28,7 @@ import {SheetData} from "../../model/deprecated/sheet-data";
 import {unstable_next} from "scheduler";
 import {AUTOSAVE_INTERVAL_MS} from "../../model/global-constants";
 import {RefreshRounded} from "@material-ui/icons";
+import {NymphScheme} from "../../resources/Nymph-recording";
 
 export interface SaveLoadSettingsPanelProps {
 }
@@ -47,11 +47,11 @@ export const SaveLoadSettingsPanel = () => {
     const loadFromLocalstorage = () => {
             const sheetsLocalstorageValue = localStorage.getItem(SHEETS_LOCALSTORAGE_KEY);
             if (sheetsLocalstorageValue) {
-                const processedSheetsValue = new Map(JSON.parse(sheetsLocalstorageValue)) as Map<string, SheetData>;
-                const firstSheet = Array.from(processedSheetsValue.keys())[0]
-                console.log(firstSheet)
-                updateSheets(processedSheetsValue as Map<string, SheetData>)
+                const memorizedScheme = (sheetsLocalstorageValue ? new Map(JSON.parse(sheetsLocalstorageValue)) : []) as Map<string, SheetData>;
+                const firstSheet = Array.from(memorizedScheme.keys())[0]
+                updateSheets(memorizedScheme )
                 updateActiveSheet(firstSheet)
+                partialUpdateSettings({quadratSize:memorizedScheme.get(firstSheet)!.bars[0].size})
             }
     }
 
@@ -63,15 +63,6 @@ export const SaveLoadSettingsPanel = () => {
         if (!isTouched) {
             return;
         }
-        // if(!isTouched){
-        //     const sheetsLocalstorageValue = localStorage.getItem(SHEETS_LOCALSTORAGE_KEY);
-        //         if (sheetsLocalstorageValue) {
-        //             const processedSheetsValue = new Map(JSON.parse(sheetsLocalstorageValue));
-        //             updateSheets(processedSheetsValue as Map<string, SheetData>)
-        //         }
-        // }
-        const sheetsToStore = JSON.stringify(Array.from(sheets.entries()));
-
         localStorage.setItem(SHEETS_LOCALSTORAGE_KEY, JSON.stringify(Array.from(sheets.entries()), null, 2));
 
 
@@ -167,8 +158,7 @@ export const SaveLoadSettingsPanel = () => {
                         value={demoFile}
                         onChange={handleDemoSongSelection}
                     >
-                        <MenuItem value={'ba'}>Беспечный ангел</MenuItem>
-                        <MenuItem value={'gorod'}>Город которого нет</MenuItem>
+                        <MenuItem value={'nymph'}>Nymphetamine</MenuItem>
                         <MenuItem value={'ddt'}>ДДТ - Свобода</MenuItem>
                     </Select>
                 </FormControl>
@@ -177,12 +167,14 @@ export const SaveLoadSettingsPanel = () => {
                     startIcon={<PlaylistPlayRoundedIcon/>}
                     onClick={() => {
 
-                        const fileString = demoFile === 'ba' ? JSON.stringify(BAIntroScheme) :
-                            demoFile === 'gorod' ? JSON.stringify(Gorod) :
+                        const fileString = demoFile === 'nymph' ? JSON.stringify(NymphScheme) :
                                 demoFile === 'ddt' ? JSON.stringify(DDTScheme) : '';
 
-                        const restoredScheme = JSON.parse(fileString);
-                        updateSheets(restoredScheme);
+                        const memorizedScheme = (fileString ? new Map(JSON.parse(fileString)) : []) as Map<string, SheetData>;
+                        const firstSheet = Array.from(memorizedScheme.keys())[0]
+                        updateSheets(memorizedScheme )
+                        updateActiveSheet(firstSheet)
+                        partialUpdateSettings({quadratSize:memorizedScheme.get(firstSheet)!.bars[0].size})
                     }}>
                     Загрузить демо
                 </Button>

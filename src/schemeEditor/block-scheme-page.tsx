@@ -1,20 +1,14 @@
-import React, {useContext, useEffect, useState} from "react"
-import {Card, CardContent, Divider, Typography} from "@material-ui/core";
-import {useGlobalStyles} from "../App";
+import React, {useContext} from "react"
+import {Divider, Typography} from "@material-ui/core";
 // @ts-ignore
 import {BlockSchemeGrid} from "./components/editor/block-scheme-grid";
-import {EditorSettingsPanel} from "./components/menu/editor-settings-panel";
-import {SettingsContext, SettingsContextProvider} from "./context/settings-context";
-import {BarContext, BarContextProvider} from "./context/bar-context";
-import {EditorHeader} from "./components/menu/editor-header";
+import {SettingsContext} from "./context/settings-context";
+import {BarContext} from "./context/bar-context";
 import {ScrollableTabs} from "./components/tabpanel/tab-panel";
-import {ScrollableTabsButtonAuto} from "./components/tabpanel/scrollable-tabs";
 import {PlaybackModule} from "./components/menu/playback-module";
 import IconButton from "@material-ui/core/IconButton";
 import {PrintRounded} from "@material-ui/icons";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
-import {getScaleSize, renderToPdf} from "./utils/rendering-utils";
+import {getScaleSize} from "./utils/rendering-utils";
 import PdfExporter from "../core/pdf-exporter-class";
 
 

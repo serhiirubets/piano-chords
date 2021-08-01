@@ -2,20 +2,23 @@ import React, {useContext} from "react"
 import {SkeletonData} from "../../model/deprecated/skeleton-data";
 import PlaylistAddRoundedIcon from '@material-ui/icons/PlaylistAddRounded';
 import {SkeletonWrapper} from "./skeleton-wrapper";
-import {Button} from "@material-ui/core";
+import {Button, Typography} from "@material-ui/core";
 import {SettingsContext} from "../../context/settings-context";
 import {arrayMove, SortableContainer, SortableElement} from "react-sortable-hoc";
 import {BarContext} from "../../context/bar-context";
 import {QUADRAT_WIDTH} from "../../model/global-constants";
+import {getFlexBasisValue, getPaddingValue} from "../../utils/rendering-utils";
 
 
 const AddMoreButton = ({onClick, opacity}) => {
     const {settings} = useContext(SettingsContext);
     return (<div key="addMoreButton" style={{
         marginTop: "30px",
-        marginLeft: "40px",
+        marginLeft: "0px",
         marginRight: "10px",
         justifyContent: "center",
+        opacity: opacity,
+        // display: "none"
     }}>
         <Button variant="outlined" key="addNewSkeletonButton"
                 style={{
@@ -37,51 +40,48 @@ const SortableItem = SortableElement(({idx}) =>
         alignItems: "center",
     }}><SkeletonWrapper index={idx}></SkeletonWrapper></div>);
 
-const getFlexBasisValue = (barSize:number, isExporting:boolean) =>{
-    if (isExporting){
-        return "40%"
-    }
-    return barSize<8 ? "": "40%"
-}
-
-const getPaddingValue = (barSize:number, isExporting:boolean) =>{
-    if (isExporting){
-        return " 0 5em 0 5em"
-    }
-    return barSize<8 ? "0":" 0 2em 0 2em"
-}
 
 const SortableGrid = SortableContainer(({children}) => {
-    const {bars, updateBars} = useContext(BarContext);
+    const {bars, updateBars, activeSheet} = useContext(BarContext);
     const {settings} = useContext(SettingsContext);
 
-    return <div
-        ref={settings.editorElementRef}
-        style={{
-            display: "flex",
-            flexWrap: "wrap",
-            flexDirection: "row",
-            width: "100%",
-            padding: getPaddingValue(settings.quadratSize, settings.isExportingInProgress)
-
+    return <div ref={settings.editorElementRef}>
+        <div style={{
+            alignSelf:"right",
+            marginTop:10,
+            display:settings.isExportingInProgress ? "inherit": "none"
         }}>
+            <Typography variant="h6" style={{fontFamily: "Times New Roman", fontWeight:"bold"}}> {activeSheet}</Typography>
+        </div>
+        <div
+            style={{
+                display: "flex",
+                flexWrap: "wrap",
+                flexDirection: "row",
+                width: "100%",
+                padding: getPaddingValue(settings.quadratSize, settings.isExportingInProgress)
 
-        {children.map((value, index) => {
-            return (
-                <div style={{
-                    flexBasis: getFlexBasisValue(settings.quadratSize, settings.isExportingInProgress),
-                }}>
-                    <SortableItem key={`item-${value.id}`} index={index} idx={index}/>
-                </div>)
-        })}
+            }}>
+
+            {children.map((value, index) => {
+                return (
+                    <div style={{
+
+                        flexBasis: getFlexBasisValue(settings.quadratSize, settings.isExportingInProgress),
+                    }}>
+                        <SortableItem key={`item-${value.id}`} index={index} idx={index}/>
+                    </div>)
+            })}
 
             <AddMoreButton
-            onClick={() => {
-            updateBars([...bars, new SkeletonData(settings.quadratSize)])
-        }}
-            opacity={settings.isExportingInProgress ? 0 : 100}
+                onClick={() => {
+                    updateBars([...bars, new SkeletonData(settings.quadratSize)])
+                }}
+                opacity={settings.isExportingInProgress ? 0 : 100}
             ></AddMoreButton>
-            </div>
+        </div>
+    </div>
+
         });
 
 

@@ -19,7 +19,7 @@ const defaultSettings :EditorSettings= {
 
 export const SettingsContext = React.createContext({
     settings: defaultSettings,
-    updateSettings: (value) => {
+    updateSettings: (value, cb?) => {
     }
 });
 

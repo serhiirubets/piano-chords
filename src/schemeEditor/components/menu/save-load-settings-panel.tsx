@@ -45,7 +45,6 @@ export const SaveLoadSettingsPanel = () => {
 
 
     const loadFromLocalstorage = () => {
-
             const sheetsLocalstorageValue = localStorage.getItem(SHEETS_LOCALSTORAGE_KEY);
             if (sheetsLocalstorageValue) {
                 const processedSheetsValue = new Map(JSON.parse(sheetsLocalstorageValue)) as Map<string, SheetData>;
@@ -54,7 +53,6 @@ export const SaveLoadSettingsPanel = () => {
                 updateSheets(processedSheetsValue as Map<string, SheetData>)
                 updateActiveSheet(firstSheet)
             }
-
     }
 
     useEffect(() => {
@@ -96,6 +94,7 @@ export const SaveLoadSettingsPanel = () => {
         const firstSheet = Array.from(memorizedScheme.keys())[0]
         updateSheets(memorizedScheme )
         updateActiveSheet(firstSheet)
+        partialUpdateSettings({quadratSize:memorizedScheme.get(firstSheet)!.bars[0].size})
     }
 
     const handleSaveFileSelected = (e) => {
@@ -105,6 +104,7 @@ export const SaveLoadSettingsPanel = () => {
         fileReader.onloadend = handleReadPersistedFile
         fileReader.readAsText(file)
     }
+
 
 
     return (<Accordion>

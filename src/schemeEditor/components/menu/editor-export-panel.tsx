@@ -17,26 +17,6 @@ export const EditorExportPanel = () => {
     const {settings,updateSettings} = useContext(SettingsContext);
     const classes = useGlobalStyles();
 
-    // const printDocument = async () => {
-    //     const input = document.getElementById(PRINTABLE_AREA_ID);
-    //     console.log(input)
-    //     if (input) {
-    //         html2canvas(input)
-    //             .then((canvas) => {
-    //                 console.log(canvas)
-    //                 const imgData = canvas.toDataURL('image/png');
-    //                 console.log(imgData)
-    //                 const pdf = new jsPDF();
-    //                 pdf.addImage(imgData, 'JPEG', 0, 0, 1000, 1000)
-    //
-    //                 pdf.save("download.pdf");
-    //                 console.log('Cохранение как пдф');
-    //             })
-    //         ;
-    //     }
-    //
-    // }
-
     return (<Accordion>
         <AccordionSummary
             expandIcon={<ExpandMoreIcon/>}
@@ -48,11 +28,11 @@ export const EditorExportPanel = () => {
 
                 <Pdf targetRef={settings.editorElementRef}
                      filename="block-scheme.pdf"
-                     scale={0.8}
+                     scale={1.5}
                      onComplete={() => updateSettings({...settings,isExportingInProgress:false})}>
                     {({toPdf}) => (
 
-                        < Button
+                        <Button
                             variant="outlined"
                             startIcon={<SaveRoundedIcon/>}
                             style={{width: "100%"}}

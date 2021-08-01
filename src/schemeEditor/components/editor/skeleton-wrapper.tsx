@@ -19,13 +19,14 @@ export const SkeletonWrapper = ({index}: BlockSchemeSkeletonWrapperProps) => {
     const {settings} = useContext(SettingsContext);
     const {bars, updateBars} = useContext(BarContext);
 
-    const blockSchemeStyle = {
-        marginTop: "30px",
-        marginLeft: "40px",
-        marginRight: "10px",
-        justifyContent: "center",
-        flex:1
-    }
+    // const blockSchemeStyle = {
+    //     marginTop: "30px",
+    //     marginLeft: "0px",
+    //     marginRight: "10px",
+    //     justifyContent: "center",
+    //     // flexDirection:"column",
+    //     display:"flex"
+    // }
 
     const handleMouseEnter = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
         setIsHovered(true)
@@ -54,29 +55,37 @@ export const SkeletonWrapper = ({index}: BlockSchemeSkeletonWrapperProps) => {
     }
 
     return (
-        <div style={blockSchemeStyle} onMouseEnter={handleMouseEnter} onMouseLeave={hadleMouseLeave}>
-            <div style={{display: "flex", justifyContent: "flex-end", flexDirection: "row", width:"100%"}}>
-                {isHovered ? <SoundfontProvider
-                        instrumentName="bright_acoustic_piano"
-                        audioContext={audioContext}
-                        hostname={soundfontHostname}
-                        render={({playNote, stopNote, stopAllNotes}) => (
-                            <div style={{display: "flex", flexDirection: "row",  width:"100%"}}>
-                                <SkeletonWrapperControls onStartPlaying={() => handlePlayButtonClick(playNote)}
-                                                         onStopPlaying={() => {
-                                                             stopNote();
-                                                             stopAllNotes();
-                                                         }}
-                                                         onCopy={handleCopyButtonClick}
-                                                         onClear={handleClearButtonClick}
-                                                         isDisplayed={true}
-                                                         onDescriptionChange={() => {
-                                                         }}/>
-                            </div>
-                        )}/>
-                    : (<div style={{height: 40, width: '100%'}}></div>)}
-            </div>
-            <Skeleton skeletonIndex={index}></Skeleton>
+        <div style={{
+            marginTop: "30px",
+            marginLeft: "10px",
+            marginRight: "10px",
+            justifyContent: "center",
+            flexDirection:"column",
+            display:"flex"
+        }} onMouseEnter={handleMouseEnter} onMouseLeave={hadleMouseLeave}>
+
+                <div style={{display: "flex", justifyContent: "flex-end", flexDirection: "row", width: "100%"}}>
+                    {isHovered ? <SoundfontProvider
+                            instrumentName="bright_acoustic_piano"
+                            audioContext={audioContext}
+                            hostname={soundfontHostname}
+                            render={({playNote, stopNote, stopAllNotes}) => (
+                                <div style={{display: "flex", flexDirection: "row", width: "100%"}}>
+                                    <SkeletonWrapperControls onStartPlaying={() => handlePlayButtonClick(playNote)}
+                                                             onStopPlaying={() => {
+                                                                 stopNote();
+                                                                 stopAllNotes();
+                                                             }}
+                                                             onCopy={handleCopyButtonClick}
+                                                             onClear={handleClearButtonClick}
+                                                             isDisplayed={true}
+                                                             onDescriptionChange={() => {
+                                                             }}/>
+                                </div>
+                            )}/>
+                        : (<div style={{height: 40, width: '100%'}}></div>)}
+                </div>
+                <Skeleton skeletonIndex={index}></Skeleton>
         </div>
 
     )

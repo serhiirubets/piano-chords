@@ -4,7 +4,7 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import {SkeletonData} from "../../model/deprecated/skeleton-data";
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import {useGlobalStyles} from "../../../App";
 import {SettingsContext} from "../../context/settings-context";
 import {SaveLoadSettingsPanel} from "./save-load-settings-panel";
@@ -20,6 +20,7 @@ export const EditorSettingsPanel = () => {
     const {settings, updateSettings} = useContext(SettingsContext);
     const {bars, updateBars} = useContext(BarContext);
 
+    const [barSize, setBarSize] = useState<number>(bars[0].size);
     const classes = useGlobalStyles();
 
     const partialUpdateSettings = (value: Partial<EditorSettings>) => {
@@ -61,6 +62,14 @@ export const EditorSettingsPanel = () => {
         updateBars(newBars)
     }
 
+    const handleQuadratSizeChange = (event) => {
+
+        if (event.key === 'Enter') {
+            partialUpdateSettings({quadratSize: barSize});
+            recalculateBars(barSize);
+        }
+    }
+
 
     return (
         <Card className={classes.controlPanelCard}>
@@ -84,12 +93,9 @@ export const EditorSettingsPanel = () => {
                         <AccordionDetails>
                             <TextField className={classes.textInputPadding}
                                        label="Размер квадрата"
-                                       defaultValue={settings.quadratSize}
-                                       onChange={(event) => {
-                                           const newQuadratSize = Number(event.target.value);
-                                           partialUpdateSettings({quadratSize: newQuadratSize});
-                                           recalculateBars(newQuadratSize);
-                                       }}
+                                       defaultValue={barSize}
+                                       onChange={(event) =>setBarSize(Number(event.target.value))}
+                                       onKeyUp={(event)=>handleQuadratSizeChange(event)}
                                        disabled={false}/>
                         </AccordionDetails>
                     </Accordion>

@@ -1,4 +1,4 @@
-import {Card, CardContent, Checkbox, FormControlLabel, TextField, Typography} from "@material-ui/core";
+import {Card, CardContent, Checkbox, FormControlLabel, Grid, TextField, Typography} from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -88,24 +88,16 @@ export const EditorSettingsPanel = () => {
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon/>}
                         >
-                            <Typography className={classes.accordionHeading}>Структура</Typography>
+                            <Typography className={classes.accordionHeading}>Cтруктура и Отображение</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
+                            <Grid container direction="column" spacing={1}>
                             <TextField className={classes.textInputPadding}
                                        label="Размер квадрата"
                                        defaultValue={barSize}
                                        onChange={(event) =>setBarSize(Number(event.target.value))}
                                        onKeyUp={(event)=>handleQuadratSizeChange(event)}
                                        disabled={false}/>
-                        </AccordionDetails>
-                    </Accordion>
-                    <Accordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon/>}
-                        >
-                            <Typography className={classes.accordionHeading}>Отображение</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
                             <FormControlLabel
                                 value="top"
                                 control={<Checkbox
@@ -113,6 +105,7 @@ export const EditorSettingsPanel = () => {
                                     onChange={(e) => partialUpdateSettings({displayApplicature: e.target.checked})}
                                 />}
                                 label="Показывать аппликатуру"></FormControlLabel>
+                            </Grid>
                         </AccordionDetails>
                     </Accordion>
                 </div>

@@ -13,8 +13,8 @@ import {getFlexBasisValue, getPaddingValue} from "../../utils/rendering-utils";
 const AddMoreButton = ({onClick, opacity}) => {
     const {settings} = useContext(SettingsContext);
     return (<div key="addMoreButton" style={{
-        marginTop: "30px",
-        marginLeft: "0px",
+        marginTop: "20px",
+        marginLeft: "10px",
         marginRight: "10px",
         justifyContent: "center",
         opacity: opacity,

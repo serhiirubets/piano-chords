@@ -40,8 +40,9 @@ export const SaveLoadSettingsPanel = () => {
     const SAVE_NAME = 'Новая блок-схема'
     const classes = useGlobalStyles();
 
-    const [demoFile, setDemoFile] = React.useState('ba');
+    const [demoFile, setDemoFile] = useState('ba');
     let fileReader;
+    let filename;
 
 
     const loadFromLocalstorage = () => {
@@ -80,23 +81,22 @@ export const SaveLoadSettingsPanel = () => {
 
     const handleReadPersistedFile = (e) => {
         const stringifiedData = fileReader.result;
-        console.log(stringifiedData)
         const memorizedScheme = (stringifiedData ? new Map(JSON.parse(stringifiedData)) : []) as Map<string, SheetData>;
         const firstSheet = Array.from(memorizedScheme.keys())[0]
         updateSheets(memorizedScheme )
         updateActiveSheet(firstSheet)
-        partialUpdateSettings({quadratSize:memorizedScheme.get(firstSheet)!.bars[0].size})
+        partialUpdateSettings({quadratSize:memorizedScheme.get(firstSheet)!.bars[0].size, fileName:filename})
     }
 
     const handleSaveFileSelected = (e) => {
         const file = e.target.files[0]
-        partialUpdateSettings({fileName: file.name.replace(".json", "")})
+        const sanitizedFilename = file.name.replace(".json", "")
+        filename = sanitizedFilename;
+
         fileReader = new FileReader();
         fileReader.onloadend = handleReadPersistedFile
         fileReader.readAsText(file)
     }
-
-
 
     return (<Accordion>
         <AccordionSummary
@@ -142,12 +142,12 @@ export const SaveLoadSettingsPanel = () => {
                         checked={settings.autosave}
                         onChange={(e) => partialUpdateSettings({autosave: e.target.checked})}
                     />}
-                    label="Сохранять между обновлениями страницы"></FormControlLabel>
+                    label="Aвтосохранение в память"></FormControlLabel>
                 <Button
                     variant="outlined"
                     startIcon={<RefreshRounded/>}
                     onClick={loadFromLocalstorage}>
-                    Загрузить быстрое сохранение
+                    Загрузить автосохранение
                 </Button>
                 <hr/>
                 <FormControl>

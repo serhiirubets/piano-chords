@@ -7,8 +7,6 @@ import {EditorSettingsPanel} from "./components/menu/editor-settings-panel";
 import {SettingsContextProvider} from "./context/settings-context";
 import {BarContext, BarContextProvider} from "./context/bar-context";
 import {EditorHeader} from "./components/menu/editor-header";
-import {ScrollableTabs} from "./components/tabpanel/tab-panel";
-import {ScrollableTabsButtonAuto} from "./components/tabpanel/scrollable-tabs";
 import {BlockSchemeWhitePage} from "./block-scheme-page";
 
 

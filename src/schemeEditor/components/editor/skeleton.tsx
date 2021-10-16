@@ -3,14 +3,17 @@ import React, {useCallback, useContext, useState} from "react";
 import {css, jsx} from "@emotion/react/macro";
 import {SkeletonNode} from "./skeleton-node";
 import {BarContext} from "../../context/bar-context";
-import {HandType, TripletData} from "../../model/deprecated/skeleton-data";
-import {Note, NoteType} from "../../model/note-data";
+import {HandType, SkeletonData, TripletData} from "../../model/deprecated/skeleton-data";
+import {INote, Note, NoteType} from "../../model/note-data";
 import {SkeletonNodeData} from "../../model/deprecated/skeleton-node-data";
 import {NodeSubtitle} from "./node-subtitle";
 import {getMidiNumber} from "../../utils/playback-utils";
 import {ClickAwayListener, ListItemText, Menu, MenuItem} from "@material-ui/core";
 import {distinct} from "../../utils/js-utils";
 import {getTripletByIndex, getTripletDurationByIndex, isPartOfTriplet} from "../../utils/triplet-utils";
+import {BulkEditPopupMenu} from "./bulk-edit-popup-menu";
+import {SettingsContext} from "../../context/settings-context";
+import {getSkeletonHandData, setSkeletonHandData} from "../../utils/skeleton-node-utils";
 
 export enum NodeSelectionMode {
     NONE = "0000",
@@ -37,16 +40,22 @@ const isHostingTriplet = (triplets: TripletData[], idx: number) => {
     return triplets.filter(triplet => triplet.start === idx).length > 0
 }
 
+const getCommonValueOfTheAttributeOrDefault = (notes: Note[], attribute: string, defaultValue: string | number | boolean) => {
+    let commonValue = notes.length > 0 ? notes[0][attribute] : defaultValue;
+    return notes.every(note => note[attribute] === commonValue) ? commonValue : defaultValue
+}
 
 
 export const Skeleton = ({skeletonIndex}) => {
-    const {bars, updateBars} = useContext(BarContext);
+    const {bars, updateBars, updateSingleBar} = useContext(BarContext);
+    const {settings} = useContext(SettingsContext);
 
     const skeletonData = bars[skeletonIndex]
     const [selectedNodes, setSelectedNodes] = useState<number[]>(new Array<number>());
     const [activeNodeIndex, setActiveNodeIndex] = useState<number | null>(null);
+    const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
 
-    const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [bulkEditMenuAnchorEl, setBulkEditMenuAnchorEl] = useState<null | HTMLElement>(null);
 
     const getSelectionMode = (idx: number) => {
         if (!selectedNodes.includes(idx)) {
@@ -126,9 +135,10 @@ export const Skeleton = ({skeletonIndex}) => {
             const handsArray = hand === HandType.RIGHT ? updatedSkeleton.right : updatedSkeleton.left;
             handsArray[index] = skeletonNodeDataData;
 
-            const updatedBars = [...bars];
-            updatedBars[skeletonIndex] = updatedSkeleton;
-            updateBars(updatedBars)
+            updateSingleBar(skeletonIndex, updatedSkeleton)
+            // const updatedBars = [...bars];
+            // updatedBars[skeletonIndex] = updatedSkeleton;
+            // updateBars(updatedBars)
 
         }
     }, [bars, skeletonIndex])
@@ -161,8 +171,41 @@ export const Skeleton = ({skeletonIndex}) => {
         setMenuAnchorEl(null);
     }
 
+    const openBulkEditPopupMenu = (e) => {
+        setBulkEditMenuAnchorEl(e.currentTarget)
+        // setSelectedNodes([])
+        setMenuAnchorEl(null)
+    }
+
+    const closeBulkEditPopupMenu = (e) => {
+        setBulkEditMenuAnchorEl(null);
+    }
+
+    const bulkUpdateNotes = (indices: number[], noteHand: HandType, buFunction:(notes: INote[]) => INote[]) => {
+
+        const updatedSkeletonData = new SkeletonData(settings.quadratSize);
+        updatedSkeletonData.right = [...skeletonData.right]
+        updatedSkeletonData.left = [...skeletonData.left]
+
+        const updatedHand = getSkeletonHandData(updatedSkeletonData, noteHand)
+        console.log('originalSkeleton', skeletonData)
+        indices.forEach(index => {
+            if (indices.includes(index)) {
+                const updatedNode = {...updatedHand[index]}
+                console.log('passedFromFunc',buFunction)
+                const updatedNotes = buFunction(updatedNode.notes)
+                updatedNode.notes = updatedNotes
+                updatedHand[index] = updatedNode
+            }
+        })
+        console.log('updatedSkeleton', updatedSkeletonData)
+        setSkeletonHandData(updatedSkeletonData, updatedHand, noteHand);
+
+        updateSingleBar(skeletonIndex, updatedSkeletonData)
+    }
+
     const isNotTripletEligible = () => {
-        if (selectedNodes.length !== 2 && selectedNodes.length !== 4) {
+        if (selectedNodes.length !== 2 && selectedNodes.length !== 4 && selectedNodes.length !== 8) {
             return true;
         }
 
@@ -184,14 +227,15 @@ export const Skeleton = ({skeletonIndex}) => {
             .filter(distinct);
 
         updatedSkeleton.triplets = updatedTriplets;
-
-        const updatedBars = [...bars];
-        updatedBars[skeletonIndex] = updatedSkeleton;
-        updateBars(updatedBars)
+        updateSingleBar(skeletonIndex, updatedSkeleton)
+        // const updatedBars = [...bars];
+        // updatedBars[skeletonIndex] = updatedSkeleton;
+        // updateBars(updatedBars)
 
         setSelectedNodes([])
         setMenuAnchorEl(null)
     }
+
 
     const clearTriplet = (hostIndex: number) => {
         const tripletDataToRemove = getTripletByIndex(skeletonData.triplets, hostIndex);
@@ -211,9 +255,10 @@ export const Skeleton = ({skeletonIndex}) => {
         updatedSkeleton.right[hostIndex] = new SkeletonNodeData();
         updatedSkeleton.triplets.splice(indexOfTriplet, 1);
 
-        const updatedBars = [...bars];
-        updatedBars[skeletonIndex] = updatedSkeleton;
-        updateBars(updatedBars)
+        updateSingleBar(skeletonIndex, updatedSkeleton)
+        // const updatedBars = [...bars];
+        // updatedBars[skeletonIndex] = updatedSkeleton;
+        // updateBars(updatedBars)
     }
 
 
@@ -223,6 +268,13 @@ export const Skeleton = ({skeletonIndex}) => {
             tripletDuration: getTripletDurationByIndex(skeletonData.triplets, idx) || 0,
             handleClearTriplet: clearTriplet
         }
+    }
+
+    const getNotesBySelectedIndices = (handType: HandType) => {
+        const handNotes = handType === HandType.LEFT ? skeletonData.left : skeletonData.right;
+        return handNotes
+            .filter((el, index) => selectedNodes.includes(index))
+            .flatMap(node => node.notes)
     }
 
     return (
@@ -239,7 +291,7 @@ export const Skeleton = ({skeletonIndex}) => {
                                     <NodeSubtitle nodeData={noteData}
                                                   midiSummary={rightHandMidiSummary}
                                                   setNotes={setNote(HandType.RIGHT, idx)}
-                                                      tripletProps={getTripletProps(idx)}
+                                                  tripletProps={getTripletProps(idx)}
                                     ></NodeSubtitle>
                                     <div key={`${skeletonIndex}-r-${idx}-contextHandler`}
                                          onContextMenu={handleContextMenuClick}>
@@ -285,10 +337,25 @@ export const Skeleton = ({skeletonIndex}) => {
                         <MenuItem disabled={isNotTripletEligible()} onClick={initiateTriplet}>
                             <ListItemText primary="Триоль"/>
                         </MenuItem>
-                        <MenuItem disabled onClick={handleMenuClose}>
+                        <MenuItem onClick={openBulkEditPopupMenu}>
                             <ListItemText>Редактировать</ListItemText>
                         </MenuItem>
+                        <MenuItem disabled onClick={handleMenuClose}>
+                            <ListItemText>Копировать</ListItemText>
+                        </MenuItem>
+                        <MenuItem disabled onClick={handleMenuClose}>
+                            <ListItemText>Удалить</ListItemText>
+                        </MenuItem>
                     </Menu>
+                    <BulkEditPopupMenu
+                        onClose={closeBulkEditPopupMenu}
+                        bulkUpdateOperationChange={(bulkOperationFunction) => {
+                            bulkUpdateNotes(selectedNodes, HandType.RIGHT, bulkOperationFunction)
+                        }}
+
+                        // note={new Note({note:"c", octave:4})}
+                        anchorEl={bulkEditMenuAnchorEl}
+                    ></BulkEditPopupMenu>
                 </div>
             </ClickAwayListener>
         </div>

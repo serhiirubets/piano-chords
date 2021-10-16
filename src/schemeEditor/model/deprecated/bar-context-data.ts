@@ -8,6 +8,7 @@ export interface BarContextData {
 
     bars: SkeletonData[];
     updateBars: (newQuads: SkeletonData[]) => any;
+    updateSingleBar: (barIndex: number, barDara:SkeletonData) => any;
 
     updateActiveSheet : (sheetName:string) => any;
     updateSheets:( newSheets:Map<string, SheetData>) => any;

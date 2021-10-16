@@ -10,18 +10,13 @@ const defaultSettings: BarContextData = {
     activeSheet: "Часть 1",
 
     bars: [new SkeletonData(8)],
-    updateBars: (newValue) => {
-    },
+    updateBars: (newValue) => {},
+    updateSingleBar: (index, data) =>{},
 
-    updateActiveSheet: (sheetName: string) => {
-    },
-    updateSheets: (newSheets: Map<string, SheetData>) => {
-    },
-
+    updateActiveSheet: (sheetName: string) => {},
+    updateSheets: (newSheets: Map<string, SheetData>) => {},
     barSize: 8,
-    updateBarSize: (newValue) => {
-    }
-
+    updateBarSize: (newValue) => {}
 }
 
 export const BarContext = React.createContext(defaultSettings);
@@ -59,6 +54,19 @@ export const BarContextProvider = (props: any) => {
         setIsTouched(true)
     }
 
+    const updateSingleQuad = (quadIndex:number, quadData: SkeletonData) => {
+        const sheetToUpdate = sheets.get(getActiveSheet());
+        const updatedMap = new Map<string, SheetData>(sheets);
+        const updatedSheet = sheetToUpdate ? JSON.parse(JSON.stringify(sheetToUpdate)) : defaultSheet
+        const updatedBars = [updatedSheet.bars]
+        updatedBars[quadIndex] = quadData
+        updatedSheet.bars = updatedBars;
+        updatedMap.set(getActiveSheet(), updatedSheet);
+
+        setSheets(updatedMap)
+        setIsTouched(true)
+    }
+
     return (
         <BarContext.Provider value={
             {
@@ -66,6 +74,7 @@ export const BarContextProvider = (props: any) => {
                 bars: (sheets.get(activeSheet) || defaultSheet).bars,
                 isTouched:isTouched,
                 updateBars: updateQuads,
+                updateSingleBar:updateSingleQuad,
                 activeSheet: activeSheet,
                 updateActiveSheet: setActiveSheet,
                 updateSheets: setSheets,

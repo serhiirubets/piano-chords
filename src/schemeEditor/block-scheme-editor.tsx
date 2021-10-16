@@ -12,7 +12,6 @@ import {BlockSchemeWhitePage} from "./block-scheme-page";
 
 export const BlockSchemeEditor = () => {
     const classes = useGlobalStyles();
-    const {bars, updateBars} = useContext(BarContext);
 
     return (
         <div style={{flexDirection: "row", display: "flex"}}>

@@ -27,5 +27,6 @@ export enum HandType {
 export interface TripletData {
     start:number;
     length:number;
+    hand: HandType;
 }
 

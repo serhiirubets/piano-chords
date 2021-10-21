@@ -148,7 +148,16 @@ const ClearButton = ({onClick}) => {
     </div>)
 }
 
-export const SkeletonNode = ({data, setData, nodeIndex, handType, selectionMode, onSelect, onDeselect, tripletProps}: BlockSchemeNodeProps) => {
+export const SkeletonNode = ({
+                                 data,
+                                 setData,
+                                 nodeIndex,
+                                 handType,
+                                 selectionMode,
+                                 onSelect,
+                                 onDeselect,
+                                 tripletProps
+                             }: BlockSchemeNodeProps) => {
     const {settings} = useContext(SettingsContext);
     const [isEditMode, setEditMode] = useState(false);
     const [inputText, setInputText] = useState<string>('');
@@ -168,7 +177,7 @@ export const SkeletonNode = ({data, setData, nodeIndex, handType, selectionMode,
         onSelect && onSelect(event);
     };
 
-    const handleFocus = () => {
+    const handleFocus = (event) => {
         setEditMode(true)
     };
 
@@ -254,13 +263,13 @@ export const SkeletonNode = ({data, setData, nodeIndex, handType, selectionMode,
                 ...computeBorderStyle(selectionMode),
                 ...computeTripletDisplayProps(tripletPropsOrFallback)
             }}
-
+                 tabIndex={-1}
             >
                 {tripletPropsOrFallback.isHostingTriplet && <ClearButton
                     onClick={() => {
                         setEditMode(false)
                         setInputText("")
-                        tripletPropsOrFallback.handleClearTriplet(nodeIndex)
+                        tripletPropsOrFallback.handleClearTriplet({index: nodeIndex, noteHand: data.hand})
                     }}/>
                 }
                 {tripletPropsOrFallback.isHostingTriplet && data.isPresent && prepareTripletItems()}

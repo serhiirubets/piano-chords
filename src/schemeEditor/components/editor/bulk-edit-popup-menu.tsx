@@ -33,7 +33,6 @@ export const BulkEditPopupMenu = ({bulkUpdateOperationChange, anchorEl, onClose}
                 }
             )
         }
-        console.log(updateOperation)
         bulkUpdateOperationChange(updateOperation)
 
     }

@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {jsx} from "@emotion/react/macro";
 import {DOT_WIDTH, QUADRAT_WIDTH, SMALL_DOT_WIDTH} from "../../model/global-constants";
 import {SkeletonNodeData} from "../../model/deprecated/skeleton-node-data";
@@ -158,6 +158,7 @@ export const SkeletonNode = ({
                                  onDeselect,
                                  tripletProps
                              }: BlockSchemeNodeProps) => {
+    const transientInputValue = useRef(data.originalText);
     const {settings} = useContext(SettingsContext);
     const [isEditMode, setEditMode] = useState(false);
     const [inputText, setInputText] = useState<string>('');
@@ -198,11 +199,23 @@ export const SkeletonNode = ({
     }
 
     const handleSave = () => {
+
+        if (transientInputValue.current === inputText) {
+            setEditMode(false);
+            return
+        }
+        console.log('transient',transientInputValue)
+        console.log('current',inputText)
+
+        console.log('saving data')
         const updatedNote = parseInputToTheNotes(inputText,
             settings.defaultOctaves.get(handType)!,
             tripletPropsOrFallback);
+        console.log('saving data', updatedNote)
         setData(updatedNote, inputText)
         setEditMode(false);
+        transientInputValue.current = inputText;
+        console.log('newTransient', transientInputValue.current)
     }
 
     const prepareTripletItems = () => {
@@ -218,7 +231,7 @@ export const SkeletonNode = ({
                 height: idealTripletValues.is8thTriplet ? DOT_WIDTH : SMALL_DOT_WIDTH,
                 transform: "rotateY(0deg) rotate(45deg)",
                 opacity: isPresent ? 100 : 0,
-                background: "red"
+                background: handType === HandType.RIGHT?"red":"green"
             }}/>
 
 

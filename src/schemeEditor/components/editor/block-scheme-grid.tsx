@@ -38,6 +38,7 @@ const SortableItem = SortableElement(({idx}) =>
         minWidth: "100px",
         justifyContent: "center",
         alignItems: "center",
+        padding:"0 50 0 50"
     }}><SkeletonWrapper index={idx}></SkeletonWrapper></div>);
 
 

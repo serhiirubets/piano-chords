@@ -1,12 +1,12 @@
 import {PlaybackData, SkeletonNodeData} from "../model/deprecated/skeleton-node-data";
-import {Note, NoteType} from "../model/note-data";
+import {INote, Note, NoteType} from "../model/note-data";
 import {HandType, SkeletonData} from "../model/deprecated/skeleton-data";
 import {getMidiNumber} from "./playback-utils";
 import {groupBy} from "./js-utils";
 
 export const getEffectiveNodeColor = (data: SkeletonNodeData, isHostingTriplet: boolean) => {
-    return data.hand == HandType.LEFT ? "green" :
-        isHostingTriplet ? "yellow" :
+    return isHostingTriplet ? "yellow" :
+        data.hand == HandType.LEFT ? "green" :
             data.type == NoteType.FEATHER ? "#2196f3" : "red";
 }
 
@@ -26,8 +26,8 @@ export const getPlaybackData = (data: SkeletonNodeData): PlaybackData[] => {
         })
 }
 
-export const getOriginalText = (noteArray: Note[]): string => {
-    const chordToString = (notes: Note[]) => {
+export const getOriginalText = (noteArray: INote[]): string => {
+    const chordToString = (notes: INote[]) => {
         return notes.map(note => note.note + note.octave).join(" ")
     }
 
@@ -76,10 +76,17 @@ export const getSkeletonHandData = (data: SkeletonData, hand: HandType) => {
 }
 
 export const setSkeletonHandData = (originalData: SkeletonData, handData: SkeletonNodeData[], hand: HandType) => {
-    if(hand === HandType.LEFT){
+    if (hand === HandType.LEFT) {
         originalData.left = handData
-    }
-    else {
+    } else {
         originalData.right = handData
     }
+}
+
+export const copySkeleton = (originalData: SkeletonData) => {
+    const updatedSkeletonData = new SkeletonData(originalData.size);
+    updatedSkeletonData.right = [...originalData.right]
+    updatedSkeletonData.left = [...originalData.left]
+    updatedSkeletonData.triplets = [...originalData.triplets]
+    return updatedSkeletonData
 }

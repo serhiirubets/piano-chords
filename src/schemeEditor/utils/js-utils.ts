@@ -15,3 +15,7 @@ export const groupBy = (list, keyGetter) => {
     });
     return map;
 }
+
+export const deepCopy = (object:Object) => {
+    return JSON.parse(JSON.stringify(object))
+}

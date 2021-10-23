@@ -29,6 +29,7 @@ import {unstable_next} from "scheduler";
 import {AUTOSAVE_INTERVAL_MS} from "../../model/global-constants";
 import {RefreshRounded} from "@material-ui/icons";
 import {NymphScheme} from "../../resources/Nymph-recording";
+import {deepCopy} from "../../utils/js-utils";
 
 export interface SaveLoadSettingsPanelProps {
 }
@@ -64,7 +65,7 @@ export const SaveLoadSettingsPanel = () => {
         if (!isTouched) {
             return;
         }
-        localStorage.setItem(SHEETS_LOCALSTORAGE_KEY, JSON.stringify(Array.from(sheets.entries()), null, 2));
+        localStorage.setItem(SHEETS_LOCALSTORAGE_KEY, deepCopy(Array.from(sheets.entries())));
 
 
     }, [sheets]);

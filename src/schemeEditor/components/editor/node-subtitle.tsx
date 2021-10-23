@@ -31,6 +31,7 @@ const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizon
     const {settings} = useContext(SettingsContext)
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [isHovered, setIsHovered] = React.useState<boolean>(false);
+
     const handlePopoverClose = () => {
         setAnchorEl(null);
     };

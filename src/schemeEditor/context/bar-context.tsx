@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {BarContextData} from "../model/deprecated/bar-context-data";
 import {SkeletonData} from "../model/deprecated/skeleton-data";
 import {sheet} from "@emotion/css";
 import {SheetData} from "../model/deprecated/sheet-data";
+import {SelectionBuffer} from "../model/selection/selection-buffer";
+import {deepCopy} from "../utils/js-utils";
 
 const defaultSettings: BarContextData = {
     sheets: new Map<string, SheetData>(),
@@ -12,6 +14,7 @@ const defaultSettings: BarContextData = {
     bars: [new SkeletonData(8)],
     updateBars: (newValue) => {},
     updateSingleBar: (index, data) =>{},
+    selectionBuffer: {current:new SelectionBuffer()},
 
     updateActiveSheet: (sheetName: string) => {},
     updateSheets: (newSheets: Map<string, SheetData>) => {},
@@ -24,6 +27,7 @@ export const BarContext = React.createContext(defaultSettings);
 export const BarContextProvider = (props: any) => {
     const emptyBars = [new SkeletonData(8)];
     const defaultSheet = new SheetData();
+    const selectionBuffer = useRef<SelectionBuffer>(new SelectionBuffer());
     defaultSheet.name = "Часть 1";
     defaultSheet.index = 0;
     defaultSheet.bars = emptyBars;
@@ -46,7 +50,7 @@ export const BarContextProvider = (props: any) => {
     const updateQuads = (newBars: SkeletonData[]) => {
         const sheetToUpdate = sheets.get(getActiveSheet());
         const updatedMap = new Map<string, SheetData>(sheets);
-        const updatedSheet = sheetToUpdate ? JSON.parse(JSON.stringify(sheetToUpdate)) : defaultSheet
+        const updatedSheet = sheetToUpdate ? deepCopy(sheetToUpdate) : defaultSheet
         updatedSheet.bars = newBars;
         updatedMap.set(getActiveSheet(), updatedSheet);
 
@@ -57,8 +61,8 @@ export const BarContextProvider = (props: any) => {
     const updateSingleQuad = (quadIndex:number, quadData: SkeletonData) => {
         const sheetToUpdate = sheets.get(getActiveSheet());
         const updatedMap = new Map<string, SheetData>(sheets);
-        const updatedSheet = sheetToUpdate ? JSON.parse(JSON.stringify(sheetToUpdate)) : defaultSheet
-        const updatedBars = [updatedSheet.bars]
+        const updatedSheet = sheetToUpdate ? deepCopy(sheetToUpdate) : defaultSheet
+        const updatedBars = [...updatedSheet.bars]
         updatedBars[quadIndex] = quadData
         updatedSheet.bars = updatedBars;
         updatedMap.set(getActiveSheet(), updatedSheet);
@@ -73,6 +77,7 @@ export const BarContextProvider = (props: any) => {
                 sheets: sheets,
                 bars: (sheets.get(activeSheet) || defaultSheet).bars,
                 isTouched:isTouched,
+                selectionBuffer: selectionBuffer,
                 updateBars: updateQuads,
                 updateSingleBar:updateSingleQuad,
                 activeSheet: activeSheet,

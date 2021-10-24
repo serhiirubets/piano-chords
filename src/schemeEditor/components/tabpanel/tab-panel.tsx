@@ -1,39 +1,18 @@
 import React, {useContext} from 'react';
 import {makeStyles, Theme} from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 import AddRoundedIcon from '@material-ui/icons/AddRounded';
 import {BarContext} from "../../context/bar-context";
 import {SheetData} from "../../model/deprecated/sheet-data";
 import {TabElement} from "./tab-element";
+import {SortableContainer, SortableElement} from "react-sortable-hoc";
+import {deepCopy} from "../../utils/js-utils";
 
 interface TabPanelProps {
     children?: React.ReactNode;
     index: any;
     value: any;
-}
-
-function TabPanel(props: TabPanelProps) {
-    const {children, value, index, ...other} = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`scrollable-auto-tabpanel-${index}`}
-            aria-labelledby={`scrollable-auto-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box p={3}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    );
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -43,8 +22,30 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 }));
 
+const SortableTabItem = SortableElement(({sheetName, onTabSelect, handleNameChange, onRemoveTriggered}) => {
+    return (<TabElement
+        label={sheetName}
+        onNameChange={handleNameChange}
+        onTabSelect={onTabSelect}
+        onRemoveTriggered={onRemoveTriggered}
+    />)
+})
+
+const SortableTabContainer = SortableContainer(({value, onChange, children}) => {
+    return <Tabs
+        value={value}
+        onChange={onChange}
+        indicatorColor="secondary"
+        textColor="primary"
+        variant="scrollable"
+        scrollButtons="auto"
+    >
+        {children}
+    </Tabs>
+})
+
 export const ScrollableTabs = () => {
-    const styles = useStyles();
+
     const {sheets, updateSheets, activeSheet, updateActiveSheet} = useContext(BarContext);
     const [value, setValue] = React.useState(0);
 
@@ -52,7 +53,36 @@ export const ScrollableTabs = () => {
         .sort(([k1, v1], [k2, v2]) => {
             return v1.index - v2.index;
         })
-        .map(([k,v]) => k);
+        .map(([k, v]) => k);
+
+    const handleDragNDropEnd = ({oldIndex, newIndex}) => {
+        if(oldIndex === newIndex){
+            return
+        }
+        const updatedSheets = new Map();
+        const shiftDirection = newIndex > oldIndex? -1 : 1
+        const isBetweenOldAndNewPosition = (value) => {
+          return shiftDirection < 0 ? oldIndex < value.index && value.index <= newIndex : newIndex<= value.index && value.index < oldIndex
+        }
+        const isOutsideOldAndNewPosition = (value) => {
+            return   shiftDirection < 0 ? value.index < oldIndex || value.index > newIndex :value.index < newIndex || value.index > oldIndex
+        }
+
+        sheets.forEach((value, key) => {
+            if (isOutsideOldAndNewPosition(value)) {
+                updatedSheets.set(key, value)
+            } else if (isBetweenOldAndNewPosition(value)) {
+                const updatedValue = deepCopy(value)
+                updatedValue.index = value.index + shiftDirection
+                updatedSheets.set(key, updatedValue)
+            } else {
+                const updatedValue = deepCopy(value)
+                updatedValue.index = newIndex
+                updatedSheets.set(key, updatedValue)
+            }
+        })
+        updateSheets(updatedSheets)
+    }
 
     const handleChange = (event: React.ChangeEvent<{}> | null, newValue: number) => {
         setValue(newValue);
@@ -60,7 +90,6 @@ export const ScrollableTabs = () => {
             updateActiveSheet(sheetNames[newValue])
         }
     };
-
 
     const handleAdditionOfSheet = () => {
         const newSheet = new SheetData();
@@ -73,9 +102,9 @@ export const ScrollableTabs = () => {
         updateActiveSheet(newSheet.name)
     }
 
-    const handleRemovalOfSheet = (sheetName:string) => {
+    const handleRemovalOfSheet = (sheetName: string) => {
         const updatedSheets = new Map(sheets);
-        if(Array.from(updatedSheets.entries()).length === 1){
+        if (Array.from(updatedSheets.entries()).length === 1) {
             alert("Минимальное количество листов в блок-схеме = 1")
             return;
         }
@@ -95,31 +124,26 @@ export const ScrollableTabs = () => {
             updateSheets(updatedSheets);
             updateActiveSheet(newName);
         }
-
     }
 
     return (
-        // <div>
-            <Tabs
-                value={value}
-                onChange={handleChange}
-                indicatorColor="secondary"
-                textColor="primary"
-                variant="scrollable"
-                scrollButtons="auto"
-            >
-                {sheetNames
-                    .map((sheetName, idx) => <TabElement
-                        label={sheetName}
-                        onNameChange={handleNameChange}
-                        onTabSelect={() => {
-                            handleChange(null, idx)
-                        }}
-                        onRemoveTriggered={handleRemovalOfSheet}
-                    />)}
-                <Tab icon={<AddRoundedIcon/>} onClick={handleAdditionOfSheet}/>
-            </Tabs>
-
-        // </div>
+        <SortableTabContainer
+            axis={"x"}
+            value={value}
+            onChange={handleChange}
+            onSortEnd={handleDragNDropEnd}
+        >
+            {sheetNames
+                .map((sheetName, idx) => <SortableTabItem
+                    index={idx}
+                    sheetName={sheetName}
+                    handleNameChange={handleNameChange}
+                    onTabSelect={() => {
+                        handleChange(null, idx)
+                    }}
+                    onRemoveTriggered={handleRemovalOfSheet}
+                />)}
+            <Tab icon={<AddRoundedIcon/>} onClick={handleAdditionOfSheet}/>
+        </SortableTabContainer>
     );
 }

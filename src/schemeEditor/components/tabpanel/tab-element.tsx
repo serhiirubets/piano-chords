@@ -2,6 +2,8 @@ import Tab from "@material-ui/core/Tab";
 import React, {useEffect, useState} from "react";
 import {ClickAwayListener, ListItemText, Menu, MenuItem, TextField} from "@material-ui/core";
 import {jsx} from "@emotion/react/macro";
+import {SortableElement, SortableHandle} from "react-sortable-hoc";
+import OpenWithRoundedIcon from '@material-ui/icons/OpenWithRounded';
 
 export interface TabElementProps {
     label: string;
@@ -9,6 +11,23 @@ export interface TabElementProps {
     onTabSelect: () => any;
     onRemoveTriggered: (name:string) => any;
 }
+
+const MoveTabButton = SortableHandle(() => {
+    const [isHovered, setIsHovered] = useState<boolean>(false)
+    return (<div
+        css={{
+            position: "absolute",
+            right: 0,
+            top: 0,
+            zIndex: 10,
+            opacity: isHovered ? 0 : 100
+        }}
+
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}>
+        <OpenWithRoundedIcon fontSize="small" color="action"/>
+    </div>)
+})
 
 export const TabElement = ({label, onNameChange,onTabSelect,onRemoveTriggered}: TabElementProps) => {
     const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -67,6 +86,7 @@ export const TabElement = ({label, onNameChange,onTabSelect,onRemoveTriggered}: 
                         <ListItemText primary="Удалить"/>
                     </MenuItem>
                 </Menu>
+                <div style={{flex:"1", flexDirection:"row"}}>
                 <TextField
                     style={{
                         opacity: isEditMode ? 100 : 0,
@@ -81,8 +101,9 @@ export const TabElement = ({label, onNameChange,onTabSelect,onRemoveTriggered}: 
                 <Tab style={{opacity: isEditMode ? 0 : 100, zIndex: isEditMode ? 0 : 2}}
                      label={label}
                      onClick={()=> onTabSelect()}
-                     onContextMenu={handleContextMenuClick}>
-                </Tab>
+                     onContextMenu={handleContextMenuClick}></Tab>
+                {/*<MoveTabButton></MoveTabButton>*/}
+                </div>
             </div>
         </ClickAwayListener>
     )

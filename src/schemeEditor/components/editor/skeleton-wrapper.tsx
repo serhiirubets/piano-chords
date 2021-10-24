@@ -8,6 +8,7 @@ import SoundfontProvider from "../../../components/piano-core/SoundfontProvider"
 import {getNotesToPlay, playNotes} from "../../utils/playback-utils";
 import {SettingsContext} from "../../context/settings-context";
 import {BarContext} from "../../context/bar-context";
+import {deepCopy} from "../../utils/js-utils";
 
 export interface BlockSchemeSkeletonWrapperProps {
     index: number;
@@ -43,7 +44,7 @@ export const SkeletonWrapper = ({index}: BlockSchemeSkeletonWrapperProps) => {
     }
 
     const handleCopyButtonClick = () => {
-        const barCopy = JSON.parse(JSON.stringify(bars[index]));
+        const barCopy = deepCopy(bars[index]);
         barCopy.id = uuid();
         const editedBars = [...bars];
         editedBars.push(barCopy)

@@ -44,7 +44,6 @@ export const getScaleSize = (barSize: number) => {
 }
 
 export const renderToPdf = async (settings:EditorSettings, toPdf?) => {
-        // toPdf()
         html2canvas(settings.editorElementRef.current, {
             logging: true,
             useCORS: true,
@@ -61,7 +60,5 @@ export const renderToPdf = async (settings:EditorSettings, toPdf?) => {
             settings.editorElementRef.current.classList.remove('exporting');
         });
 
-    // updateSettings({...settings, isExportingInProgress:true}, renderPdfDocument())
-    // updateSettings({...settings,isExportingInProgress:false})
 
 }

@@ -1,6 +1,7 @@
 import {TripletHandlingProps} from "../components/editor/skeleton";
 import {PlaybackDuration} from "../model/note-data";
-import {TripletData} from "../model/deprecated/skeleton-data";
+import {HandType, TripletData} from "../model/deprecated/skeleton-data";
+import {SelectionIndex} from "../model/selection/selection-index";
 
 export const getTripletEffectiveParameters = (tripletProps: TripletHandlingProps) => {
     const is8thTriplet = tripletProps.tripletDuration / 3 >= 1;
@@ -15,20 +16,21 @@ export const getTripletEffectiveParameters = (tripletProps: TripletHandlingProps
     }
 }
 
-export const isPartOfTriplet = (triplets: TripletData[], index: number) => {
+export const isPartOfTriplet = (triplets: TripletData[], index: SelectionIndex) => {
     return getTripletByIndex(triplets, index) !== null
 }
 
-export const getTripletByIndex = (triplets: TripletData[], idx: number): TripletData | null => {
+export const getTripletByIndex = (triplets: TripletData[], idx: SelectionIndex, ): TripletData | null => {
 
     const maybeTriplet = triplets
-        .filter(triplet => triplet.start <= idx && idx < triplet.start + triplet.length);
+        .filter(triplet=> triplet.hand === idx.noteHand)
+        .filter(triplet => triplet.start <= idx.index && idx.index < triplet.start + triplet.length);
     return maybeTriplet.length > 0 ?
         maybeTriplet[0] :
         null;
 }
 
-export const getTripletDurationByIndex = (triplets: TripletData[], index: number) => {
+export const getTripletDurationByIndex = (triplets: TripletData[], index: SelectionIndex) => {
     const maybeTriplet = getTripletByIndex(triplets, index);
 
     if (maybeTriplet) {

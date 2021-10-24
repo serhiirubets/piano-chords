@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {jsx} from "@emotion/react/macro";
 import {DOT_WIDTH, QUADRAT_WIDTH, SMALL_DOT_WIDTH} from "../../model/global-constants";
 import {SkeletonNodeData} from "../../model/deprecated/skeleton-node-data";
@@ -148,7 +148,17 @@ const ClearButton = ({onClick}) => {
     </div>)
 }
 
-export const SkeletonNode = ({data, setData, nodeIndex, handType, selectionMode, onSelect, onDeselect, tripletProps}: BlockSchemeNodeProps) => {
+export const SkeletonNode = ({
+                                 data,
+                                 setData,
+                                 nodeIndex,
+                                 handType,
+                                 selectionMode,
+                                 onSelect,
+                                 onDeselect,
+                                 tripletProps
+                             }: BlockSchemeNodeProps) => {
+    const transientInputValue = useRef(data.originalText);
     const {settings} = useContext(SettingsContext);
     const [isEditMode, setEditMode] = useState(false);
     const [inputText, setInputText] = useState<string>('');
@@ -168,7 +178,7 @@ export const SkeletonNode = ({data, setData, nodeIndex, handType, selectionMode,
         onSelect && onSelect(event);
     };
 
-    const handleFocus = () => {
+    const handleFocus = (event) => {
         setEditMode(true)
     };
 
@@ -189,11 +199,23 @@ export const SkeletonNode = ({data, setData, nodeIndex, handType, selectionMode,
     }
 
     const handleSave = () => {
+
+        if (transientInputValue.current === inputText) {
+            setEditMode(false);
+            return
+        }
+        console.log('transient',transientInputValue)
+        console.log('current',inputText)
+
+        console.log('saving data')
         const updatedNote = parseInputToTheNotes(inputText,
             settings.defaultOctaves.get(handType)!,
             tripletPropsOrFallback);
+        console.log('saving data', updatedNote)
         setData(updatedNote, inputText)
         setEditMode(false);
+        transientInputValue.current = inputText;
+        console.log('newTransient', transientInputValue.current)
     }
 
     const prepareTripletItems = () => {
@@ -209,7 +231,7 @@ export const SkeletonNode = ({data, setData, nodeIndex, handType, selectionMode,
                 height: idealTripletValues.is8thTriplet ? DOT_WIDTH : SMALL_DOT_WIDTH,
                 transform: "rotateY(0deg) rotate(45deg)",
                 opacity: isPresent ? 100 : 0,
-                background: "red"
+                background: handType === HandType.RIGHT?"red":"green"
             }}/>
 
 
@@ -254,13 +276,13 @@ export const SkeletonNode = ({data, setData, nodeIndex, handType, selectionMode,
                 ...computeBorderStyle(selectionMode),
                 ...computeTripletDisplayProps(tripletPropsOrFallback)
             }}
-
+                 tabIndex={-1}
             >
                 {tripletPropsOrFallback.isHostingTriplet && <ClearButton
                     onClick={() => {
                         setEditMode(false)
                         setInputText("")
-                        tripletPropsOrFallback.handleClearTriplet(nodeIndex)
+                        tripletPropsOrFallback.handleClearTriplet({index: nodeIndex, noteHand: data.hand})
                     }}/>
                 }
                 {tripletPropsOrFallback.isHostingTriplet && data.isPresent && prepareTripletItems()}

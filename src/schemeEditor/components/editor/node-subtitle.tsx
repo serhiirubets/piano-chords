@@ -1,27 +1,17 @@
 /** @jsx jsx */
 import React, {useContext} from "react";
 import {jsx} from "@emotion/react/macro";
-import {INote, Note, NoteType, PlaybackDuration, PlaybackOffset} from "../../model/note-data";
+import {INote, Note, PlaybackDuration, PlaybackOffset} from "../../model/note-data";
 import {HandType} from "../../model/deprecated/skeleton-data";
 import {SkeletonNodeData} from "../../model/deprecated/skeleton-node-data";
 import {QUADRAT_WIDTH} from "../../model/global-constants";
 import {compareByMidiNumbers, getMidiNumber, isChord} from "../../utils/playback-utils";
 import {HandMidiSummary, TripletHandlingProps} from "./skeleton";
-import {
-    Checkbox,
-    ClickAwayListener,
-    FormControlLabel,
-    Popover,
-    Switch,
-    TextField,
-    Typography,
-    withStyles
-} from "@material-ui/core";
-import {blue, red} from "@material-ui/core/colors";
-import ClearRoundedIcon from "@material-ui/icons/ClearRounded";
+import {ClickAwayListener} from "@material-ui/core";
 import {getOctaveInRussianNotation, getOriginalText} from "../../utils/skeleton-node-utils";
 import {getTripletEffectiveParameters} from "../../utils/triplet-utils";
 import {SettingsContext} from "../../context/settings-context";
+import {NoteEditPopupMenu} from "./subtitle/note-edit-popup-menu";
 
 
 export interface NodeSubtitleProps {
@@ -35,130 +25,13 @@ export interface NodeSubtitleProps {
     tripletProps?: TripletHandlingProps
 }
 
-const FeatherSwitch = withStyles({
-    switchBase: {
-        color: red[500],
-        '&$checked': {
-            color: blue[500],
-        },
-        '&$checked + $track': {
-            backgroundColor: blue[300],
-        },
-    },
-    checked: {},
-    track: {color: red[500],},
-})(Switch);
 
-
-export interface NoteContextMenuProps {
-    note: INote;
-    setNote: any;
-    hand: HandType;
-}
-
-const NoteContextMenu = ({note, onUpdateNote, hand, anchorEl, onClose}) => {
-    const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
-
-    const handleNoteUpdate = (data: Partial<INote>) => {
-        const updatedNote = new Note({
-            note: data.note || note.note,
-            octave: data.octave || note.octave,
-            displayOctave: data.displayOctave || note.displayOctave,
-            applicature: data.applicature || note.applicature,
-            duration: note.duration,
-            playbackOffset: note.playbackOffset,
-            noteType: data.noteType || note.noteType
-        });
-        onUpdateNote(updatedNote)
-
-    }
-
-    return (
-        <Popover
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={onClose}
-            anchorOrigin={{
-                vertical: 'center',
-                horizontal: 'right',
-            }}
-            transformOrigin={{
-                vertical: 'center',
-                horizontal: 'left',
-            }}
-        >
-            <div style={{padding: 10, display: "flex", flexDirection: "column"}}>
-                <div style={{position: "absolute", right: 3, top: 3}}>
-                    <ClearRoundedIcon fontSize="small" color="action" onClick={onClose}/>
-                </div>
-                <div style={{padding: 10, display: "flex", flexDirection: "row"}}>
-                    <TextField style={{paddingRight: 10, width: 50}}
-                               defaultValue={note.note}
-                               label="Нота"
-                               InputLabelProps={{
-                                   shrink: true,
-                               }}
-                               inputProps={{maxLength: 4}}
-                               onChange={event => {
-                                   handleNoteUpdate({note: event.target.value})
-                               }}
-                    />
-
-                    <TextField style={{paddingRight: 10, width: 50}}
-                               defaultValue={note.octave}
-                               label="Октава"
-                               type="number"
-                               InputLabelProps={{
-                                   shrink: true,
-                               }}
-                               inputProps={{maxLength: 4}}
-                               onChange={event => {
-                                   handleNoteUpdate({octave: Number(event.target.value)})
-                               }}
-                    />
-                </div>
-                <div style={{padding: 10, display: "flex", flexDirection: "row"}}>
-                    <TextField style={{paddingRight: 10, width: 70}}
-                               defaultValue={note.applicature}
-                               label="Аппликатура"
-                               InputLabelProps={{
-                                   shrink: true,
-                               }}
-                               inputProps={{width: 50}}
-                               onChange={event => {
-                                   handleNoteUpdate({applicature: event.target.value})
-                               }}
-                    />
-                    {hand === HandType.RIGHT && <FormControlLabel
-                        control={<FeatherSwitch checked={note.noteType === NoteType.FEATHER}
-                                                onChange={(event) => {
-                                                    handleNoteUpdate({noteType: event.target.checked ? NoteType.FEATHER : NoteType.REGULAR})
-                                                }}></FeatherSwitch>}
-                        labelPlacement="top"
-                        label={<Typography
-                            style={{color: "gray", fontSize: "small"}}>Оперение</Typography>}
-                    />}
-                </div>
-                <FormControlLabel
-                    value="top"
-                    control={<Checkbox
-                        checked={note.displayOctave}
-                        onChange={(e) => handleNoteUpdate({displayOctave: e.target.checked})}
-                    />}
-                    label={<Typography
-                        style={{color: "gray", fontSize: "small"}}>Показывать октаву</Typography>}></FormControlLabel>
-
-            </div>
-        </Popover>
-    )
-}
 
 const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizontalOffset}) => {
     const {settings} = useContext(SettingsContext)
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [isHovered, setIsHovered] = React.useState<boolean>(false);
+
     const handlePopoverClose = () => {
         setAnchorEl(null);
     };
@@ -210,12 +83,12 @@ const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizon
                     {transformFlatSign(note).isFlat && <sup css={{fontSize: fontHeight * 0.6}}>♭</sup>}
                     {settings.displayApplicature && <sup css={{fontSize: fontHeight * 0.7, color:"#D65F24"}}>{note.applicature}</sup>}
                 </div>
-                <NoteContextMenu note={note}
+                <NoteEditPopupMenu note={note}
                                  anchorEl={anchorEl}
                                  hand={hand}
                                  onUpdateNote={onUpdateNote}
                                  onClose={handlePopoverClose}
-                ></NoteContextMenu>
+                ></NoteEditPopupMenu>
             </div>
         </ClickAwayListener>)
 }

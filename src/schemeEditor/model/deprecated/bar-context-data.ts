@@ -7,6 +7,7 @@ export interface BarContextData {
     sheets : Map<string, SheetData>
     isTouched:boolean;
     activeSheet:string;
+    activeSubSheet:string|null;
 
     bars: SkeletonData[];
     updateBars: (newQuads: SkeletonData[]) => any;
@@ -14,6 +15,7 @@ export interface BarContextData {
     selectionBuffer:MutableRefObject<SelectionBuffer>;
 
     updateActiveSheet : (sheetName:string) => any;
+    updateActiveSubSheet : (sheetName:string|null) => any;
     updateSheets:( newSheets:Map<string, SheetData>) => any;
 
     barSize: number;

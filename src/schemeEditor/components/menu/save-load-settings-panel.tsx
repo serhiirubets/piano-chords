@@ -83,7 +83,7 @@ export const SaveLoadSettingsPanel = () => {
     const handleReadPersistedFile = (e) => {
         const stringifiedData = fileReader.result;
         const memorizedScheme = (stringifiedData ? new Map(JSON.parse(stringifiedData)) : []) as Map<string, SheetData>;
-        const firstSheet = Array.from(memorizedScheme.keys())[0]
+        const firstSheet = Array.from(memorizedScheme.keys()).filter(value => value !== null)[0]
         updateSheets(memorizedScheme )
         updateActiveSheet(firstSheet)
         partialUpdateSettings({quadratSize:memorizedScheme.get(firstSheet)!.bars[0].size, fileName:filename})

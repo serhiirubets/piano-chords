@@ -10,6 +10,7 @@ export interface TabElementProps {
     onNameChange: (newName: string) => any;
     onTabSelect: () => any;
     onRemoveTriggered: (name:string) => any;
+    externalStyle?:Object
 }
 
 const MoveTabButton = SortableHandle(() => {
@@ -29,7 +30,7 @@ const MoveTabButton = SortableHandle(() => {
     </div>)
 })
 
-export const TabElement = ({label, onNameChange,onTabSelect,onRemoveTriggered}: TabElementProps) => {
+export const TabElement = ({label, onNameChange,onTabSelect,onRemoveTriggered,externalStyle}: TabElementProps) => {
     const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(null);
     const [isEditMode, setEditMode] = useState<boolean>(false);
 
@@ -65,7 +66,7 @@ export const TabElement = ({label, onNameChange,onTabSelect,onRemoveTriggered}: 
             handleMenuClose();
             setEditMode(false);
         }}>
-            <div style={{position: "relative"}}>
+            <div style={{position: "relative", ...externalStyle}}>
                 <Menu
                     id="simple-menu"
                     anchorEl={menuAnchorEl}
@@ -98,7 +99,10 @@ export const TabElement = ({label, onNameChange,onTabSelect,onRemoveTriggered}: 
                     onKeyUp={(event) => handleTextInput(event)}
                     defaultValue={label}
                 ></TextField>
-                <Tab style={{opacity: isEditMode ? 0 : 100, zIndex: isEditMode ? 0 : 2}}
+                <Tab style={{opacity: isEditMode ? 0 : 100,
+                    zIndex: isEditMode ? 0 : 2,
+                    ...(externalStyle || {})
+                }}
                      label={label}
                      onClick={()=> onTabSelect()}
                      onContextMenu={handleContextMenuClick}></Tab>

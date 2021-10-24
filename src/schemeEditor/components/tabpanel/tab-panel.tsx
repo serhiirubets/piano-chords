@@ -212,7 +212,13 @@ export const ScrollableTabs = () => {
     }
 
     return (
-        <div style={classes.wrapperDiv}>
+        <div style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            alignItems: "left",
+            width:"100%",
+            overflow:"scroll"}}>
             <SortableTabContainer
                 axis={"x"}
                 indicatorColor="secondary"
@@ -262,7 +268,9 @@ export const ScrollableTabs = () => {
 
 const classes = {
     wrapperDiv: {
-        width:"100%"
+        width: "100%",
+        display: "flex",
+        flexDirection: 'column'
     },
     sheetTabItem: {
         fontWeight: "bold",
@@ -278,6 +286,8 @@ const classes = {
     subsheetTabRoot: {
         minHeight: 37,
         height: 37,
-        background:"#e7e7e7"
+        width:"100%",
+        maxWidth:"100%",
+        background: "#e7e7e7"
     }
 }

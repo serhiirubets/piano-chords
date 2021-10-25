@@ -33,6 +33,7 @@ const MoveTabButton = SortableHandle(() => {
 export const TabElement = ({label, onNameChange,onTabSelect,onRemoveTriggered,externalStyle}: TabElementProps) => {
     const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(null);
     const [isEditMode, setEditMode] = useState<boolean>(false);
+    const [tabnameText, setTabnameText] = useState(label)
 
     const handleMenuClose = () => {
         setMenuAnchorEl(null);
@@ -53,12 +54,13 @@ export const TabElement = ({label, onNameChange,onTabSelect,onRemoveTriggered,ex
         }
 
         if (event.key === 'Enter') {
-            handleSave(event.target.value)
+            handleSave(tabnameText)
         }
 
         if (event.key === 'Escape') {
             setEditMode(false)
         }
+        setTabnameText(event.target.value)
     }
 
     return (
@@ -97,7 +99,8 @@ export const TabElement = ({label, onNameChange,onTabSelect,onRemoveTriggered,ex
                         paddingRight:"1em"
                     }}
                     onKeyUp={(event) => handleTextInput(event)}
-                    defaultValue={label}
+                    defaultValue={tabnameText}
+                    onBlur = {() => handleSave(tabnameText)}
                 ></TextField>
                 <Tab style={{opacity: isEditMode ? 0 : 100,
                     zIndex: isEditMode ? 0 : 2,

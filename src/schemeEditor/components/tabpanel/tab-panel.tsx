@@ -158,6 +158,10 @@ export const ScrollableTabs = () => {
             return;
         }
         updatedSheets.delete(sheetName);
+        const subSheets = Array.from(sheets.entries())
+            .filter(([key, value])=> value.parentName === sheetName)
+            .map(([key, value]) => key);
+        subSheets.forEach(sheetName => updatedSheets.delete(sheetName))
         updateSheets(updatedSheets);
         updateActiveSheet(Array.from(updatedSheets.keys())[0])
     }

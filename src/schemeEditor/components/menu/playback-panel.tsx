@@ -15,13 +15,8 @@ export interface SaveLoadSettingsPanelProps {
 }
 
 export const PlaybackPanel = () => {
-    const {settings, updateSettings} = useContext(SettingsContext);
-    const {bars, updateBars} = useContext(BarContext);
+    const {settings, partialUpdateSettings} = useContext(SettingsContext);
     const classes = useGlobalStyles();
-
-    const partialUpdateSettings = (value: Partial<EditorSettings>) => {
-        updateSettings({...settings, ...value})
-    }
 
     const handleNoteDurationChange = (event: any, newValue: number | number[]) => {
         partialUpdateSettings({playbackTempo: (newValue as number) * -1});

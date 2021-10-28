@@ -160,7 +160,6 @@ export const Skeleton = ({skeletonIndex}) => {
         }
     }, [bars, skeletonIndex])
 
-    console.log('skeleton',skeletonData)
 
     const getSkeletonMidiSummary = (hand: HandType) => {
         const handNotes = getSkeletonHandData(skeletonData, hand);
@@ -416,6 +415,7 @@ export const Skeleton = ({skeletonIndex}) => {
                         keepMounted
                         open={Boolean(menuAnchorEl)}
                         onClose={handleMenuClose}
+                        dense
                     >
                         <MenuItem disabled={isNotTripletEligible()} onClick={initiateTriplet}>
                             <ListItemText primary="Триоль"/>

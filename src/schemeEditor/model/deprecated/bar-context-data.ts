@@ -20,4 +20,5 @@ export interface BarContextData {
 
     barSize: number;
     updateBarSize: (newSize: number) => any;
+    undo: () => any;
 }

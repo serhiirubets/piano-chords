@@ -5,6 +5,7 @@ import {sheet} from "@emotion/css";
 import {SheetData} from "../model/deprecated/sheet-data";
 import {SelectionBuffer} from "../model/selection/selection-buffer";
 import {deepCopy} from "../utils/js-utils";
+import {HistoricalData} from "../model/history/historical-data";
 
 const defaultSettings: BarContextData = {
     sheets: new Map<string, SheetData>(),
@@ -21,12 +22,14 @@ const defaultSettings: BarContextData = {
 
     updateActiveSheet: (sheetName: string) => {
     },
-    updateActiveSubSheet: (sheetName: string|null) => {
+    updateActiveSubSheet: (sheetName: string | null) => {
     },
     updateSheets: (newSheets: Map<string, SheetData>) => {
     },
     barSize: 8,
     updateBarSize: (newValue) => {
+    },
+    undo: () => {
     }
 }
 
@@ -35,6 +38,7 @@ export const BarContext = React.createContext(defaultSettings);
 export const BarContextProvider = (props: any) => {
     const emptyBars = [new SkeletonData(8)];
     const selectionBuffer = useRef<SelectionBuffer>(new SelectionBuffer());
+    const history = useRef<HistoricalData[]>(new Array<HistoricalData>())
 
     const defaultSheet = new SheetData();
     defaultSheet.name = "Часть 1";
@@ -44,9 +48,10 @@ export const BarContextProvider = (props: any) => {
     const [sheets, setSheets] = useState<Map<string, SheetData>>(new Map<string, SheetData>()
         .set("Часть 1", defaultSheet))
     const [activeSheet, setActiveSheet] = useState<string>("")
-    const [activeSubSheet, setActiveSubSheet] = useState<string|null>(null)
+    const [activeSubSheet, setActiveSubSheet] = useState<string | null>(null)
     const [quadSize, setQuadSize] = useState(8);
     const [isTouched, setIsTouched] = useState(false);
+    const [historyRecords, setHistoryRecords] = useState<HistoricalData[]>(new Array<HistoricalData>())
 
     const getActiveSheet = () => {
         const allSheetNames = Array.from(sheets.keys());
@@ -58,7 +63,7 @@ export const BarContextProvider = (props: any) => {
         const subSheetNamesForActiveSheet = Array.from(sheets.entries())
             .filter(([key, value]) => value.parentName === activeSheetName)
             .map(([key, value]) => key);
-        if(activeSubSheet !== null && subSheetNamesForActiveSheet.includes(activeSubSheet)){
+        if (activeSubSheet !== null && subSheetNamesForActiveSheet.includes(activeSubSheet)) {
             return activeSubSheet
         }
         if (activeSheetName === null && subSheetNamesForActiveSheet.length > 0) {
@@ -69,8 +74,8 @@ export const BarContextProvider = (props: any) => {
     }
 
     const getActiveEditableSheet = () => {
-        const activeSubsheet  = getActiveSubSheet();
-       return  activeSubsheet === null ? getActiveSheet() : activeSubsheet;
+        const activeSubsheet = getActiveSubSheet();
+        return activeSubsheet === null ? getActiveSheet() : activeSubsheet;
     }
 
     useEffect(() => {
@@ -86,6 +91,7 @@ export const BarContextProvider = (props: any) => {
 
         setSheets(updatedMap)
         setIsTouched(true)
+        logHistoryRecord()
     }
 
     const updateSingleQuad = (quadIndex: number, quadData: SkeletonData) => {
@@ -99,10 +105,36 @@ export const BarContextProvider = (props: any) => {
 
         setSheets(updatedMap)
         setIsTouched(true)
+        logHistoryRecord()
     }
-    console.log(sheets)
-    console.log('acrive editable sheet', getActiveEditableSheet())
-    console.log('bars,',(sheets.get(getActiveEditableSheet()) || defaultSheet).bars)
+
+    const logHistoryRecord = () => {
+        const record = {
+            sheets: sheets,
+            activeSheet: activeSheet,
+            activeSubSheet: activeSubSheet
+        }
+        setHistoryRecords([...historyRecords, record])
+        console.log('history length', historyRecords.length)
+        console.log('history', [...historyRecords, record])
+    }
+
+    const rollbackHistory = () => {
+        const rolledBackHistory = [...historyRecords]
+        const previousHistoryItem = rolledBackHistory.pop()
+        console.log('historyItem', previousHistoryItem)
+        console.log('revertedHistory', rolledBackHistory)
+        if (previousHistoryItem) {
+
+            setSheets(previousHistoryItem.sheets)
+            setActiveSheet(previousHistoryItem.activeSheet)
+            setActiveSubSheet(previousHistoryItem.activeSubSheet)
+        }
+        setHistoryRecords(rolledBackHistory)
+
+    }
+
+
     return (
         <BarContext.Provider value={
             {
@@ -118,7 +150,8 @@ export const BarContextProvider = (props: any) => {
                 updateActiveSubSheet: setActiveSubSheet,
                 updateSheets: setSheets,
                 barSize: quadSize,
-                updateBarSize: setQuadSize
+                updateBarSize: setQuadSize,
+                undo: rollbackHistory
             }
         }>
             {props.children}

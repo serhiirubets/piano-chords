@@ -142,6 +142,7 @@ const ClearButton = ({onClick}) => {
         onClick={() => {
             onClick()
         }}
+
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}>
         <ClearRoundedIcon fontSize="small"/>
@@ -167,8 +168,11 @@ export const SkeletonNode = ({
             /*NOOP*/
         }
     }
+
+    nodeIndex === 2 && console.log(data)
     useEffect(() => {
         setInputText(data.originalText || getOriginalText(data.notes))
+        transientInputValue.current = data.originalText
     }, [data])
 
     const handeSelection = (event) => {
@@ -201,6 +205,7 @@ export const SkeletonNode = ({
     const handleSave = () => {
 
         if (transientInputValue.current === inputText) {
+            console.log('omitting save event as there were no changes')
             setEditMode(false);
             return
         }

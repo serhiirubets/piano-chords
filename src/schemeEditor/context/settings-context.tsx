@@ -1,12 +1,14 @@
 import React, {useState} from "react";
 import {EditorSettings} from "../model/editor-settings-data";
 import {HandType} from "../model/deprecated/skeleton-data";
+import {OctaveNotation} from "../model/deprecated/octave";
 
 const defaultSettings: EditorSettings = {
     playbackTempo: 0.25,
     quadratSize: 8,
     displayApplicature: false,
     alterGainForFeather: true,
+    octaveNotation:OctaveNotation.SCIENTIFIC,
     autosave: true,
     simpleMode: true,
     simpleModeLeftHandNote: "c3",

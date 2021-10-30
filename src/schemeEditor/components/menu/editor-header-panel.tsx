@@ -5,6 +5,7 @@ import {BarContext} from "../../context/bar-context";
 import UndoRoundedIcon from '@material-ui/icons/UndoRounded';
 import {SkeletonNodeData} from "../../model/deprecated/skeleton-node-data";
 import {SkeletonData} from "../../model/deprecated/skeleton-data";
+import {OctaveNotationSelector} from "./octave-notation-selector";
 
 export interface SaveLoadSettingsPanelProps {
 }
@@ -86,21 +87,15 @@ export const EditorHeaderPanel = () => {
                     onChange={(event) => setBarSize(Number(event.target.value))}
                     onKeyUp={(event) => handleQuadratSizeChange(event)}
                     disabled={false}/>}
-                label={<Typography style={{fontSize: "small"}}>Размер квадрата</Typography>}></FormControlLabel>
+                label={<Typography style={{fontSize: "small"}}>Размер <br/> квадрата</Typography>}></FormControlLabel>
             <Divider orientation="vertical" flexItem/>
 
-            {/*<TextField*/}
-            {/*    */}
-            {/*           label="Размер квадрата"*/}
-            {/*           defaultValue={barSize}*/}
-            {/*           onChange={(event) =>setBarSize(Number(event.target.value))}*/}
-            {/*           onKeyUp={(event)=>handleQuadratSizeChange(event)}*/}
-            {/*           disabled={false}/>*/}
-            <Tooltip title="Отменить"  placement="top">
-                <IconButton component="span" >
+            <Tooltip title="Отменить" placement="top">
+                <IconButton component="span">
                     <UndoRoundedIcon fontSize="small" onClick={undo} style={{fill: "#4b4a4a"}}/>
                 </IconButton>
             </Tooltip>
+            <OctaveNotationSelector></OctaveNotationSelector>
         </div>
     )
 }

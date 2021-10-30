@@ -37,7 +37,6 @@ export interface TripletHandlingProps {
     handleClearTriplet: (index: SelectionIndex) => void
 }
 
-
 const isHostingTriplet = (triplets: TripletData[], idx: SelectionIndex) => {
     return triplets
         .filter(triplet => triplet.hand === idx.noteHand)
@@ -207,7 +206,7 @@ export const Skeleton = ({skeletonIndex}) => {
             const updatedNotes = bulkUpdateFunction(updatedNode.notes)
             updatedNode.notes = updatedNotes
             updatedNode.originalText = getOriginalText(updatedNotes)
-            updatedNode.type = updatedNotes.some(note => note.noteType === NoteType.FEATHER)? NoteType.FEATHER : NoteType.REGULAR
+            updatedNode.type = updatedNotes.some(note => note.noteType === NoteType.FEATHER) ? NoteType.FEATHER : NoteType.REGULAR
             handDataToUpdate[selectionIndex.index] = updatedNode
             setSkeletonHandData(updatedSkeletonData, handDataToUpdate, selectionIndex.noteHand);
         })
@@ -246,7 +245,7 @@ export const Skeleton = ({skeletonIndex}) => {
             const indexOfNode = getPositionRelativeToSelectionStart(selectionIndex, selectedNodes)
             //Might be undefined for nodes covered by triplet ranges
             const updatedNode = selectionBuffer.current.getByRelativePositionAndOffset(indexOfNode, selectionIndex)
-            if(updatedNode){
+            if (updatedNode) {
                 const handDataToUpdate = getSkeletonHandData(updatedSkeletonData, selectionIndex.noteHand)
                 handDataToUpdate[selectionIndex.index] = updatedNode
 
@@ -415,7 +414,6 @@ export const Skeleton = ({skeletonIndex}) => {
                         keepMounted
                         open={Boolean(menuAnchorEl)}
                         onClose={handleMenuClose}
-                        dense
                     >
                         <MenuItem disabled={isNotTripletEligible()} onClick={initiateTriplet}>
                             <ListItemText primary="Триоль"/>
@@ -431,7 +429,7 @@ export const Skeleton = ({skeletonIndex}) => {
                             <ListItemText>Копировать</ListItemText>
                         </MenuItem>
                         <MenuItem
-                            disabled = {selectionBuffer.current.isEmpty()}
+                            disabled={selectionBuffer.current.isEmpty()}
                             onClick={pasteFromBuffer}>
                             <ListItemText>Вставить</ListItemText>
                         </MenuItem>

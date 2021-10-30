@@ -1,10 +1,12 @@
 import {HandType} from "./deprecated/skeleton-data";
+import {OctaveNotation} from "./deprecated/octave";
 
 export interface EditorSettings {
     playbackTempo: number;
     quadratSize: number;
     displayApplicature? : boolean;
     alterGainForFeather:boolean;
+    octaveNotation:OctaveNotation;
 
     autosave:boolean;
     simpleMode:boolean;

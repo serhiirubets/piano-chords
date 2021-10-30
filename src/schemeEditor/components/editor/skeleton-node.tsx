@@ -12,8 +12,9 @@ import {NodeSelectionMode, TripletHandlingProps} from "./skeleton";
 import ClearRoundedIcon from '@material-ui/icons/ClearRounded';
 import {groupBy} from "../../utils/js-utils";
 import {getTripletEffectiveParameters} from "../../utils/triplet-utils";
+import {OctaveNotation, parseOctaveNotationToScientific} from "../../model/deprecated/octave";
 
-const DISALLOWED_KEYS_PATTERN = /[^a-gmA-G#:\s\/0-9\*]/g
+const NOTES_REGEX = /a-gmA-G#\s\/:/
 const SIXTEENS_SEPARATOR = '/'
 const CHORD_SEPARATOR = ' '
 const TRIPLET_SEPARATOR = ':'
@@ -31,7 +32,7 @@ export interface BlockSchemeNodeProps {
 }
 
 
-const parseInputToTheNotes = (stringValue: string, defaultOctave: number, tripletProps: TripletHandlingProps): Note[] => {
+const parseInputToTheNotes = (stringValue: string, defaultOctave: number, tripletProps: TripletHandlingProps, octaveNotation: OctaveNotation): Note[] => {
     if (stringValue.length == 0) {
         return []
     }
@@ -39,7 +40,7 @@ const parseInputToTheNotes = (stringValue: string, defaultOctave: number, triple
         const getOffset = index => index % 2 == 0 ? PlaybackOffset.NONE : PlaybackOffset.HALF;
         const sixteensParts = stringValue.split(SIXTEENS_SEPARATOR);
         return sixteensParts
-            .flatMap((sixteens, index) => parseNoteOrChord(sixteens, defaultOctave, PlaybackDuration.HALF, getOffset(index)));
+            .flatMap((sixteens, index) => parseNoteOrChord(sixteens, defaultOctave, PlaybackDuration.HALF, getOffset(index), octaveNotation));
     } else if (stringValue.includes(TRIPLET_SEPARATOR)) {
 
         //Triplets are either 8th (4 nodes) or 16th (2 nodes)
@@ -48,15 +49,19 @@ const parseInputToTheNotes = (stringValue: string, defaultOctave: number, triple
 
         const tripletParts = stringValue.split(TRIPLET_SEPARATOR);
         return tripletParts
-            .flatMap((triplet, index) => parseNoteOrChord(triplet, defaultOctave, tripletRealValues.idealDuration, getOffset(index)));
+            .flatMap((triplet, index) => parseNoteOrChord(triplet, defaultOctave, tripletRealValues.idealDuration, getOffset(index), octaveNotation));
     }
 
-    return parseNoteOrChord(stringValue, defaultOctave, PlaybackDuration.FULL, PlaybackOffset.NONE);
+    return parseNoteOrChord(stringValue, defaultOctave, PlaybackDuration.FULL, PlaybackOffset.NONE, octaveNotation);
 }
 
-const parseNoteOrChord = (stringValue: string, defaultOctave: number, duration: PlaybackDuration, offset: PlaybackOffset): Note[] => {
+const parseNoteOrChord = (stringValue: string,
+                          defaultOctave: number,
+                          duration: PlaybackDuration,
+                          offset: PlaybackOffset,
+                          octaveNotation: OctaveNotation): Note[] => {
     return stringValue.split(CHORD_SEPARATOR)
-        .map(s => parseNote(s, defaultOctave))
+        .map(s => parseNote(s, defaultOctave, octaveNotation))
         .filter(note => note.note !== '')
         .map(note => {
             note.duration = duration;
@@ -65,12 +70,12 @@ const parseNoteOrChord = (stringValue: string, defaultOctave: number, duration: 
         });
 }
 
-const parseNote = (stringValue: string, defaultOctave: number): Note => {
+const parseNote = (stringValue: string, defaultOctave: number, octaveNotation: OctaveNotation): Note => {
+    const octaveRegexp = octaveNotation.regexp
+    const octaveMatches = stringValue.match(octaveRegexp);
 
-    const octaveMatches = stringValue.match(/[0-9]{1}/g);
-
-    const octave = octaveMatches && octaveMatches.length > 0 ? Number(octaveMatches[0]) : defaultOctave;
-    const noteText = stringValue.replace(/\d/g, '');
+    const octave = octaveMatches && octaveMatches.length > 0 ? parseOctaveNotationToScientific(octaveMatches[0], octaveNotation) : defaultOctave;
+    const noteText = stringValue.replace(octaveRegexp, '');
     return new Note({note: noteText, octave})
 }
 
@@ -142,6 +147,7 @@ const ClearButton = ({onClick}) => {
         onClick={() => {
             onClick()
         }}
+
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}>
         <ClearRoundedIcon fontSize="small"/>
@@ -167,8 +173,11 @@ export const SkeletonNode = ({
             /*NOOP*/
         }
     }
+
+    nodeIndex === 2 && console.log(data)
     useEffect(() => {
-        setInputText(data.originalText || getOriginalText(data.notes))
+        setInputText(data.originalText || getOriginalText(data.notes, settings.octaveNotation))
+        transientInputValue.current = data.originalText
     }, [data])
 
     const handeSelection = (event) => {
@@ -192,8 +201,9 @@ export const SkeletonNode = ({
         if (event.key === 'Enter') {
             handleSave()
         }
-
-        const filteredValues = event.target.value.replace(DISALLOWED_KEYS_PATTERN, '');
+        const DISALLOWED_KEYS = new RegExp(`[^${NOTES_REGEX.source}${settings.octaveNotation.regexpKeys}]+`)
+        console.log('DIsallowed keys', DISALLOWED_KEYS)
+        const filteredValues = event.target.value.replace(DISALLOWED_KEYS, '');
         event.target.value = filteredValues || "";
         setInputText(filteredValues);
     }
@@ -201,16 +211,18 @@ export const SkeletonNode = ({
     const handleSave = () => {
 
         if (transientInputValue.current === inputText) {
+            console.log('omitting save event as there were no changes')
             setEditMode(false);
             return
         }
-        console.log('transient',transientInputValue)
-        console.log('current',inputText)
+        console.log('transient', transientInputValue)
+        console.log('current', inputText)
 
         console.log('saving data')
         const updatedNote = parseInputToTheNotes(inputText,
             settings.defaultOctaves.get(handType)!,
-            tripletPropsOrFallback);
+            tripletPropsOrFallback,
+            settings.octaveNotation);
         console.log('saving data', updatedNote)
         setData(updatedNote, inputText)
         setEditMode(false);
@@ -231,7 +243,7 @@ export const SkeletonNode = ({
                 height: idealTripletValues.is8thTriplet ? DOT_WIDTH : SMALL_DOT_WIDTH,
                 transform: "rotateY(0deg) rotate(45deg)",
                 opacity: isPresent ? 100 : 0,
-                background: handType === HandType.RIGHT?"red":"green"
+                background: handType === HandType.RIGHT ? "red" : "green"
             }}/>
 
 

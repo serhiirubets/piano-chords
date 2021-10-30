@@ -12,6 +12,7 @@ import {getOctaveInRussianNotation, getOriginalText} from "../../utils/skeleton-
 import {getTripletEffectiveParameters} from "../../utils/triplet-utils";
 import {SettingsContext} from "../../context/settings-context";
 import {NoteEditPopupMenu} from "./subtitle/note-edit-popup-menu";
+import {settings} from "cluster";
 
 
 export interface NodeSubtitleProps {
@@ -94,6 +95,7 @@ const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizon
 }
 
 export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: NodeSubtitleProps) => {
+    const {settings} = useContext(SettingsContext)
     const MAX_HEIGHT = QUADRAT_WIDTH * 1.75;
     const RECOMMENDED_SCALE = MAX_HEIGHT / 30; //30 =2.5 octaves
     const FONT_HEIGHT = 18;
@@ -179,7 +181,7 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: No
         const updatedNotes = [...nodeData.notes];
         const indexOfOldNote = updatedNotes.indexOf(oldNote);
         updatedNotes[indexOfOldNote] = newNote
-        setNotes(updatedNotes, getOriginalText(updatedNotes))
+        setNotes(updatedNotes, getOriginalText(updatedNotes, settings.octaveNotation))
 
     }
 

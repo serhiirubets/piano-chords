@@ -2,7 +2,7 @@ import {SkeletonNodeData, IBlockSchemeNodeData} from "./skeleton-node-data";
 import {v4 as uuid} from 'uuid';
 
 export class SkeletonData {
-    public readonly id = uuid();
+    public id = uuid();
     public triplets=new Array<TripletData>()
 
     public defaultOctaveLeft = 3;

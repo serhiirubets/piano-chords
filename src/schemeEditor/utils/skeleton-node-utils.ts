@@ -3,6 +3,7 @@ import {INote, Note, NoteType} from "../model/note-data";
 import {HandType, SkeletonData} from "../model/deprecated/skeleton-data";
 import {getMidiNumber} from "./playback-utils";
 import {groupBy} from "./js-utils";
+import {getOctaveNotationFromScientific, OctaveNotation} from "../model/deprecated/octave";
 
 export const getEffectiveNodeColor = (data: SkeletonNodeData, isHostingTriplet: boolean) => {
     return isHostingTriplet ? "yellow" :
@@ -26,9 +27,10 @@ export const getPlaybackData = (data: SkeletonNodeData): PlaybackData[] => {
         })
 }
 
-export const getOriginalText = (noteArray: INote[]): string => {
+export const getOriginalText = (noteArray: INote[], octaveNotation: OctaveNotation): string => {
+    console.log('getting text for notation', octaveNotation.entries)
     const chordToString = (notes: INote[]) => {
-        return notes.map(note => note.note + note.octave).join(" ")
+        return notes.map(note => note.note + getOctaveNotationFromScientific(note.octave, octaveNotation)).join(" ")
     }
 
     const notesGroupedByOffset = groupBy(noteArray, note => note.playbackOffset);

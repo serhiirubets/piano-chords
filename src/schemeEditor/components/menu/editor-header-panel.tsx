@@ -81,21 +81,25 @@ export const EditorHeaderPanel = () => {
             <FormControlLabel
                 control={<TextField
                     variant="outlined"
-                    style={{width: 40, maxWidth: 40, paddingLeft: "15px"}}
+                    style={{width: 40, maxWidth: 40, paddingLeft: "20px", }}
                     size="small"
                     defaultValue={barSize}
                     onChange={(event) => setBarSize(Number(event.target.value))}
                     onKeyUp={(event) => handleQuadratSizeChange(event)}
                     disabled={false}/>}
-                label={<Typography style={{fontSize: "small"}}>Размер <br/> квадрата</Typography>}></FormControlLabel>
+                label={<Typography style={{fontSize: "small", paddingLeft: "5px",paddingRight:"10px"}}>Размер <br/> квадрата</Typography>}></FormControlLabel>
             <Divider orientation="vertical" flexItem/>
-
+            <FormControlLabel
+                style={{width: 140, maxWidth: 140, paddingLeft: "20px"}}
+                control={<OctaveNotationSelector></OctaveNotationSelector>}
+                label={<Typography style={{fontSize: "small", paddingLeft: "5px", paddingRight:"10px"}}> Нотация <br/> октав</Typography>}></FormControlLabel>
+            <Divider orientation="vertical" flexItem/>
             <Tooltip title="Отменить" placement="top">
                 <IconButton component="span">
                     <UndoRoundedIcon fontSize="small" onClick={undo} style={{fill: "#4b4a4a"}}/>
                 </IconButton>
             </Tooltip>
-            <OctaveNotationSelector></OctaveNotationSelector>
+
         </div>
     )
 }

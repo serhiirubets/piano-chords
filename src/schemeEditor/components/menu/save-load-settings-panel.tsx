@@ -65,7 +65,7 @@ export const SaveLoadSettingsPanel = () => {
         if (!isTouched) {
             return;
         }
-        localStorage.setItem(SHEETS_LOCALSTORAGE_KEY, deepCopy(Array.from(sheets.entries())));
+        localStorage.setItem(SHEETS_LOCALSTORAGE_KEY, JSON.stringify(Array.from(sheets.entries())));
 
 
     }, [sheets]);

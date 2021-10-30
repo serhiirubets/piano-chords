@@ -205,7 +205,7 @@ export const Skeleton = ({skeletonIndex}) => {
             const updatedNode = {...handDataToUpdate[selectionIndex.index]}
             const updatedNotes = bulkUpdateFunction(updatedNode.notes)
             updatedNode.notes = updatedNotes
-            updatedNode.originalText = getOriginalText(updatedNotes)
+            updatedNode.originalText = getOriginalText(updatedNotes, settings.octaveNotation)
             updatedNode.type = updatedNotes.some(note => note.noteType === NoteType.FEATHER) ? NoteType.FEATHER : NoteType.REGULAR
             handDataToUpdate[selectionIndex.index] = updatedNode
             setSkeletonHandData(updatedSkeletonData, handDataToUpdate, selectionIndex.noteHand);

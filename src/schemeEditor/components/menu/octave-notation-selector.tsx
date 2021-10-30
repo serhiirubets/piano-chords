@@ -1,8 +1,19 @@
 import React, {useContext, useState} from "react";
 import QueueMusicRoundedIcon from '@material-ui/icons/QueueMusicRounded';
-import {ClickAwayListener, IconButton, ListItemText, Menu, MenuItem, Tooltip} from "@material-ui/core";
+import {
+    Button,
+    ClickAwayListener, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
+    IconButton,
+    ListItemText,
+    Menu,
+    MenuItem,
+    TextField,
+    Tooltip
+} from "@material-ui/core";
 import {SettingsContext} from "../../context/settings-context";
-import {OctaveNotation} from "../../model/deprecated/octave";
+import {OctaveNotation, Octaves} from "../../model/deprecated/octave";
+import {BarContext} from "../../context/bar-context";
+import {deepCopy} from "../../utils/js-utils";
 
 const OctaveTooltip = ({octaveNotations}) => {
     const notations = octaveNotations.split(',')
@@ -19,14 +30,14 @@ const OctaveTooltip = ({octaveNotations}) => {
 }
 
 export const OctaveNotationSelector = () => {
+    const {bars, updateBars} = useContext(BarContext)
     const {settings, partialUpdateSettings} = useContext(SettingsContext)
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>();
+    const [isDialogOpened, setDialogOpened] = useState<boolean>(false);
+    const [targetOctaveNotation, setTargetOctaveNotation] = useState<OctaveNotation | null>(null);
     const open = Boolean(anchorEl);
 
-    console.log('menu element', anchorEl)
-
     const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        console.log('menu target', event.currentTarget)
         setAnchorEl(event.currentTarget)
     }
 
@@ -34,8 +45,35 @@ export const OctaveNotationSelector = () => {
         setAnchorEl(null);
     };
 
+    const handleDialogClose = () => {
+        setDialogOpened(false);
+    };
+
+    const handleDialogConfirm = () => {
+        setDialogOpened(false);
+        if(targetOctaveNotation){
+            partialUpdateSettings({octaveNotation: targetOctaveNotation})
+        }
+        setAnchorEl(null);
+    };
+
+
     const updateOctaveSettings = (notation: OctaveNotation) => {
-        partialUpdateSettings({octaveNotation: notation})
+        if(notation.name !== settings.octaveNotation.name){
+            setDialogOpened(true)
+        }
+        const updatedBars = deepCopy(bars);
+        console.log(updatedBars)
+        updatedBars.forEach(bar => {
+            bar.left.forEach(node => {
+                node.originalText = ''
+            })
+            bar.right.forEach(node => {
+                node.originalText = ''
+            })
+        })
+        updateBars(updatedBars)
+        partialUpdateSettings({...settings, octaveNotation:notation})
         setAnchorEl(null);
     };
 
@@ -49,19 +87,19 @@ export const OctaveNotationSelector = () => {
                 open={open}
                 onClose={handleClose}
             >
-                <MenuItem onClick={() => updateOctaveSettings(OctaveNotation.SCIENTIFIC)}>
+                <MenuItem onClick={() => updateOctaveSettings(Octaves.SCIENTIFIC)}>
                     <Tooltip title={<OctaveTooltip octaveNotations="0,1,2,3,4,5,6,7,8"/>}>
                         <ListItemText primary="Научная"
                                       secondary="0,1,2,3,4,5,6,7,8"/>
                     </Tooltip>
                 </MenuItem>
-                <MenuItem onClick={() => updateOctaveSettings(OctaveNotation.NAME)}>
+                <MenuItem onClick={() => updateOctaveSettings(Octaves.NAME)}>
                     <Tooltip title={<OctaveTooltip octaveNotations=".sk,.k,.b,.m,.1,.2,.3,.4"/>}>
                         <ListItemText primary="Именная"
                                       secondary=".sk,.k,.b,.m,.1,.2,.3,.4"/>
                     </Tooltip>
                 </MenuItem>
-                <MenuItem onClick={() => updateOctaveSettings(OctaveNotation.MIDI)}>
+                <MenuItem onClick={() => updateOctaveSettings(Octaves.MIDI)}>
                     <Tooltip title={<OctaveTooltip octaveNotations="−4,−3,−2,−1,0,1,2,3,4"/>}>
                         <ListItemText primary="MIDI"
                                       secondary="−4,−3,−2,−1,0,1,2,3,4"/>
@@ -69,9 +107,31 @@ export const OctaveNotationSelector = () => {
                 </MenuItem>
             </Menu>
         </ClickAwayListener>
-
-        <IconButton onClick={(e) => handleMenuOpen(e)}>
-            <QueueMusicRoundedIcon/>
-        </IconButton>
+        <Dialog
+            open={isDialogOpened}
+            onClose={handleDialogClose}
+        >
+            <DialogTitle id="alert-dialog-title">
+                {"Смена нотации записи октав"}
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    Для корректной работы программы может быть необходимо изменить значения введенные в ячейки.<br></br>
+                    Изменения коснутся ячеек, в которых явно указаны октавы. Произойдет замена на новую нотацию.
+                    Продожить?
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleDialogClose}>Отменить</Button>
+                <Button onClick={handleDialogConfirm} autoFocus>
+                    Продолжить
+                </Button>
+            </DialogActions>
+        </Dialog>
+        <Button
+            variant="outlined"
+            onClick={(e) => handleMenuOpen(e)}>
+            {settings.octaveNotation.name}
+        </Button>
     </div>)
 }

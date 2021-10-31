@@ -39,7 +39,7 @@ const SortableItem = SortableElement(({idx}) =>
         justifyContent: "center",
         alignItems: "center",
         padding:"0 50 0 50"
-    }}><SkeletonWrapper index={idx}></SkeletonWrapper></div>);
+    }}><SkeletonWrapper index={idx} id={idx}></SkeletonWrapper></div>);
 
 
 const SortableGrid = SortableContainer(({children}) => {

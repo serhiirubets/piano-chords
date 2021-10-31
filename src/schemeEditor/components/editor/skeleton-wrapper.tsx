@@ -12,9 +12,10 @@ import {deepCopy} from "../../utils/js-utils";
 
 export interface BlockSchemeSkeletonWrapperProps {
     index: number;
+    id:string
 }
 
-export const SkeletonWrapper = ({index}: BlockSchemeSkeletonWrapperProps) => {
+export const SkeletonWrapper = ({index, id}: BlockSchemeSkeletonWrapperProps) => {
     const [isHovered, setIsHovered] = useState<boolean>(false);
 
     const {settings} = useContext(SettingsContext);
@@ -80,6 +81,7 @@ export const SkeletonWrapper = ({index}: BlockSchemeSkeletonWrapperProps) => {
                                                              onCopy={handleCopyButtonClick}
                                                              onClear={handleClearButtonClick}
                                                              isDisplayed={true}
+                                                             id={id}
                                                              onDescriptionChange={() => {
                                                              }}/>
                                 </div>

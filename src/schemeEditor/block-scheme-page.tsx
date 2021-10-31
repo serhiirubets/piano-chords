@@ -11,6 +11,7 @@ import {PrintRounded} from "@material-ui/icons";
 import {getScaleSize} from "./utils/rendering-utils";
 import PdfExporter from "../core/pdf-exporter-class";
 import {EditorHeaderPanel} from "./components/menu/editor-header-panel";
+import {BlockSchemeGridNew} from "./components/editor/block-scheme-grid-new";
 
 
 export const BlockSchemeWhitePage = () => {
@@ -82,7 +83,7 @@ export const BlockSchemeWhitePage = () => {
                 </div>
 
                 <div style={{height: "100%", width: "100%"}}>
-                    <BlockSchemeGrid></BlockSchemeGrid>
+                    <BlockSchemeGridNew></BlockSchemeGridNew>
                 </div>
 
             </div>

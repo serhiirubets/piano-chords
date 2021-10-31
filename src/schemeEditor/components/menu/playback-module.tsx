@@ -9,7 +9,6 @@ import {getNotesToPlay, playNotes} from "../../utils/playback-utils";
 import PlayArrowRoundedIcon from "@material-ui/icons/PlayArrowRounded";
 import StopRoundedIcon from "@material-ui/icons/StopRounded";
 import {BarContext} from "../../context/bar-context";
-import {PrintRounded} from "@material-ui/icons";
 
 export interface PlaybackModuleProps {
     iconColor?: string;
@@ -24,8 +23,7 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
 
 export const PlaybackModule = ({iconColor}: PlaybackModuleProps) => {
     const {settings, partialUpdateSettings} = useContext(SettingsContext);
-    const {bars, updateBars} = useContext(BarContext);
-    const classes = useGlobalStyles();
+    const {bars} = useContext(BarContext);
 
     return (
         <SoundfontProvider

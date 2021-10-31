@@ -11,8 +11,10 @@ import OpenWithRoundedIcon from '@material-ui/icons/OpenWithRounded';
 import ClearRoundedIcon from '@material-ui/icons/ClearRounded';
 import StopRoundedIcon from '@material-ui/icons/StopRounded';
 import {DRAGGABLE_CLASSNAME} from "../../model/global-constants";
+import {useSortable} from "@dnd-kit/sortable";
 
 export interface BlockSchemeSkeletonWrapperProps {
+    id:string,
     onStartPlaying: any;
     onStopPlaying: any;
     onCopy: any;
@@ -28,31 +30,41 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-export const SkeletonWrapperControls = ({
+export const SkeletonWrapperControls = ({   id,
                                             onStartPlaying,
                                             onStopPlaying,
                                             onCopy,
                                             isDisplayed,
                                             onClear,
-                                            onDescriptionChange
                                         }: BlockSchemeSkeletonWrapperProps) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [isBeingDragged, setIsBeingDragged] = useState(false);
-    const localStyles = useStyles();
 
-    const GridDragNDropHandle =
-        SortableHandle(() => <OpenWithRoundedIcon
+    const GridDragNDropHandle = () => {
+        // const {
+        //     attributes,
+        //     listeners,
+        //     setNodeRef,
+        //     transform,
+        //     transition,
+        //     isDragging
+        // } = useSortable({ id: id });
+
+
+        const handleDragStart = () => {
+            setIsBeingDragged(true)
+        }
+        const handleDragStop = () => {
+            setIsBeingDragged(false)
+        }
+
+        return <OpenWithRoundedIcon
             onMouseDown={handleDragStart}
             onMouseUp={handleDragStop}
             color={isBeingDragged ? "primary" : "action"}
-            className={DRAGGABLE_CLASSNAME}/>)
+            className={DRAGGABLE_CLASSNAME}/>
+    }
 
-    const handleDragStart = () => {
-        setIsBeingDragged(true)
-    }
-    const handleDragStop = () => {
-        setIsBeingDragged(false)
-    }
 
     return (
         <div style={blockSchemeStyle}>

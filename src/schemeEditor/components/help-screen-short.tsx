@@ -11,8 +11,8 @@ import {
     TableHead,
     TableRow,
     Typography
-} from "@material-ui/core";
-import InfoRoundedIcon from '@material-ui/icons/InfoRounded';
+} from "@mui/material";
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 
 export interface HelpDialogProps {
     iconColor?:string;

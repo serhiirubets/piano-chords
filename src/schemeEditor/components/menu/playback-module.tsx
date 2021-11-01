@@ -1,13 +1,12 @@
-import {Divider, Grid, Slider, styled} from "@material-ui/core";
+import {Slider, styled} from "@mui/material";
 import React, {useContext} from "react";
-import {useGlobalStyles} from "../../../App";
 import {SettingsContext} from "../../context/settings-context";
 import SoundfontProvider from "../../../components/piano-core/SoundfontProvider";
 import {audioContext, soundfontHostname} from "../../model/global-constants";
-import IconButton from "@material-ui/core/IconButton";
+import IconButton from "@mui/material/IconButton";
 import {getNotesToPlay, playNotes} from "../../utils/playback-utils";
-import PlayArrowRoundedIcon from "@material-ui/icons/PlayArrowRounded";
-import StopRoundedIcon from "@material-ui/icons/StopRounded";
+import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
+import StopRoundedIcon from "@mui/icons-material/StopRounded";
 import {BarContext} from "../../context/bar-context";
 
 export interface PlaybackModuleProps {
@@ -37,13 +36,16 @@ export const PlaybackModule = ({iconColor}: PlaybackModuleProps) => {
                         <IconButton
                             onClick={() => {
                                 playNotes(getNotesToPlay(bars), playNote, settings.playbackTempo, settings.alterGainForFeather)
-                            }}>
+                            }}
+                            size="large">
                             <PlayArrowRoundedIcon fontSize="large" style={{fill: "#176503"}}/>
                         </IconButton>
-                        <IconButton onClick={() => {
-                            stopNote();
-                            stopAllNotes();
-                        }}>
+                        <IconButton
+                            onClick={() => {
+                                stopNote();
+                                stopAllNotes();
+                            }}
+                            size="large">
                             <StopRoundedIcon fontSize="large" style={{fill: "#ac0707"}}/>
                         </IconButton>
 
@@ -60,5 +62,6 @@ export const PlaybackModule = ({iconColor}: PlaybackModuleProps) => {
                 </div>
 
             )}
-        />)
+        />
+    );
 }

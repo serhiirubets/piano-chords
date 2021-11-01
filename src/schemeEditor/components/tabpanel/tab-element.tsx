@@ -1,15 +1,15 @@
-import Tab from "@material-ui/core/Tab";
+import Tab from "@mui/material/Tab";
 import React, {useState} from "react";
-import {ClickAwayListener, ListItemText, Menu, MenuItem, TextField} from "@material-ui/core";
-import DragIndicatorRounded from '@material-ui/icons/DragIndicatorRounded';
+import {ClickAwayListener, ListItemText, Menu, MenuItem, MenuList, TextField} from "@mui/material";
 
 export interface TabElementProps {
     label: string;
     onNameChange: (newName: string) => any;
     onTabSelect: () => any;
     onRemoveTriggered: (name: string) => any;
+    onDuplicate: (name: string) => any;
     externalStyle?: Object,
-    externalRef:any;
+    externalRef: any;
     draggableAttributes: any;
     draggableListeners: any;
 }
@@ -20,6 +20,7 @@ export const TabElement = ({
                                onNameChange,
                                onTabSelect,
                                onRemoveTriggered,
+                               onDuplicate,
                                externalStyle,
                                draggableAttributes,
                                draggableListeners
@@ -37,7 +38,9 @@ export const TabElement = ({
         setMenuAnchorEl(e.currentTarget)
     }
     const handleSave = (newName: string) => {
+        console.log('saving',label,tabnameText,newName)
         onNameChange(newName);
+        console.log('saved')
         setEditMode(false);
     }
 
@@ -48,6 +51,7 @@ export const TabElement = ({
 
         if (event.key === 'Enter') {
             handleSave(tabnameText)
+            setEditMode(false)
         }
 
         if (event.key === 'Escape') {
@@ -63,37 +67,46 @@ export const TabElement = ({
         }}>
             <div style={{position: "relative", ...externalStyle}}>
                 <Menu
-                    id="simple-menu"
+                    id="edit-tab-menu"
                     anchorEl={menuAnchorEl}
                     keepMounted
                     open={Boolean(menuAnchorEl)}
                     onClose={handleMenuClose}
                 >
-                    <MenuItem onClick={() => {
-                        setEditMode(true);
-                        handleMenuClose();
-                    }}>
-                        <ListItemText primary="Переименовать"/>
-                    </MenuItem>
-                    <MenuItem onClick={() => {
-                        onRemoveTriggered(label)
-                        handleMenuClose();
-                    }}>
-                        <ListItemText primary="Удалить"/>
-                    </MenuItem>
+                    <MenuList dense>
+                        <MenuItem onClick={() => {
+                            setEditMode(true);
+                            handleMenuClose();
+                        }}>
+                            <ListItemText primary="Переименовать"/>
+                        </MenuItem>
+                        <MenuItem onClick={() => {
+                            onDuplicate(label);
+                            handleMenuClose();
+                        }}>
+                            <ListItemText primary="Дублировaть"/>
+                        </MenuItem>
+                        <MenuItem onClick={() => {
+                            onRemoveTriggered(label)
+                            handleMenuClose();
+                        }}>
+                            <ListItemText primary="Удалить"/>
+                        </MenuItem>
+                    </MenuList>
                 </Menu>
                 <div style={{flex: "1", flexDirection: "row"}}>
                     <TextField
+                        variant="standard"
                         style={{
                             opacity: isEditMode ? 100 : 0,
-                            zIndex: isEditMode ? 2 : 0,
+                            zIndex: isEditMode ? 5 : 0,
                             position: "absolute",
                             paddingLeft: "1em",
-                            paddingRight: "1em"
+                            paddingRight: "1em",
+                            background: "white"
                         }}
                         onKeyUp={(event) => handleTextInput(event)}
                         defaultValue={tabnameText}
-                        onBlur={() => handleSave(tabnameText)}
                     ></TextField>
                     <Tab style={{
                         opacity: isEditMode ? 0 : 100,

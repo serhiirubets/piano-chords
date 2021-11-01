@@ -1,14 +1,12 @@
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import {Checkbox, FormControlLabel, Slider, Typography} from "@material-ui/core";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import Accordion from "@material-ui/core/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {Checkbox, FormControlLabel, Slider, Typography} from "@mui/material";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Accordion from "@mui/material/Accordion";
 import React, {useContext} from "react";
 import {useGlobalStyles} from "../../../App";
 import {SettingsContext} from "../../context/settings-context";
-import {EditorSettings} from "../../model/editor-settings-data";
-import SpeedRoundedIcon from "@material-ui/icons/SpeedRounded";
-import {BarContext} from "../../context/bar-context";
+import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded";
 import {PlaybackModule} from "./playback-module";
 
 export interface SaveLoadSettingsPanelProps {

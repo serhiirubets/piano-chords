@@ -1,14 +1,13 @@
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import {Button, Checkbox, FormControlLabel, Grid, TextField, Typography} from "@material-ui/core";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import SaveRoundedIcon from "@material-ui/icons/SaveRounded";
-import Accordion from "@material-ui/core/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {Button, Grid, Typography} from "@mui/material";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
+import Accordion from "@mui/material/Accordion";
 import React, {useContext} from "react";
 import {useGlobalStyles} from "../../../App";
 import {SettingsContext} from "../../context/settings-context";
 import PdfExporter from "../../../core/pdf-exporter-class";
-
 
 
 export interface SaveLoadSettingsPanelProps {

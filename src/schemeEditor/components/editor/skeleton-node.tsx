@@ -3,13 +3,13 @@ import React, {useContext, useEffect, useRef, useState} from "react";
 import {jsx} from "@emotion/react/macro";
 import {DOT_WIDTH, QUADRAT_WIDTH, SMALL_DOT_WIDTH} from "../../model/global-constants";
 import {SkeletonNodeData} from "../../model/deprecated/skeleton-node-data";
-import {TextField} from "@material-ui/core";
+import {TextField} from "@mui/material";
 import {HandType} from "../../model/deprecated/skeleton-data";
 import {Note, PlaybackDuration, PlaybackOffset} from "../../model/note-data";
 import {SettingsContext} from "../../context/settings-context";
 import {getEffectiveNodeColor, getOriginalText} from "../../utils/skeleton-node-utils";
 import {NodeSelectionMode, TripletHandlingProps} from "./skeleton";
-import ClearRoundedIcon from '@material-ui/icons/ClearRounded';
+import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import {groupBy} from "../../utils/js-utils";
 import {getTripletEffectiveParameters} from "../../utils/triplet-utils";
 import {OctaveNotation, parseOctaveNotationToScientific} from "../../model/deprecated/octave";
@@ -311,7 +311,7 @@ export const SkeletonNode = ({
                     onKeyUp={handleNoteInput}
                     onBlur={handleSave}
                     value={inputText}
-                    // defaultValue={getOriginalText(data.notes)}
+                    variant="standard"
                 />
 
             </div>

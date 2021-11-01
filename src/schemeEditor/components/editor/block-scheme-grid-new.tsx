@@ -1,6 +1,6 @@
 import React, {useContext, useState} from "react"
-import PlaylistAddRoundedIcon from '@material-ui/icons/PlaylistAddRounded';
-import {Box, Button, Typography} from "@material-ui/core";
+import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
+import {Button, Typography} from "@mui/material";
 import {SettingsContext} from "../../context/settings-context";
 import {QUADRAT_WIDTH} from "../../model/global-constants";
 import {

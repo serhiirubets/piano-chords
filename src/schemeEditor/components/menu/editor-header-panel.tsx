@@ -1,8 +1,8 @@
-import {Checkbox, Divider, FormControlLabel, IconButton, TextField, Tooltip, Typography} from "@material-ui/core";
+import {Checkbox, Divider, FormControlLabel, IconButton, TextField, Tooltip, Typography} from "@mui/material";
 import React, {useContext, useState} from "react";
 import {SettingsContext} from "../../context/settings-context";
 import {BarContext} from "../../context/bar-context";
-import UndoRoundedIcon from '@material-ui/icons/UndoRounded';
+import UndoRoundedIcon from '@mui/icons-material/UndoRounded';
 import {SkeletonNodeData} from "../../model/deprecated/skeleton-node-data";
 import {SkeletonData} from "../../model/deprecated/skeleton-data";
 import {OctaveNotationSelector} from "./octave-notation-selector";
@@ -81,7 +81,7 @@ export const EditorHeaderPanel = () => {
             <FormControlLabel
                 control={<TextField
                     variant="outlined"
-                    style={{width: 40, maxWidth: 40, paddingLeft: "20px", }}
+                    style={{width: 50, maxWidth: 50, paddingLeft: "20px", }}
                     size="small"
                     defaultValue={barSize}
                     onChange={(event) => setBarSize(Number(event.target.value))}
@@ -95,11 +95,11 @@ export const EditorHeaderPanel = () => {
                 label={<Typography style={{fontSize: "small", paddingLeft: "5px", paddingRight:"10px"}}> Нотация <br/> октав</Typography>}></FormControlLabel>
             <Divider orientation="vertical" flexItem/>
             <Tooltip title="Отменить" placement="top">
-                <IconButton component="span">
+                <IconButton component="span" size="large">
                     <UndoRoundedIcon fontSize="small" onClick={undo} style={{fill: "#4b4a4a"}}/>
                 </IconButton>
             </Tooltip>
 
         </div>
-    )
+    );
 }

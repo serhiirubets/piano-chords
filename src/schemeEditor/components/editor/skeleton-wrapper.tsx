@@ -1,4 +1,3 @@
-import {useGlobalStyles} from "../../../App";
 import React, {useContext, useState} from "react";
 import {v4 as uuid} from 'uuid';
 import {Skeleton} from "./skeleton";
@@ -82,7 +81,7 @@ export const SkeletonWrapper = ({index, id, sortableListeners, sortableAttribute
                                     />
                                 </div>
                             )}/>
-                        : (<div style={{height: 40, width: '100%'}}></div>)}
+                        : (<div style={{height: 44, width: '100%'}}></div>)}
                 </div>
                 <Skeleton skeletonIndex={index}></Skeleton>
         </div>)

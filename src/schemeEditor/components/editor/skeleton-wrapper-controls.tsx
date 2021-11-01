@@ -1,12 +1,12 @@
 import React, {useState} from "react";
-import {Tooltip} from "@material-ui/core";
-import IconButton from '@material-ui/core/IconButton';
+import {Tooltip} from "@mui/material";
+import IconButton from '@mui/material/IconButton';
 
-import PlayArrowRoundedIcon from '@material-ui/icons/PlayArrowRounded';
-import FileCopyRoundedIcon from '@material-ui/icons/FileCopyRounded';
-import OpenWithRoundedIcon from '@material-ui/icons/OpenWithRounded';
-import ClearRoundedIcon from '@material-ui/icons/ClearRounded';
-import StopRoundedIcon from '@material-ui/icons/StopRounded';
+import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
+import FileCopyRoundedIcon from '@mui/icons-material/FileCopyRounded';
+import OpenWithRoundedIcon from '@mui/icons-material/OpenWithRounded';
+import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
+import StopRoundedIcon from '@mui/icons-material/StopRounded';
 import {DRAGGABLE_CLASSNAME} from "../../model/global-constants";
 
 export interface BlockSchemeSkeletonWrapperProps {

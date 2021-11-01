@@ -1,5 +1,5 @@
 import React, {useContext} from "react"
-import {Card, CardContent} from "@material-ui/core";
+import {Card, CardContent} from "@mui/material";
 import {useGlobalStyles} from "../App";
 // @ts-ignore
 import {BlockSchemeGrid} from "./components/editor/block-scheme-grid";

@@ -1,13 +1,13 @@
 import React, {useContext} from "react"
-import {Divider, Typography} from "@material-ui/core";
+import {Divider, Typography} from "@mui/material";
 // @ts-ignore
 import {BlockSchemeGrid} from "./components/editor/block-scheme-grid";
 import {SettingsContext} from "./context/settings-context";
 import {BarContext} from "./context/bar-context";
 import {ScrollableTabs} from "./components/tabpanel/tab-panel";
 import {PlaybackModule} from "./components/menu/playback-module";
-import IconButton from "@material-ui/core/IconButton";
-import {PrintRounded} from "@material-ui/icons";
+import IconButton from "@mui/material/IconButton";
+import {PrintRounded} from "@mui/icons-material";
 import {getScaleSize} from "./utils/rendering-utils";
 import PdfExporter from "../core/pdf-exporter-class";
 import {EditorHeaderPanel} from "./components/menu/editor-header-panel";
@@ -44,10 +44,12 @@ export const BlockSchemeWhitePage = () => {
                                 {/*afterExport={() => updateSettings({...settings, isExportingInProgress: false})}>*/}
 
                                 {({toPdf}) =>
-                                    <IconButton onClick={() => {
-                                        updateSettings({...settings, isExportingInProgress: true})
-                                        toPdf()
-                                    }}>
+                                    <IconButton
+                                        onClick={() => {
+                                            updateSettings({...settings, isExportingInProgress: true})
+                                            toPdf()
+                                        }}
+                                        size="large">
                                         <PrintRounded fontSize="large" style={{fill: "#4b4a4a"}}/>
                                     </IconButton>
                                 }
@@ -88,5 +90,5 @@ export const BlockSchemeWhitePage = () => {
 
             </div>
         </div>
-    )
+    );
 }

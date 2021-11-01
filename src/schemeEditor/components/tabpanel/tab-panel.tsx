@@ -1,15 +1,30 @@
-import React, {useContext} from 'react';
-import {makeStyles, Theme} from '@material-ui/core/styles';
+import React, {useContext, useState} from 'react';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import AddRoundedIcon from '@material-ui/icons/AddRounded';
 import {BarContext} from "../../context/bar-context";
 import {SheetData} from "../../model/deprecated/sheet-data";
 import {TabElement} from "./tab-element";
-import {SortableContainer, SortableElement} from "react-sortable-hoc";
 import {deepCopy} from "../../utils/js-utils";
-import {HorizontalSplit} from "@material-ui/icons";
 import {Divider} from "@material-ui/core";
+import {
+    closestCenter, closestCorners,
+    DndContext,
+    DragOverlay,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors
+} from "@dnd-kit/core";
+import {
+    horizontalListSortingStrategy,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    useSortable
+} from "@dnd-kit/sortable";
+import {CSS} from "@dnd-kit/utilities";
+
+import {restrictToHorizontalAxis,} from '@dnd-kit/modifiers';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -17,36 +32,105 @@ interface TabPanelProps {
     value: any;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        flexGrow: 1,
-        width: '100%'
-    },
-}));
 
-const SortableTabItem = SortableElement(({sheetName, onTabSelect, handleNameChange, onRemoveTriggered, style}) => {
+const SortableTabItem = ({sheetName, onTabSelect, handleNameChange, onRemoveTriggered, style}) => {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging
+    } = useSortable({id: sheetName});
+
+    const transitionStyle = {
+        transform: CSS.Transform.toString(transform),
+        // transition,
+        cursor: isDragging? "grab": "auto",
+        opacity: isDragging ? 0.1 : 1,
+        ...style
+    };
+
     return (<TabElement
+        externalRef={setNodeRef}
         label={sheetName}
         onNameChange={handleNameChange}
         onTabSelect={onTabSelect}
         onRemoveTriggered={onRemoveTriggered}
-        externalStyle={style}
+        externalStyle={transitionStyle}
+        draggableAttributes={attributes}
+        draggableListeners={listeners}
     />)
-})
+}
 
-const SortableTabContainer = SortableContainer(({value, indicatorColor, onChange, children, style}) => {
-    return <Tabs
-        value={value}
-        onChange={onChange}
-        indicatorColor={indicatorColor}
-        textColor="primary"
-        variant="scrollable"
-        scrollButtons="auto"
-        style={style}
-    >
-        {children}
-    </Tabs>
-})
+const SortableTabContainer = ({value, items, indicatorColor, onSortEnd, onChange, children, style}) => {
+    const [activeId, setActiveId] = useState(null)
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                delay: 250,
+                tolerance: 5,
+            }
+        }),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+        )
+    ;
+
+    const handleDragStart = (event) => {
+        setActiveId(event.active.id);
+    };
+
+    const handleDragEnd = (event) => {
+        setActiveId(null);
+        const {active, over} = event;
+
+        if (active.id !== over.id) {
+            console.log(active.id)
+            console.log(over.id)
+            const oldIndex = items.indexOf(active.id);
+            const newIndex = items.indexOf(over.id);
+            console.log('oldIndex', oldIndex)
+            console.log('newIndex', newIndex)
+            onSortEnd({oldIndex: oldIndex, newIndex: newIndex})
+            onChange(null, newIndex)
+        }
+    };
+
+    return <DndContext
+        modifiers={[restrictToHorizontalAxis]}
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}>
+        <SortableContext items={items} strategy={horizontalListSortingStrategy}>
+            <Tabs
+                value={value}
+                onChange={onChange}
+                indicatorColor={indicatorColor}
+                textColor="primary"
+                variant="scrollable"
+                scrollButtons="auto"
+                style={style}
+            >
+                {children}
+            </Tabs>
+            <DragOverlay>
+                {activeId ? (
+                    <div
+                        style={{
+                            height: style.height || "40px",
+                            width: "160px",
+                            backgroundColor: "silver",
+                            opacity: "50%"
+                        }}
+                    ></div>
+                ) : null}
+            </DragOverlay>
+        </SortableContext>
+    </DndContext>
+}
 
 export const ScrollableTabs = () => {
 
@@ -159,7 +243,7 @@ export const ScrollableTabs = () => {
         }
         updatedSheets.delete(sheetName);
         const subSheets = Array.from(sheets.entries())
-            .filter(([key, value])=> value.parentName === sheetName)
+            .filter(([key, value]) => value.parentName === sheetName)
             .map(([key, value]) => key);
         subSheets.forEach(sheetName => updatedSheets.delete(sheetName))
         updateSheets(updatedSheets);
@@ -221,10 +305,11 @@ export const ScrollableTabs = () => {
             flexDirection: "column",
             justifyContent: "space-between",
             alignItems: "left",
-            width:"100%",
-            overflow:"scroll"}}>
+            width: "100%",
+            overflow: "scroll"
+        }}>
             <SortableTabContainer
-                axis={"x"}
+                items={sheetNames}
                 indicatorColor="secondary"
                 value={sheetValue}
                 onChange={handleSheetChange}
@@ -233,7 +318,6 @@ export const ScrollableTabs = () => {
             >
                 {sheetNames
                     .map((sheetName, idx) => <SortableTabItem
-                        index={idx}
                         style={classes.sheetTabItem}
                         sheetName={sheetName}
                         handleNameChange={handleSheetNameChange}
@@ -246,7 +330,7 @@ export const ScrollableTabs = () => {
             </SortableTabContainer>
             <Divider/>
             <SortableTabContainer
-                axis={"x"}
+                items={subSheetNames}
                 style={classes.subsheetTabRoot}
                 indicatorColor="primary"
                 value={subSheetValue}
@@ -255,7 +339,6 @@ export const ScrollableTabs = () => {
             >
                 {subSheetNames
                     .map((sheetName, idx) => <SortableTabItem
-                        index={idx}
                         sheetName={sheetName}
                         handleNameChange={handleSubSheetNameChange}
                         style={classes.subsheetTabItem}
@@ -290,8 +373,8 @@ const classes = {
     subsheetTabRoot: {
         minHeight: 37,
         height: 37,
-        width:"100%",
-        maxWidth:"100%",
+        width: "100%",
+        maxWidth: "100%",
         background: "#e7e7e7"
     }
 }

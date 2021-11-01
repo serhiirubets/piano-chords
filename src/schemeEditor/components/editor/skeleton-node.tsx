@@ -174,7 +174,6 @@ export const SkeletonNode = ({
         }
     }
 
-    nodeIndex === 2 && console.log(data)
     useEffect(() => {
         setInputText(data.originalText || getOriginalText(data.notes, settings.octaveNotation))
         transientInputValue.current = data.originalText

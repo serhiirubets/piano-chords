@@ -1,9 +1,6 @@
 import React, {useState} from "react";
-import {Button, makeStyles, TextField, Tooltip, Typography} from "@material-ui/core";
+import {Tooltip} from "@material-ui/core";
 import IconButton from '@material-ui/core/IconButton';
-import {
-    SortableHandle,
-} from 'react-sortable-hoc';
 
 import PlayArrowRoundedIcon from '@material-ui/icons/PlayArrowRounded';
 import FileCopyRoundedIcon from '@material-ui/icons/FileCopyRounded';
@@ -11,44 +8,33 @@ import OpenWithRoundedIcon from '@material-ui/icons/OpenWithRounded';
 import ClearRoundedIcon from '@material-ui/icons/ClearRounded';
 import StopRoundedIcon from '@material-ui/icons/StopRounded';
 import {DRAGGABLE_CLASSNAME} from "../../model/global-constants";
-import {useSortable} from "@dnd-kit/sortable";
 
 export interface BlockSchemeSkeletonWrapperProps {
-    id:string,
+    id: string,
     onStartPlaying: any;
     onStopPlaying: any;
     onCopy: any;
     onClear: any;
-    onDescriptionChange: any;
     isDisplayed: boolean;
+    sortableListeners: any;
+    sortableAttributes: any;
 }
 
-const useStyles = makeStyles(() => ({
-    textField: {width: 50, marginLeft: 3},
-    inputText: {
-        fontSize: '0.8em'
-    }
-}));
-
-export const SkeletonWrapperControls = ({   id,
+export const SkeletonWrapperControls = ({
+                                            id,
                                             onStartPlaying,
                                             onStopPlaying,
                                             onCopy,
                                             isDisplayed,
                                             onClear,
+                                            sortableListeners,
+                                            sortableAttributes
                                         }: BlockSchemeSkeletonWrapperProps) => {
     const [isPlaying, setIsPlaying] = useState(false);
-    const [isBeingDragged, setIsBeingDragged] = useState(false);
 
-    const GridDragNDropHandle = () => {
-        // const {
-        //     attributes,
-        //     listeners,
-        //     setNodeRef,
-        //     transform,
-        //     transition,
-        //     isDragging
-        // } = useSortable({ id: id });
+    const GridDragNDropHandle = () =>{
+
+    const [isBeingDragged, setIsBeingDragged] = useState(false);
 
 
         const handleDragStart = () => {
@@ -59,6 +45,8 @@ export const SkeletonWrapperControls = ({   id,
         }
 
         return <OpenWithRoundedIcon
+            {...sortableListeners}
+            {...sortableAttributes}
             onMouseDown={handleDragStart}
             onMouseUp={handleDragStop}
             color={isBeingDragged ? "primary" : "action"}
@@ -71,31 +59,6 @@ export const SkeletonWrapperControls = ({   id,
             {isDisplayed &&
             <div style={{justifyContent: "space-between", display: "flex", flexDirection: "row", width: "100%"}}>
                 <div style={{display: "flex", alignItems: "flex-start"}}>
-                    {/*<TextField*/}
-                    {/*    label="Л. окт"*/}
-                    {/*    InputLabelProps={{*/}
-                    {/*        shrink: true,*/}
-                    {/*        className:localStyles.inputText*/}
-                    {/*    }}*/}
-                    {/*    InputProps={{*/}
-                    {/*        className:localStyles.inputText*/}
-                    {/*    }}*/}
-                    {/*    className={localStyles.textField}*/}
-                    {/*    onChange={onDescriptionChange}>*/}
-                    {/*</TextField>*/}
-
-                    {/*<TextField*/}
-                    {/*    label="П. окт"*/}
-                    {/*    className={localStyles.textField}*/}
-                    {/*    InputLabelProps={{*/}
-                    {/*        shrink: true,*/}
-                    {/*        className:localStyles.inputText*/}
-                    {/*    }}*/}
-                    {/*    InputProps={{*/}
-                    {/*        className:localStyles.inputText*/}
-                    {/*    }}*/}
-                    {/*    onChange={onDescriptionChange}>*/}
-                    {/*</TextField>*/}
                 </div>
                 <div style={{
                     display: "flex", alignItems: "flex-end"

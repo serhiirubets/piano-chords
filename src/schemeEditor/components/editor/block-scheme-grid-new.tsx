@@ -16,7 +16,7 @@ import {arrayMove, rectSortingStrategy, SortableContext, sortableKeyboardCoordin
 import SortableItem from "./block-scheme-grid-new-item";
 import {BarContext} from "../../context/bar-context";
 import {SkeletonData} from "../../model/deprecated/skeleton-data";
-import {getPaddingValue} from "../../utils/rendering-utils";
+import {getExportViewportWidth, getFlexBasisValue, getPaddingValue} from "../../utils/rendering-utils";
 
 
 const AddMoreButton = ({onClick, opacity}) => {
@@ -27,6 +27,7 @@ const AddMoreButton = ({onClick, opacity}) => {
         marginRight: "10px",
         justifyContent: "center",
         opacity: opacity,
+        flexBasis: getFlexBasisValue(settings.quadratSize, settings.isExportingInProgress),
         // display: "none"
     }}>
         <Button variant="outlined" key="addNewSkeletonButton"
@@ -75,19 +76,13 @@ export const BlockSchemeGridNew = () => {
     };
 
     return (
-        <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-            onDragStart={handleDragStart}
-        >
-            <div style={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                width: "100%",
-                padding: getPaddingValue(settings.quadratSize, settings.isExportingInProgress)
-            }}>
+        <div ref={settings.editorElementRef}>
+            <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+                onDragStart={handleDragStart}>
+
                 <div style={{
                     alignSelf: "right",
                     marginTop: 10,
@@ -96,31 +91,43 @@ export const BlockSchemeGridNew = () => {
                     <Typography variant="h6"
                                 style={{fontFamily: "Times New Roman", fontWeight: "bold"}}> {activeSheet}</Typography>
                 </div>
+                <div style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    width: getExportViewportWidth(settings.quadratSize, settings.isExportingInProgress),
+                    padding: getPaddingValue(settings.quadratSize, settings.isExportingInProgress),
+                }}>
 
-                <SortableContext items={bars} strategy={rectSortingStrategy}>
+                    <SortableContext items={bars} strategy={rectSortingStrategy}>
 
-                    {bars.map((data, index) => (
-                        <SortableItem key={data.id} id={data.id} handle={true} value={data} idx={index}/>
-                    ))}
+                        {bars.map((data, index) => (
+                            <SortableItem key={data.id} id={data.id} handle={true} value={data} idx={index}/>
+                        ))}
 
-                    <AddMoreButton onClick={() => {
-                        updateBars([...bars, new SkeletonData(settings.quadratSize)])
-                    }}
-                                   opacity={settings.isExportingInProgress ? 0 : 100}/>
-                    <DragOverlay>
-                        {activeId ? (
-                            <div
-                                style={{
-                                    height: 284,
-                                    width: QUADRAT_WIDTH * settings.quadratSize,
-                                    backgroundColor: "silver",
-                                    opacity: "50%"
-                                }}
-                            ></div>
-                        ) : null}
-                    </DragOverlay>
-                </SortableContext>
-            </div>
-        </DndContext>
+                        <AddMoreButton onClick={() => {
+                            updateBars
+                            ([
+                                ...bars, new SkeletonData
+                                (
+                                    settings.quadratSize)])
+                        }}
+                                       opacity={settings.isExportingInProgress ? 0 : 100}/>
+                        <DragOverlay>
+                            {activeId ? (
+                                <div
+                                    style={{
+                                        height: 284,
+                                        width: QUADRAT_WIDTH * settings.quadratSize,
+                                        backgroundColor: "silver",
+                                        opacity: "50%"
+                                    }}
+                                ></div>
+                            ) : null}
+                        </DragOverlay>
+                    </SortableContext>
+                </div>
+            </DndContext>
+        </div>
     );
 };

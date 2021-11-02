@@ -1,15 +1,17 @@
 import React, {useContext, useState} from "react";
-import QueueMusicRoundedIcon from '@material-ui/icons/QueueMusicRounded';
 import {
     Button,
-    ClickAwayListener, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
-    IconButton,
+    ClickAwayListener,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     ListItemText,
     Menu,
     MenuItem,
-    TextField,
     Tooltip
-} from "@material-ui/core";
+} from "@mui/material";
 import {SettingsContext} from "../../context/settings-context";
 import {OctaveNotation, Octaves} from "../../model/deprecated/octave";
 import {BarContext} from "../../context/bar-context";

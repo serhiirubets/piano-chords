@@ -1,5 +1,6 @@
-import {Switch, withStyles} from "@material-ui/core";
-import {blue, red} from "@material-ui/core/colors";
+import { Switch } from "@mui/material";
+import withStyles from '@mui/styles/withStyles';
+import {blue, red} from "@mui/material/colors";
 
 export const FeatherSwitch = withStyles({
     switchBase: {

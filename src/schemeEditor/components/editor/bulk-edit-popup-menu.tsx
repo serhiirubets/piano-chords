@@ -1,7 +1,7 @@
 import React from "react";
 import {INote, Note, NoteType} from "../../model/note-data";
-import {Checkbox, FormControlLabel, Popover, TextField, Typography} from "@material-ui/core";
-import ClearRoundedIcon from "@material-ui/icons/ClearRounded";
+import {Checkbox, FormControlLabel, Popover, TextField, Typography} from "@mui/material";
+import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import {FeatherSwitch} from "./subtitle/feather-switch";
 
 
@@ -61,6 +61,7 @@ export const BulkEditPopupMenu = ({bulkUpdateOperationChange, anchorEl, onClose}
                     <TextField style={{paddingRight: 10, width: 50}}
                                label="Октава"
                                type="number"
+                               variant="standard"
                                InputLabelProps={{
                                    shrink: true,
                                }}
@@ -74,6 +75,7 @@ export const BulkEditPopupMenu = ({bulkUpdateOperationChange, anchorEl, onClose}
                     <TextField style={{paddingRight: 10, width: 70}}
                                label="Аппликатура"
                                type="number"
+                               variant="standard"
                                InputLabelProps={{
                                    shrink: true,
                                }}

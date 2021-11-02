@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import {Dialog, DialogContent, DialogTitle, Grid, Popover, Typography} from "@material-ui/core";
-import InfoRoundedIcon from '@material-ui/icons/InfoRounded';
+import {Dialog, DialogContent, DialogTitle, Grid, Popover, Typography} from "@mui/material";
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 
 
 export const HelpDialog = () => {

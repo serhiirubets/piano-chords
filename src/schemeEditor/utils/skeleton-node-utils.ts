@@ -28,7 +28,6 @@ export const getPlaybackData = (data: SkeletonNodeData): PlaybackData[] => {
 }
 
 export const getOriginalText = (noteArray: INote[], octaveNotation: OctaveNotation): string => {
-    console.log('getting text for notation', octaveNotation.entries)
     const chordToString = (notes: INote[]) => {
         return notes.map(note => note.note + getOctaveNotationFromScientific(note.octave, octaveNotation)).join(" ")
     }

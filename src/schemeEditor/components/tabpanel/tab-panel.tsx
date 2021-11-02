@@ -1,15 +1,31 @@
-import React, {useContext} from 'react';
-import {makeStyles, Theme} from '@material-ui/core/styles';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import AddRoundedIcon from '@material-ui/icons/AddRounded';
+import React, {useContext, useState} from 'react';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import {BarContext} from "../../context/bar-context";
 import {SheetData} from "../../model/deprecated/sheet-data";
 import {TabElement} from "./tab-element";
-import {SortableContainer, SortableElement} from "react-sortable-hoc";
 import {deepCopy} from "../../utils/js-utils";
-import {HorizontalSplit} from "@material-ui/icons";
-import {Divider} from "@material-ui/core";
+import {Divider} from "@mui/material";
+import {
+    closestCenter,
+    closestCorners,
+    DndContext,
+    DragOverlay,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors
+} from "@dnd-kit/core";
+import {
+    horizontalListSortingStrategy, rectSortingStrategy, rectSwappingStrategy,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    useSortable
+} from "@dnd-kit/sortable";
+import {CSS} from "@dnd-kit/utilities";
+
+import {restrictToFirstScrollableAncestor, restrictToHorizontalAxis, restrictToWindowEdges,} from '@dnd-kit/modifiers';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -17,36 +33,102 @@ interface TabPanelProps {
     value: any;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        flexGrow: 1,
-        width: '100%'
-    },
-}));
 
-const SortableTabItem = SortableElement(({sheetName, onTabSelect, handleNameChange, onRemoveTriggered, style}) => {
+const SortableTabItem = ({sheetName, onTabSelect, handleNameChange, onRemoveTriggered, style, onDuplicate}) => {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging
+    } = useSortable({id: sheetName});
+
+    const transitionStyle = {
+        transform: CSS.Transform.toString(transform),
+        // transition,
+        cursor: isDragging? "grab": "auto",
+        opacity: isDragging ? 0.1 : 1,
+        ...style
+    };
+
     return (<TabElement
+        externalRef={setNodeRef}
         label={sheetName}
         onNameChange={handleNameChange}
         onTabSelect={onTabSelect}
         onRemoveTriggered={onRemoveTriggered}
-        externalStyle={style}
+        onDuplicate = {onDuplicate}
+        externalStyle={transitionStyle}
+        draggableAttributes={attributes}
+        draggableListeners={listeners}
     />)
-})
+}
 
-const SortableTabContainer = SortableContainer(({value, indicatorColor, onChange, children, style}) => {
-    return <Tabs
-        value={value}
-        onChange={onChange}
-        indicatorColor={indicatorColor}
-        textColor="primary"
-        variant="scrollable"
-        scrollButtons="auto"
-        style={style}
-    >
-        {children}
-    </Tabs>
-})
+const SortableTabContainer = ({value, items, indicatorColor, onSortEnd, onChange, children, style}) => {
+    const [activeId, setActiveId] = useState(null)
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                delay: 250,
+                tolerance: 5,
+            }
+        }),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+        )
+    ;
+
+    const handleDragStart = (event) => {
+        setActiveId(event.active.id);
+    };
+
+    const handleDragEnd = (event) => {
+        setActiveId(null);
+        const {active, over} = event;
+
+        if (active.id !== over.id) {
+            const oldIndex = items.indexOf(active.id);
+            const newIndex = items.indexOf(over.id);
+            onSortEnd({oldIndex: oldIndex, newIndex: newIndex})
+            onChange(null, newIndex)
+        }
+    };
+
+    return <DndContext
+        modifiers={[restrictToHorizontalAxis,restrictToWindowEdges]}
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}>
+        <SortableContext items={items} strategy={rectSortingStrategy}>
+            <Tabs
+                value={value}
+                onChange={onChange}
+                indicatorColor={indicatorColor}
+                textColor="primary"
+                variant="scrollable"
+                scrollButtons="auto"
+                style={style}
+            >
+                {children}
+            </Tabs>
+            <DragOverlay>
+                {activeId ? (
+                    <div
+                        style={{
+                            height: style.height || "40px",
+                            width: 100,
+                            backgroundColor: "silver",
+                            opacity: "50%"
+                        }}
+                    ></div>
+                ) : null}
+            </DragOverlay>
+        </SortableContext>
+    </DndContext>
+}
 
 export const ScrollableTabs = () => {
 
@@ -151,6 +233,39 @@ export const ScrollableTabs = () => {
         updateActiveSubSheet(newSheet.name)
     }
 
+    const handleCopyOfSheet = (sheetNameToCopy:string) => {
+        const updatedSheets = new Map(sheets);
+        const existingSheetData =sheets.get(sheetNameToCopy);
+        if(!existingSheetData){
+            return
+        }
+        console.log('copying', sheetNameToCopy)
+        const newSheet = deepCopy(existingSheetData);
+        newSheet.index = sheetNames.length;
+        newSheet.name = "Копия " +sheetNameToCopy;
+
+        for(let sheet of Array.from(sheets.values())){
+            if(sheet.parentName === sheetNameToCopy){
+                const copiedSubSheet = deepCopy(sheet);
+
+                if(copiedSubSheet.name.includes(sheetNameToCopy)){
+                    copiedSubSheet.name = copiedSubSheet.name.replaceAll(sheetNameToCopy, newSheet.name)
+                }else {
+                    copiedSubSheet.name = newSheet.name + " "+ copiedSubSheet.name
+                }
+                copiedSubSheet.parentName = newSheet.name
+                console.log(copiedSubSheet)
+                console.log(sheet)
+                updatedSheets.set(copiedSubSheet.name, copiedSubSheet)
+            }
+        }
+
+
+        updatedSheets.set(newSheet.name, newSheet);
+        updateSheets(updatedSheets)
+        updateActiveSheet(newSheet.name)
+    }
+
     const handleRemovalOfSheet = (sheetName: string) => {
         const updatedSheets = new Map(sheets);
         if (Array.from(updatedSheets.entries()).length === 1) {
@@ -159,7 +274,7 @@ export const ScrollableTabs = () => {
         }
         updatedSheets.delete(sheetName);
         const subSheets = Array.from(sheets.entries())
-            .filter(([key, value])=> value.parentName === sheetName)
+            .filter(([key, value]) => value.parentName === sheetName)
             .map(([key, value]) => key);
         subSheets.forEach(sheetName => updatedSheets.delete(sheetName))
         updateSheets(updatedSheets);
@@ -177,23 +292,28 @@ export const ScrollableTabs = () => {
     const handleSheetNameChange = (newName: string) => {
         const existingNames = Array.from(sheets.keys())
         if (existingNames.includes(newName)) {
+            console.log('existing', existingNames)
+            console.log('new name', newName)
             alert("Невозможно переименовать, такое имя листа уже занято")
+            return;
         }
 
         const sheetData = sheets.get(activeSheet);
-        if (!sheetData) {
-            return
+        console.log('saving', sheetData)
+        const updatedSheets = new Map(deepCopy(Array.from(sheets.entries()))) as Map<string, SheetData>
+        if (sheetData) {
+            const updatedSheetData = deepCopy(sheetData)
+            updatedSheetData.name = newName
+            Array.from(updatedSheets.values()).forEach(sheet=> {
+                if (sheet.parentName === activeSheet) {
+                    sheet.parentName = newName
+                }
+            })
+            updatedSheets.delete(activeSheet);
+            console.log('saving after update', updatedSheets)
+            updatedSheets.set(newName, updatedSheetData);
         }
 
-        const updatedSheets = new Map(deepCopy(Array.from(sheets.entries()))) as Map<string, SheetData>
-        Array.from(updatedSheets.values()).forEach(sheetData => {
-            if (sheetData.parentName === activeSheet) {
-                sheetData.parentName = newName
-            }
-        })
-        updatedSheets.set(newName, sheetData);
-
-        updatedSheets.delete(activeSheet);
         updateSheets(updatedSheets);
         updateActiveSheet(newName);
 
@@ -204,12 +324,13 @@ export const ScrollableTabs = () => {
             return
         }
 
-        const sheetData = sheets.get(activeSubSheet);
-        if (sheetData) {
-            const updatedSheets = new Map(sheets)
-                .set(newName, sheetData);
+        const sheetData = deepCopy(sheets.get(activeSubSheet));
 
+        if (sheetData) {
+            const updatedSheets =   (new Map(deepCopy(Array.from(sheets.entries()))) as Map<string, SheetData>)
             updatedSheets.delete(activeSubSheet);
+            updatedSheets.set(newName, sheetData);
+
             updateSheets(updatedSheets);
             updateActiveSubSheet(newName);
         }
@@ -221,10 +342,11 @@ export const ScrollableTabs = () => {
             flexDirection: "column",
             justifyContent: "space-between",
             alignItems: "left",
-            width:"100%",
-            overflow:"scroll"}}>
+            width: "100%",
+            overflow: "scroll"
+        }}>
             <SortableTabContainer
-                axis={"x"}
+                items={sheetNames}
                 indicatorColor="secondary"
                 value={sheetValue}
                 onChange={handleSheetChange}
@@ -233,7 +355,6 @@ export const ScrollableTabs = () => {
             >
                 {sheetNames
                     .map((sheetName, idx) => <SortableTabItem
-                        index={idx}
                         style={classes.sheetTabItem}
                         sheetName={sheetName}
                         handleNameChange={handleSheetNameChange}
@@ -241,12 +362,13 @@ export const ScrollableTabs = () => {
                             handleSheetChange(null, idx)
                         }}
                         onRemoveTriggered={handleRemovalOfSheet}
+                        onDuplicate={handleCopyOfSheet}
                     />)}
                 <Tab icon={<AddRoundedIcon/>} onClick={handleAdditionOfSheet}/>
             </SortableTabContainer>
             <Divider/>
             <SortableTabContainer
-                axis={"x"}
+                items={subSheetNames}
                 style={classes.subsheetTabRoot}
                 indicatorColor="primary"
                 value={subSheetValue}
@@ -255,7 +377,6 @@ export const ScrollableTabs = () => {
             >
                 {subSheetNames
                     .map((sheetName, idx) => <SortableTabItem
-                        index={idx}
                         sheetName={sheetName}
                         handleNameChange={handleSubSheetNameChange}
                         style={classes.subsheetTabItem}
@@ -263,6 +384,7 @@ export const ScrollableTabs = () => {
                             handleSubSheetChange(null, idx)
                         }}
                         onRemoveTriggered={handleRemovalOfSubSheet}
+                        onDuplicate={handleCopyOfSheet}
                     />)}
                 <Tab icon={<AddRoundedIcon/>} onClick={handleAdditionOfSubSheet}/>
             </SortableTabContainer>
@@ -290,8 +412,8 @@ const classes = {
     subsheetTabRoot: {
         minHeight: 37,
         height: 37,
-        width:"100%",
-        maxWidth:"100%",
+        width: "100%",
+        maxWidth: "100%",
         background: "#e7e7e7"
     }
 }

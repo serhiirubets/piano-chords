@@ -1,9 +1,26 @@
 import React, {useState} from 'react';
 import './App.css';
 import theme from "./core/theme-provider";
-import {Card, CardContent, FormControlLabel, Radio, RadioGroup, ThemeProvider, Typography} from '@material-ui/core';
-import {makeStyles} from "@material-ui/core/styles";
+import {
+    Card,
+    CardContent,
+    FormControlLabel,
+    Radio,
+    RadioGroup,
+    ThemeProvider,
+    Theme,
+    StyledEngineProvider,
+    Typography,
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import {BlockSchemeEditor} from "./schemeEditor/block-scheme-editor";
+
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
 
 function App() {
     const [selectedScale, setSelectedScale] = useState();
@@ -12,15 +29,17 @@ function App() {
     const [mode, setMode] = useState('blockSchemeEditor')
     const classes = useGlobalStyles();
     return (
-        <ThemeProvider theme={theme}>
-            <div className="App">
-                <div className={classes.contentArea}>
-                    <div className={classes.mainContentArea}>
-                        <BlockSchemeEditor/>
+        <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={theme}>
+                <div className="App">
+                    <div className={classes.contentArea}>
+                        <div className={classes.mainContentArea}>
+                            <BlockSchemeEditor/>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </ThemeProvider>
+            </ThemeProvider>
+        </StyledEngineProvider>
     );
 }
 
@@ -177,7 +196,7 @@ export const useGlobalStyles = makeStyles({
         height:75,
         boxShadow: "0px 10px 18px -5px #888888",
         zIndex:5,
-        backgroundColor: "#D65F24",
+        backgroundColor: "#4f5b66",
         alignSelf:"flex-start"
     }
 });

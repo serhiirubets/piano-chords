@@ -8,7 +8,7 @@ import {INote, Note, NoteType} from "../../model/note-data";
 import {SkeletonNodeData} from "../../model/deprecated/skeleton-node-data";
 import {NodeSubtitle} from "./node-subtitle";
 import {getMidiNumber} from "../../utils/playback-utils";
-import {ClickAwayListener, ListItemText, Menu, MenuItem} from "@material-ui/core";
+import {ClickAwayListener, Divider, ListItemText, Menu, MenuItem, MenuList} from "@mui/material";
 import {deepCopy, distinct} from "../../utils/js-utils";
 import {getTripletByIndex, getTripletDurationByIndex, isPartOfTriplet} from "../../utils/triplet-utils";
 import {BulkEditPopupMenu} from "./bulk-edit-popup-menu";
@@ -415,30 +415,34 @@ export const Skeleton = ({skeletonIndex}) => {
                         open={Boolean(menuAnchorEl)}
                         onClose={handleMenuClose}
                     >
-                        <MenuItem disabled={isNotTripletEligible()} onClick={initiateTriplet}>
-                            <ListItemText primary="Триоль"/>
-                        </MenuItem>
-                        <MenuItem onClick={openBulkEditPopupMenu}>
-                            <ListItemText>Редактировать</ListItemText>
-                        </MenuItem>
-                        <MenuItem onClick={() => {
-                            copyNodesToBuffer()
-                            setSelectedNodes([])
-                            handleMenuClose()
-                        }}>
-                            <ListItemText>Копировать</ListItemText>
-                        </MenuItem>
-                        <MenuItem
-                            disabled={selectionBuffer.current.isEmpty()}
-                            onClick={pasteFromBuffer}>
-                            <ListItemText>Вставить</ListItemText>
-                        </MenuItem>
-                        <MenuItem onClick={() => {
-                            clearNodesBySelectionIndices()
-                            handleMenuClose()
-                        }}>
-                            <ListItemText>Удалить</ListItemText>
-                        </MenuItem>
+                        <MenuList dense>
+                            <MenuItem disabled={isNotTripletEligible()} onClick={initiateTriplet}>
+                                <ListItemText primary="Триоль"/>
+                            </MenuItem>
+                            <Divider/>
+                            <MenuItem onClick={openBulkEditPopupMenu}>
+                                <ListItemText>Редактировать</ListItemText>
+                            </MenuItem>
+                            <Divider/>
+                            <MenuItem onClick={() => {
+                                copyNodesToBuffer()
+                                setSelectedNodes([])
+                                handleMenuClose()
+                            }}>
+                                <ListItemText>Копировать</ListItemText>
+                            </MenuItem>
+                            <MenuItem
+                                disabled={selectionBuffer.current.isEmpty()}
+                                onClick={pasteFromBuffer}>
+                                <ListItemText>Вставить</ListItemText>
+                            </MenuItem>
+                            <MenuItem onClick={() => {
+                                clearNodesBySelectionIndices()
+                                handleMenuClose()
+                            }}>
+                                <ListItemText>Удалить</ListItemText>
+                            </MenuItem>
+                        </MenuList>
                     </Menu>
                     <BulkEditPopupMenu
                         onClose={closeBulkEditPopupMenu}

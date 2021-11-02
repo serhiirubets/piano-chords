@@ -1,21 +1,19 @@
-import {Divider, Grid, Slider, styled} from "@material-ui/core";
+import {Slider, styled} from "@mui/material";
 import React, {useContext} from "react";
-import {useGlobalStyles} from "../../../App";
 import {SettingsContext} from "../../context/settings-context";
 import SoundfontProvider from "../../../components/piano-core/SoundfontProvider";
 import {audioContext, soundfontHostname} from "../../model/global-constants";
-import IconButton from "@material-ui/core/IconButton";
+import IconButton from "@mui/material/IconButton";
 import {getNotesToPlay, playNotes} from "../../utils/playback-utils";
-import PlayArrowRoundedIcon from "@material-ui/icons/PlayArrowRounded";
-import StopRoundedIcon from "@material-ui/icons/StopRounded";
+import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
+import StopRoundedIcon from "@mui/icons-material/StopRounded";
 import {BarContext} from "../../context/bar-context";
-import {PrintRounded} from "@material-ui/icons";
 
 export interface PlaybackModuleProps {
     iconColor?: string;
 }
 
-const StyledSlider = styled(Slider)(({ theme }) => ({
+export const StyledSlider = styled(Slider)(({ theme }) => ({
     '& .MuiSlider-thumb': {
         height: 10,
         width: 10,
@@ -24,8 +22,7 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
 
 export const PlaybackModule = ({iconColor}: PlaybackModuleProps) => {
     const {settings, partialUpdateSettings} = useContext(SettingsContext);
-    const {bars, updateBars} = useContext(BarContext);
-    const classes = useGlobalStyles();
+    const {bars} = useContext(BarContext);
 
     return (
         <SoundfontProvider
@@ -39,28 +36,32 @@ export const PlaybackModule = ({iconColor}: PlaybackModuleProps) => {
                         <IconButton
                             onClick={() => {
                                 playNotes(getNotesToPlay(bars), playNote, settings.playbackTempo, settings.alterGainForFeather)
-                            }}>
+                            }}
+                            size="large">
                             <PlayArrowRoundedIcon fontSize="large" style={{fill: "#176503"}}/>
                         </IconButton>
-                        <IconButton onClick={() => {
-                            stopNote();
-                            stopAllNotes();
-                        }}>
+                        <IconButton
+                            onClick={() => {
+                                stopNote();
+                                stopAllNotes();
+                            }}
+                            size="large">
                             <StopRoundedIcon fontSize="large" style={{fill: "#ac0707"}}/>
                         </IconButton>
 
 
                     </div>
-                    <StyledSlider
-                        style={{width: '80%', margin: "0 5px 0 5px", padding:"0 5px"}}
-                        onChange={(value, newValue)=>partialUpdateSettings({playbackTempo: (newValue as number) * -1})}
-                        defaultValue={-0.25}
-                        step={0.05}
-                        min={-1}
-                        max={-0.05}
-                    />
+                    {/*<StyledSlider*/}
+                    {/*    style={{width: '80%', margin: "0 5px 0 5px", padding:"0 5px"}}*/}
+                    {/*    onChange={(value, newValue)=>partialUpdateSettings({playbackTempo: (newValue as number) * -1})}*/}
+                    {/*    defaultValue={-0.25}*/}
+                    {/*    step={0.05}*/}
+                    {/*    min={-1}*/}
+                    {/*    max={-0.05}*/}
+                    {/*/>*/}
                 </div>
 
             )}
-        />)
+        />
+    );
 }

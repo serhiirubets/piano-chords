@@ -1,11 +1,11 @@
 /** @jsx jsx */
-import React, {useContext} from "react";
+import React from "react";
+import {jsx} from "@emotion/react/macro";
 import {INote, Note, NoteType} from "../../../model/note-data";
 import {HandType} from "../../../model/deprecated/skeleton-data";
-import {Checkbox, FormControlLabel, Popover, TextField, Typography} from "@material-ui/core";
-import ClearRoundedIcon from "@material-ui/icons/ClearRounded";
+import {Checkbox, FormControlLabel, Popover, TextField, Typography} from "@mui/material";
+import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import {FeatherSwitch} from "./feather-switch";
-import {jsx} from "@emotion/react/macro";
 
 export interface NoteContextMenuProps {
     note: INote;
@@ -52,6 +52,7 @@ export const NoteEditPopupMenu = ({note, onUpdateNote, hand, anchorEl, onClose})
                 </div>
                 <div style={{padding: 10, display: "flex", flexDirection: "row"}}>
                     <TextField style={{paddingRight: 10, width: 50}}
+                               variant="standard"
                                defaultValue={note.note}
                                label="Нота"
                                InputLabelProps={{
@@ -64,6 +65,7 @@ export const NoteEditPopupMenu = ({note, onUpdateNote, hand, anchorEl, onClose})
                     />
 
                     <TextField style={{paddingRight: 10, width: 50}}
+                               variant="standard"
                                defaultValue={note.octave}
                                label="Октава"
                                type="number"
@@ -78,6 +80,7 @@ export const NoteEditPopupMenu = ({note, onUpdateNote, hand, anchorEl, onClose})
                 </div>
                 <div style={{padding: 10, display: "flex", flexDirection: "row"}}>
                     <TextField style={{paddingRight: 10, width: 70}}
+                               variant="standard"
                                defaultValue={note.applicature}
                                label="Аппликатура"
                                InputLabelProps={{

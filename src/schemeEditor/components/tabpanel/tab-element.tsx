@@ -1,36 +1,30 @@
-import Tab from "@material-ui/core/Tab";
-import React, {useEffect, useState} from "react";
-import {ClickAwayListener, ListItemText, Menu, MenuItem, TextField} from "@material-ui/core";
-import {jsx} from "@emotion/react/macro";
-import {SortableElement, SortableHandle} from "react-sortable-hoc";
-import OpenWithRoundedIcon from '@material-ui/icons/OpenWithRounded';
+import Tab from "@mui/material/Tab";
+import React, {useState} from "react";
+import {ClickAwayListener, ListItemText, Menu, MenuItem, MenuList, TextField} from "@mui/material";
 
 export interface TabElementProps {
     label: string;
     onNameChange: (newName: string) => any;
     onTabSelect: () => any;
-    onRemoveTriggered: (name:string) => any;
-    externalStyle?:Object
+    onRemoveTriggered: (name: string) => any;
+    onDuplicate: (name: string) => any;
+    externalStyle?: Object,
+    externalRef: any;
+    draggableAttributes: any;
+    draggableListeners: any;
 }
 
-const MoveTabButton = SortableHandle(() => {
-    const [isHovered, setIsHovered] = useState<boolean>(false)
-    return (<div
-        css={{
-            position: "absolute",
-            right: 0,
-            top: 0,
-            zIndex: 10,
-            opacity: isHovered ? 0 : 100
-        }}
-
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}>
-        <OpenWithRoundedIcon fontSize="small" color="action"/>
-    </div>)
-})
-
-export const TabElement = ({label, onNameChange,onTabSelect,onRemoveTriggered,externalStyle}: TabElementProps) => {
+export const TabElement = ({
+                               externalRef,
+                               label,
+                               onNameChange,
+                               onTabSelect,
+                               onRemoveTriggered,
+                               onDuplicate,
+                               externalStyle,
+                               draggableAttributes,
+                               draggableListeners
+                           }: TabElementProps) => {
     const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(null);
     const [isEditMode, setEditMode] = useState<boolean>(false);
     const [tabnameText, setTabnameText] = useState(label)
@@ -43,8 +37,10 @@ export const TabElement = ({label, onNameChange,onTabSelect,onRemoveTriggered,ex
         onTabSelect();
         setMenuAnchorEl(e.currentTarget)
     }
-    const handleSave = (newName:string) => {
+    const handleSave = (newName: string) => {
+        console.log('saving',label,tabnameText,newName)
         onNameChange(newName);
+        console.log('saved')
         setEditMode(false);
     }
 
@@ -55,6 +51,7 @@ export const TabElement = ({label, onNameChange,onTabSelect,onRemoveTriggered,ex
 
         if (event.key === 'Enter') {
             handleSave(tabnameText)
+            setEditMode(false)
         }
 
         if (event.key === 'Escape') {
@@ -70,46 +67,60 @@ export const TabElement = ({label, onNameChange,onTabSelect,onRemoveTriggered,ex
         }}>
             <div style={{position: "relative", ...externalStyle}}>
                 <Menu
-                    id="simple-menu"
+                    id="edit-tab-menu"
                     anchorEl={menuAnchorEl}
                     keepMounted
                     open={Boolean(menuAnchorEl)}
                     onClose={handleMenuClose}
                 >
-                    <MenuItem onClick={() => {
-                        setEditMode(true);
-                        handleMenuClose();
-                    }}>
-                        <ListItemText primary="Переименовать"/>
-                    </MenuItem>
-                    <MenuItem onClick={() => {
-                        onRemoveTriggered(label)
-                        handleMenuClose();
-                    }}>
-                        <ListItemText primary="Удалить"/>
-                    </MenuItem>
+                    <MenuList dense>
+                        <MenuItem onClick={() => {
+                            setEditMode(true);
+                            handleMenuClose();
+                        }}>
+                            <ListItemText primary="Переименовать"/>
+                        </MenuItem>
+                        <MenuItem onClick={() => {
+                            onDuplicate(label);
+                            handleMenuClose();
+                        }}>
+                            <ListItemText primary="Дублировaть"/>
+                        </MenuItem>
+                        <MenuItem onClick={() => {
+                            onRemoveTriggered(label)
+                            handleMenuClose();
+                        }}>
+                            <ListItemText primary="Удалить"/>
+                        </MenuItem>
+                    </MenuList>
                 </Menu>
-                <div style={{flex:"1", flexDirection:"row"}}>
-                <TextField
-                    style={{
-                        opacity: isEditMode ? 100 : 0,
-                        zIndex: isEditMode ? 2 : 0,
-                        position: "absolute",
-                        paddingLeft:"1em",
-                        paddingRight:"1em"
+                <div style={{flex: "1", flexDirection: "row"}}>
+                    <TextField
+                        variant="standard"
+                        style={{
+                            opacity: isEditMode ? 100 : 0,
+                            zIndex: isEditMode ? 5 : 0,
+                            position: "absolute",
+                            paddingLeft: "1em",
+                            paddingRight: "1em",
+                            background: "white"
+                        }}
+                        onKeyUp={(event) => handleTextInput(event)}
+                        defaultValue={tabnameText}
+                    ></TextField>
+                    <Tab style={{
+                        opacity: isEditMode ? 0 : 100,
+                        zIndex: isEditMode ? 0 : 2,
+                        ...(externalStyle || {})
                     }}
-                    onKeyUp={(event) => handleTextInput(event)}
-                    defaultValue={tabnameText}
-                    onBlur = {() => handleSave(tabnameText)}
-                ></TextField>
-                <Tab style={{opacity: isEditMode ? 0 : 100,
-                    zIndex: isEditMode ? 0 : 2,
-                    ...(externalStyle || {})
-                }}
-                     label={label}
-                     onClick={()=> onTabSelect()}
-                     onContextMenu={handleContextMenuClick}></Tab>
-                {/*<MoveTabButton></MoveTabButton>*/}
+                         ref={externalRef}
+                         label={label}
+                         onClick={() => onTabSelect()}
+                         onContextMenu={handleContextMenuClick}
+                         {...draggableListeners}
+                         {...draggableAttributes}
+                    ></Tab>
+                    {/*<MoveTabButton></MoveTabButton>*/}
                 </div>
             </div>
         </ClickAwayListener>

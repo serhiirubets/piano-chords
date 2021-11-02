@@ -1,8 +1,8 @@
 import React, {useContext} from "react"
 import {SkeletonData} from "../../model/deprecated/skeleton-data";
-import PlaylistAddRoundedIcon from '@material-ui/icons/PlaylistAddRounded';
+import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
 import {SkeletonWrapper} from "./skeleton-wrapper";
-import {Button, Typography} from "@material-ui/core";
+import {Button, Typography} from "@mui/material";
 import {SettingsContext} from "../../context/settings-context";
 import {arrayMove, SortableContainer, SortableElement} from "react-sortable-hoc";
 import {BarContext} from "../../context/bar-context";
@@ -39,7 +39,7 @@ const SortableItem = SortableElement(({idx}) =>
         justifyContent: "center",
         alignItems: "center",
         padding:"0 50 0 50"
-    }}><SkeletonWrapper index={idx}></SkeletonWrapper></div>);
+    }}><SkeletonWrapper index={idx} id={idx}></SkeletonWrapper></div>);
 
 
 const SortableGrid = SortableContainer(({children}) => {

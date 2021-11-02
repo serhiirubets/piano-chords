@@ -7,12 +7,11 @@ import {SkeletonNodeData} from "../../model/deprecated/skeleton-node-data";
 import {QUADRAT_WIDTH} from "../../model/global-constants";
 import {compareByMidiNumbers, getMidiNumber, isChord} from "../../utils/playback-utils";
 import {HandMidiSummary, TripletHandlingProps} from "./skeleton";
-import {ClickAwayListener} from "@material-ui/core";
+import {ClickAwayListener} from "@mui/material";
 import {getOctaveInRussianNotation, getOriginalText} from "../../utils/skeleton-node-utils";
 import {getTripletEffectiveParameters} from "../../utils/triplet-utils";
 import {SettingsContext} from "../../context/settings-context";
 import {NoteEditPopupMenu} from "./subtitle/note-edit-popup-menu";
-import {settings} from "cluster";
 
 
 export interface NodeSubtitleProps {

@@ -1,35 +1,31 @@
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
     Button,
-    Checkbox, debounce,
+    Checkbox,
     FormControl,
     FormControlLabel,
     Grid,
     InputLabel,
     MenuItem,
-    Select,
+    Select, SelectChangeEvent,
     Typography
-} from "@material-ui/core";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import SaveRoundedIcon from "@material-ui/icons/SaveRounded";
-import PublishRoundedIcon from "@material-ui/icons/PublishRounded";
-import PlaylistPlayRoundedIcon from "@material-ui/icons/PlaylistPlayRounded";
-import Accordion from "@material-ui/core/Accordion";
-import React, {useCallback, useContext, useEffect, useState} from "react";
+} from "@mui/material";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
+import PublishRoundedIcon from "@mui/icons-material/PublishRounded";
+import PlaylistPlayRoundedIcon from "@mui/icons-material/PlaylistPlayRounded";
+import Accordion from "@mui/material/Accordion";
+import React, {ChangeEvent, useContext, useEffect, useState} from "react";
 import {useGlobalStyles} from "../../../App";
 import Download from '@axetroy/react-download';
 import {SettingsContext} from "../../context/settings-context";
 import {EditorSettings} from "../../model/editor-settings-data";
 import {BarContext} from "../../context/bar-context";
-import {Gorod} from "../../resources/Gorod-kotorogo-net-recordings";
 import {DDTScheme} from "../../resources/DDT-triplets-recording";
 import {SheetData} from "../../model/deprecated/sheet-data";
-import {unstable_next} from "scheduler";
-import {AUTOSAVE_INTERVAL_MS} from "../../model/global-constants";
-import {RefreshRounded} from "@material-ui/icons";
+import {RefreshRounded} from "@mui/icons-material";
 import {NymphScheme} from "../../resources/Nymph-recording";
-import {deepCopy} from "../../utils/js-utils";
 
 export interface SaveLoadSettingsPanelProps {
 }
@@ -58,7 +54,6 @@ export const SaveLoadSettingsPanel = () => {
     }
 
     useEffect(() => {
-
         if (!settings.autosave) {
             return;
         }
@@ -71,7 +66,7 @@ export const SaveLoadSettingsPanel = () => {
     }, [sheets]);
 
 
-    const handleDemoSongSelection = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const handleDemoSongSelection = (event: SelectChangeEvent<string>) => {
         setDemoFile(event.target.value as string);
     };
 
@@ -154,6 +149,7 @@ export const SaveLoadSettingsPanel = () => {
                 <FormControl>
                     <InputLabel id="demo-simple-select-label">Имя демо-файла</InputLabel>
                     <Select
+                        variant="standard"
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={demoFile}

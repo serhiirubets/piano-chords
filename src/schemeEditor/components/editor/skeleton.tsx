@@ -16,6 +16,7 @@ import {SettingsContext} from "../../context/settings-context";
 import {copySkeleton, getOriginalText, getSkeletonHandData, setSkeletonHandData} from "../../utils/skeleton-node-utils";
 import {SelectionIndex} from "../../model/selection/selection-index";
 import {getIndicesLengthAndMinPosition, getPositionRelativeToSelectionStart} from "../../utils/selection-buffer-utils";
+import {SheetData} from "../../model/deprecated/sheet-data";
 
 export enum NodeSelectionMode {
     NONE = "0000",
@@ -55,11 +56,11 @@ const getSelectedIndicesInHand = (selectedNodes: SelectionIndex[], noteHand: Han
 }
 
 
-export const Skeleton = ({skeletonIndex}) => {
-    const {bars, updateSingleBar, selectionBuffer} = useContext(BarContext);
+export const Skeleton = ({skeletonIndex, sheetName}) => {
+    const {bars, updateSingleBar, selectionBuffer, sheets} = useContext(BarContext);
     const {settings} = useContext(SettingsContext);
 
-    const skeletonData = bars[skeletonIndex]
+    const skeletonData = (sheets.get(sheetName)|| new SheetData()).bars[skeletonIndex]
     const [selectedNodes, setSelectedNodes] = useState<SelectionIndex[]>(new Array<SelectionIndex>());
     const [activeNodeIndex, setActiveNodeIndex] = useState<SelectionIndex | null>(null);
     const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);

@@ -8,6 +8,7 @@ export interface BarContextData {
     isTouched:boolean;
     activeSheet:string;
     activeSubSheet:string|null;
+    activeTrack:string|null;
 
     bars: SkeletonData[];
     updateBars: (newQuads: SkeletonData[]) => any;
@@ -16,7 +17,10 @@ export interface BarContextData {
 
     updateActiveSheet : (sheetName:string) => any;
     updateActiveSubSheet : (sheetName:string|null) => any;
+    updateActiveTrack : (sheetName:string|null) => any;
     updateSheets:( newSheets:Map<string, SheetData>) => any;
+
+    editableSheetName:string
 
     barSize: number;
     updateBarSize: (newSize: number) => any;

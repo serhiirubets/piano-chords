@@ -9,15 +9,15 @@ export interface EditorSettings {
     octaveNotation:OctaveNotation;
 
     autosave:boolean;
-    simpleMode:boolean;
-    simpleModeLeftHandNote:string;
-    simpleModeRightHandNote:string;
+    isMenuOpen: boolean;
 
     defaultOctaves: Map<HandType, number>;
 
     editorElementRef:any;
     isExportingInProgress:boolean;
     fileName:string;
+
+    isMasteringMode:boolean;
 
 }
 

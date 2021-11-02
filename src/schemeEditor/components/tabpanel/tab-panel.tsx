@@ -155,7 +155,7 @@ export const ScrollableTabs = () => {
     const getSubSheetNames = (availableSheets: Map<string, SheetData>, activeSheetName: string) => {
         return Array.from(availableSheets.entries())
             .filter(([key, value]) => {
-                return value.parentName === activeSheetName
+                return value.parentName === activeSheetName && !value.isTrack
             })
             .sort(([k1, v1], [k2, v2]) => {
                 return v1.index - v2.index;

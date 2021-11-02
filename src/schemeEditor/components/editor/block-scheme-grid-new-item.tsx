@@ -22,7 +22,7 @@ const SortableItem = (props) => {
         transition,
         margin: "10px",
         opacity: isDragging ? 0.3 : 1,
-        flexBasis: getFlexBasisValue(settings.quadratSize, settings.isExportingInProgress),
+        flexBasis: getFlexBasisValue(settings.quadratSize, settings.isExportingInProgress, settings.isMenuOpen),
         minWidth: "100px",
         justifyContent: "center",
         alignItems: "center",
@@ -32,7 +32,10 @@ const SortableItem = (props) => {
     return (
         <div ref={setNodeRef} style={style}>
             <div>
-                <SkeletonWrapper index={props.idx} id={props.id} sortableListeners={listeners}
+                <SkeletonWrapper index={props.idx}
+                                 id={props.id}
+                                 sortableListeners={listeners}
+                                 sheetName={props.sheetName}
                                  sortableAttributes={attributes}/>
             </div>
         </div>

@@ -17,44 +17,26 @@ import SortableItem from "./block-scheme-grid-new-item";
 import {BarContext} from "../../context/bar-context";
 import {SkeletonData} from "../../model/deprecated/skeleton-data";
 import {getExportViewportWidth, getFlexBasisValue, getPaddingValue} from "../../utils/rendering-utils";
+import {restrictToHorizontalAxis} from "@dnd-kit/modifiers";
+import {AddMoreButton} from "./block-scheme-grid-new";
+import {SheetData} from "../../model/deprecated/sheet-data";
 
 
-export const AddMoreButton = ({onClick, opacity}) => {
-    const {settings} = useContext(SettingsContext);
-    return (<div key="addMoreButton" style={{
-        marginTop: "20px",
-        marginLeft: "10px",
-        marginRight: "10px",
-        justifyContent: "center",
-        opacity: opacity,
-        flexBasis: getFlexBasisValue(settings.quadratSize, settings.isExportingInProgress, settings.isMenuOpen),
-        // display: "none"
-    }}>
-        <Button variant="outlined" key="addNewSkeletonButton"
-                style={{
-                    height: 284,
-                    width: QUADRAT_WIDTH * settings.quadratSize,
-                    opacity: opacity
-                }}
-                onClick={onClick}>
-            <PlaylistAddRoundedIcon color="action" style={{fontSize: 60}}></PlaylistAddRoundedIcon>
-        </Button>
-    </div>)
-}
-
-
-export const BlockSchemeGridNew = () => {
-    const {bars, activeSheet, updateBars, editableSheetName} = useContext(BarContext);
+export const MasteringModeTrackLine = ({trackName}) => {
+    const {updateBars, updateActiveTrack, sheets, activeTrack} = useContext(BarContext);
     const {settings} = useContext(SettingsContext)
+    console.log('---------')
+    console.log(activeTrack)
+    console.log(trackName)
+    console.log('---------')
+    const bars = (sheets.get(trackName)|| new SheetData()).bars
+    console.log('bars for '+trackName,bars)
     const barIds = bars.map(data => data.id);
 
     const [activeId, setActiveId] = useState(null);
 
     const sensors = useSensors(
         useSensor(PointerSensor),
-        useSensor(KeyboardSensor, {
-            coordinateGetter: sortableKeyboardCoordinates
-        })
     );
 
     const handleDragStart = (event) => {
@@ -76,35 +58,35 @@ export const BlockSchemeGridNew = () => {
     };
 
     return (
-        <div ref={settings.editorElementRef}>
+        <div style={{
+            display: "flex",
+            flexDirection: "row"
+        }}
+             onFocus={() => {
+                 updateActiveTrack(trackName)
+             }
+             }>
+            <div>
+                <Typography>{trackName}</Typography>
+            </div>
             <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
+                modifiers={[restrictToHorizontalAxis]}
                 onDragEnd={handleDragEnd}
                 onDragStart={handleDragStart}>
 
                 <div style={{
-                    alignSelf: "right",
-                    marginTop: 10,
-                    display: settings.isExportingInProgress ? "inherit" : "none"
-                }}>
-                    <Typography variant="h6"
-                                style={{fontFamily: "Times New Roman", fontWeight: "bold"}}> {activeSheet}</Typography>
-                </div>
-                <div style={{
                     display: "flex",
                     flexDirection: "row",
-                    flexWrap: "wrap",
-                    width: getExportViewportWidth(settings.quadratSize, settings.isExportingInProgress),
-                    padding: getPaddingValue(settings.quadratSize, settings.isExportingInProgress),
+                    flexWrap: "nowrap",
+                    overflowX: "scroll",
                 }}>
 
                     <SortableContext items={bars} strategy={rectSortingStrategy}>
-
                         {bars.map((data, index) => (
-                            <SortableItem key={data.id} id={data.id} handle={true} value={data} idx={index} sheetName={editableSheetName}/>
+                            <SortableItem key={data.id} id={data.id} handle={true} value={data} idx={index} sheetName={trackName}/>
                         ))}
-
                         <AddMoreButton onClick={() => {
                             updateBars
                             ([

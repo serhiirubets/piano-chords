@@ -12,6 +12,8 @@ const defaultSettings: BarContextData = {
     isTouched: false,
     activeSheet: "Часть 1",
     activeSubSheet: null,
+    activeTrack: null,
+    editableSheetName:"Часть 1",
 
     bars: [new SkeletonData(8)],
     updateBars: (newValue) => {
@@ -24,6 +26,9 @@ const defaultSettings: BarContextData = {
     },
     updateActiveSubSheet: (sheetName: string | null) => {
     },
+    updateActiveTrack: (sheetName: string | null) => {
+    },
+
     updateSheets: (newSheets: Map<string, SheetData>) => {
     },
     barSize: 8,
@@ -49,6 +54,7 @@ export const BarContextProvider = (props: any) => {
         .set("Часть 1", defaultSheet))
     const [activeSheet, setActiveSheet] = useState<string>("")
     const [activeSubSheet, setActiveSubSheet] = useState<string | null>(null)
+    const [activeTrack, setActiveTrack] = useState<string | null>(null)
     const [quadSize, setQuadSize] = useState(8);
     const [isTouched, setIsTouched] = useState(false);
     const [historyRecords, setHistoryRecords] = useState<HistoricalData[]>(new Array<HistoricalData>())
@@ -63,7 +69,7 @@ export const BarContextProvider = (props: any) => {
         const subSheetNamesForActiveSheet = Array.from(sheets.entries())
             .filter(([key, value]) => value.parentName === activeSheetName)
             .map(([key, value]) => key);
-        if (activeSubSheet !== null && subSheetNamesForActiveSheet.includes(activeSubSheet)) {
+        if (activeSubSheet && subSheetNamesForActiveSheet.includes(activeSubSheet)) {
             return activeSubSheet
         }
         if (activeSheetName === null && subSheetNamesForActiveSheet.length > 0) {
@@ -73,9 +79,30 @@ export const BarContextProvider = (props: any) => {
         return null;
     }
 
+    const getActiveTrack = () => {
+
+        const activeSheetName = getActiveSubSheet() || getActiveSheet()
+        const trackNamesForActiveSheet = Array.from(sheets.entries())
+            .filter(([key, value]) => value.parentName === activeSheetName && value.isTrack)
+            .map(([key, value]) => key);
+        console.log(trackNamesForActiveSheet)
+        console.log('at state',activeTrack)
+        if (activeTrack && trackNamesForActiveSheet.includes(activeTrack)) {
+            return activeTrack
+        }
+        if (trackNamesForActiveSheet.length > 0) {
+            return trackNamesForActiveSheet[0]
+        }
+        return null;
+    }
+
     const getActiveEditableSheet = () => {
-        const activeSubsheet = getActiveSubSheet();
-        return activeSubsheet === null ? getActiveSheet() : activeSubsheet;
+        console.log()
+        const activeTrackValue = getActiveTrack();
+        console.log('at', activeTrackValue)
+        const activeSubsheetValue = getActiveSubSheet();
+        console.log('ast', activeSubsheetValue)
+        return activeTrackValue !== null ? activeTrackValue : activeSubsheetValue !== null ? activeSubsheetValue : getActiveSheet();
     }
 
     useEffect(() => {
@@ -84,6 +111,7 @@ export const BarContextProvider = (props: any) => {
 
     const updateQuads = (newBars: SkeletonData[]) => {
         const sheetToUpdate = sheets.get(getActiveEditableSheet());
+        console.log('updatingSheet',sheetToUpdate)
         const updatedMap = new Map<string, SheetData>(sheets);
         const updatedSheet = sheetToUpdate ? deepCopy(sheetToUpdate) : defaultSheet
         updatedSheet.bars = newBars;
@@ -96,6 +124,7 @@ export const BarContextProvider = (props: any) => {
 
     const updateSingleQuad = (quadIndex: number, quadData: SkeletonData) => {
         const sheetToUpdate = sheets.get(getActiveEditableSheet());
+        console.log('updatingSheet',sheetToUpdate)
         const updatedMap = new Map<string, SheetData>(sheets);
         const updatedSheet = sheetToUpdate ? deepCopy(sheetToUpdate) : defaultSheet
         const updatedBars = [...updatedSheet.bars]
@@ -146,9 +175,12 @@ export const BarContextProvider = (props: any) => {
                 updateSingleBar: updateSingleQuad,
                 activeSheet: activeSheet,
                 activeSubSheet: activeSubSheet,
+                activeTrack: activeTrack,
                 updateActiveSheet: setActiveSheet,
                 updateActiveSubSheet: setActiveSubSheet,
+                updateActiveTrack: setActiveTrack,
                 updateSheets: setSheets,
+                editableSheetName: getActiveEditableSheet(),
                 barSize: quadSize,
                 updateBarSize: setQuadSize,
                 undo: rollbackHistory

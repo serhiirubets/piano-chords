@@ -2,7 +2,8 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import {EditorSettings} from "../model/editor-settings-data";
 
-export const getFlexBasisValue = (barSize: number, isExporting: boolean) => {
+export const getFlexBasisValue = (barSize: number, isExporting: boolean, isMenuOpen:boolean) => {
+    console.log('menu is open:',isMenuOpen)
     if (isExporting) {
         switch (barSize) {
             case 6:
@@ -13,7 +14,10 @@ export const getFlexBasisValue = (barSize: number, isExporting: boolean) => {
                 return "35%"
         }
     }
-    return barSize < 8 ? "" : "40%"
+    if(barSize === 12){
+        return "40%"
+    }
+    return isMenuOpen ? "40%" : "22%"
 }
 
 export const getPaddingValue = (barSize: number, isExporting: boolean) => {
@@ -56,6 +60,10 @@ export const getExportViewportWidth = (barSize: number, isExporting: boolean) =>
     }
 
     return "100%";
+}
+
+export const getQuadratSize = (isMasteringMode: boolean)=> {
+
 }
 
 

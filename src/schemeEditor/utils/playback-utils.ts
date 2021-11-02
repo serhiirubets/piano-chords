@@ -4,32 +4,44 @@ import {INote, Note} from "../model/note-data";
 import {MidiNumbers} from 'react-piano';
 import {getPlaybackData} from "./skeleton-node-utils";
 import {groupBy} from "./js-utils";
+import {SheetData} from "../model/deprecated/sheet-data";
 
 
-export const getNotesToPlay = (bars: Array<SkeletonData>) => {
-    const notes = new Array<PlaybackData[]>();
-    bars.forEach(quadrat => {
-        for (let i = 0; i < quadrat.size; i++) {
-            const currentBeatNotes: PlaybackData[] = [...getPlaybackData(quadrat.left[i]),
-                ...getPlaybackData(quadrat.right[i])]
+export const getNotesToPlay = (bars: Array<{ data: SkeletonData, relativePosition: number }>) => {
+    const notes = new Array<{ data: PlaybackData[], relativePosition: number }>();
+    console.log('bars')
+    bars.forEach(({data, relativePosition}) => {
+        for (let i = 0; i < data.size; i++) {
+            const currentBeatNotes: PlaybackData[] = [...getPlaybackData(data.left[i]),
+                ...getPlaybackData(data.right[i])]
                 .flat(3);
-            notes.push(currentBeatNotes);
+            notes.push({data: currentBeatNotes, relativePosition: relativePosition});
         }
     })
+    console.log(notes)
     return notes;
 }
 
-export const playNotes = (beatsToPlay, playFunction, tempo, doDistinguishFeatherGain) => {
+export const playNotes = (beatsToPlay: { data: PlaybackData[], relativePosition: number }[], playFunction, tempo, doDistinguishFeatherGain) => {
     const STANDARD_DURATION = tempo * 1;
     const getGain = (beatPlayback) => doDistinguishFeatherGain ? beatPlayback.gain : 1
-
-    for (let i = 0; i <= beatsToPlay.length; i++) {
-        const currentBeat: PlaybackData[] = beatsToPlay[i];
+    console.log('beats to play',beatsToPlay)
+    for (let i = 0; i < beatsToPlay.length; i++) {
+        console.log(beatsToPlay[i])
+        const currentBeat: PlaybackData[] = beatsToPlay[i].data;
         if (currentBeat === undefined) {
             continue;
         }
-        currentBeat.forEach(playback => {
-            const offset = STANDARD_DURATION * (i + 1 + playback.playbackOffset);
+        const notesInBeat = 8
+        const index = beatsToPlay[i].relativePosition * notesInBeat + i % notesInBeat
+        console.log('=', i)
+        console.log('==', i % notesInBeat)
+        console.log('===', notesInBeat)
+        console.log('playback index', index)
+
+        currentBeat.forEach((playback) => {
+            const offset = STANDARD_DURATION * (index + playback.playbackOffset);
+            console.log('note', playback, 'offset', offset)
             playFunction(playback.midiNumber, offset, {duration: playback.duration, gain: getGain(playback)});
         })
     }
@@ -56,10 +68,22 @@ export const isChord = (notes: Note[]) => {
     const groupNotes = groupBy(notes, note => note.playbackOffset)
     let anyGroup = false;
     groupNotes.forEach(value => {
-        if(value.length > 1){
+        if (value.length > 1) {
             anyGroup = true;
         }
-    } )
+    })
 
     return anyGroup
+}
+
+export const collectBarsToPlay = (isMasteringMode: boolean, activeSheetName: string, sheets: Map<string, SheetData>) => {
+    if (isMasteringMode) {
+        const tracksForSheet = Array.from(sheets.entries()).filter(([key, value]) =>
+            value.parentName === activeSheetName && value.isTrack
+        ).flatMap(([key, value]) => {
+            return value.bars.map((bar, idx) => ({data: bar, relativePosition: idx}))
+        })
+        return tracksForSheet
+    }
+    return (sheets.get(activeSheetName)||new SheetData()).bars.map((bar, idx) => ({data: bar, relativePosition: idx}))
 }

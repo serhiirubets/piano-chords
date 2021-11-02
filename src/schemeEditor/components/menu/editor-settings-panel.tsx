@@ -12,10 +12,6 @@ export const EditorSettingsPanel = () => {
         <Card className={classes.controlPanelCard}>
             <CardContent>
                 <div style={{position: 'sticky'}}>
-                    <Typography className={classes.title} color="textPrimary" gutterBottom>
-                        Панель управления
-                    </Typography>
-
                     <SaveLoadSettingsPanel/>
                     <EditorExportPanel/>
                     <PlaybackPanel/>

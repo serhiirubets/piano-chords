@@ -23,9 +23,10 @@ export const AddMoreButton = ({onClick, opacity}) => {
     const {settings} = useContext(SettingsContext);
     return (<div key="addMoreButton" style={{
         marginTop: "20px",
-        marginLeft: "10px",
-        marginRight: "10px",
+        marginLeft: "20px",
         justifyContent: "center",
+        alignItems:"center",
+        alignContent:"center",
         opacity: opacity,
         flexBasis: getFlexBasisValue(settings.quadratSize, settings.isExportingInProgress, settings.isMenuOpen),
         // display: "none"

@@ -9,7 +9,6 @@ import {SheetData} from "../model/deprecated/sheet-data";
 
 export const getNotesToPlay = (bars: Array<{ data: SkeletonData, relativePosition: number }>) => {
     const notes = new Array<{ data: PlaybackData[], relativePosition: number }>();
-    console.log('bars')
     bars.forEach(({data, relativePosition}) => {
         for (let i = 0; i < data.size; i++) {
             const currentBeatNotes: PlaybackData[] = [...getPlaybackData(data.left[i]),
@@ -18,30 +17,21 @@ export const getNotesToPlay = (bars: Array<{ data: SkeletonData, relativePositio
             notes.push({data: currentBeatNotes, relativePosition: relativePosition});
         }
     })
-    console.log(notes)
     return notes;
 }
 
-export const playNotes = (beatsToPlay: { data: PlaybackData[], relativePosition: number }[], playFunction, tempo, doDistinguishFeatherGain) => {
+export const playNotes = (beatsToPlay: { data: PlaybackData[], relativePosition: number }[], playFunction, tempo, doDistinguishFeatherGain, quadratSize) => {
     const STANDARD_DURATION = tempo * 1;
     const getGain = (beatPlayback) => doDistinguishFeatherGain ? beatPlayback.gain : 1
-    console.log('beats to play',beatsToPlay)
     for (let i = 0; i < beatsToPlay.length; i++) {
-        console.log(beatsToPlay[i])
         const currentBeat: PlaybackData[] = beatsToPlay[i].data;
         if (currentBeat === undefined) {
             continue;
         }
-        const notesInBeat = 8
-        const index = beatsToPlay[i].relativePosition * notesInBeat + i % notesInBeat
-        console.log('=', i)
-        console.log('==', i % notesInBeat)
-        console.log('===', notesInBeat)
-        console.log('playback index', index)
+        const index = beatsToPlay[i].relativePosition * quadratSize + i % quadratSize
 
         currentBeat.forEach((playback) => {
             const offset = STANDARD_DURATION * (index + playback.playbackOffset);
-            console.log('note', playback, 'offset', offset)
             playFunction(playback.midiNumber, offset, {duration: playback.duration, gain: getGain(playback)});
         })
     }
@@ -79,7 +69,7 @@ export const isChord = (notes: Note[]) => {
 export const collectBarsToPlay = (isMasteringMode: boolean, activeSheetName: string, sheets: Map<string, SheetData>) => {
     if (isMasteringMode) {
         const tracksForSheet = Array.from(sheets.entries()).filter(([key, value]) =>
-            value.parentName === activeSheetName && value.isTrack
+            value.parentName === activeSheetName && value.isTrack && !value.isMuted
         ).flatMap(([key, value]) => {
             return value.bars.map((bar, idx) => ({data: bar, relativePosition: idx}))
         })

@@ -37,7 +37,7 @@ export const PlaybackModule = ({iconColor}: PlaybackModuleProps) => {
 
                         <IconButton
                             onClick={() => {
-                                playNotes(getNotesToPlay(collectBarsToPlay(settings.isMasteringMode, activeSubSheet || activeSheet, sheets)), playNote, settings.playbackTempo, settings.alterGainForFeather)
+                                playNotes(getNotesToPlay(collectBarsToPlay(settings.isMasteringMode, activeSubSheet || activeSheet, sheets)), playNote, settings.playbackTempo, settings.alterGainForFeather, settings.quadratSize)
                             }}
                             size="large">
                             <PlayArrowRoundedIcon fontSize="large" style={{fill: "#176503"}}/>

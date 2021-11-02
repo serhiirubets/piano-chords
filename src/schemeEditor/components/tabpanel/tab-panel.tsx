@@ -9,7 +9,6 @@ import {deepCopy} from "../../utils/js-utils";
 import {Divider} from "@mui/material";
 import {
     closestCenter,
-    closestCorners,
     DndContext,
     DragOverlay,
     KeyboardSensor,
@@ -17,15 +16,10 @@ import {
     useSensor,
     useSensors
 } from "@dnd-kit/core";
-import {
-    horizontalListSortingStrategy, rectSortingStrategy, rectSwappingStrategy,
-    SortableContext,
-    sortableKeyboardCoordinates,
-    useSortable
-} from "@dnd-kit/sortable";
+import {rectSortingStrategy, SortableContext, sortableKeyboardCoordinates, useSortable} from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
 
-import {restrictToFirstScrollableAncestor, restrictToHorizontalAxis, restrictToWindowEdges,} from '@dnd-kit/modifiers';
+import {restrictToHorizontalAxis, restrictToWindowEdges,} from '@dnd-kit/modifiers';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -128,6 +122,37 @@ const SortableTabContainer = ({value, items, indicatorColor, onSortEnd, onChange
             </DragOverlay>
         </SortableContext>
     </DndContext>
+}
+
+export const handleSheetsDragNDrop = ({oldIndex, newIndex}, sheetsToUpdate:Array<SheetData>, allSheets:Map<string, SheetData>, updateSheets) => {
+    if (oldIndex === newIndex) {
+        return
+    }
+    const updatedSheets = new Map(deepCopy(Array.from(allSheets.entries()))) as Map<string, SheetData>;
+    const shiftDirection = newIndex > oldIndex ? -1 : 1
+    const isBetweenOldAndNewPosition = (value) => {
+        return shiftDirection < 0 ? oldIndex < value.index && value.index <= newIndex : newIndex <= value.index && value.index < oldIndex
+    }
+    const isOutsideOldAndNewPosition = (value) => {
+        return shiftDirection < 0 ? value.index < oldIndex || value.index > newIndex : value.index < newIndex || value.index > oldIndex
+    }
+
+    sheetsToUpdate.forEach((value) => {
+        if (isOutsideOldAndNewPosition(value)) {
+
+        } else if (isBetweenOldAndNewPosition(value)) {
+            const updatedValue = deepCopy(value)
+            updatedValue.index = value.index + shiftDirection
+            updatedSheets.delete(value.name)
+            updatedSheets.set(value.name, updatedValue)
+        } else {
+            const updatedValue = deepCopy(value)
+            updatedValue.index = newIndex
+            updatedSheets.delete(value.name)
+            updatedSheets.set(value.name, updatedValue)
+        }
+    })
+    updateSheets(updatedSheets)
 }
 
 export const ScrollableTabs = () => {

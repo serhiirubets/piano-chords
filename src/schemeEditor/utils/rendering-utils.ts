@@ -3,7 +3,6 @@ import jsPDF from "jspdf";
 import {EditorSettings} from "../model/editor-settings-data";
 
 export const getFlexBasisValue = (barSize: number, isExporting: boolean, isMenuOpen:boolean) => {
-    console.log('menu is open:',isMenuOpen)
     if (isExporting) {
         switch (barSize) {
             case 6:

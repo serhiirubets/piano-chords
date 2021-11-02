@@ -56,7 +56,7 @@ export const SkeletonWrapper = ({
         playNotes(getNotesToPlay([{
             data: bars[index],
             relativePosition: 0
-        }]), playFunction, settings.playbackTempo, settings.alterGainForFeather)
+        }]), playFunction, settings.playbackTempo, settings.alterGainForFeather, settings.quadratSize)
     }
 
     return (

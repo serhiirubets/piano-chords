@@ -7,8 +7,19 @@ const theme = createTheme(({
     typography: {
         button: {
             textTransform: 'none',
-            // margin:"3px"
-        }
+        },
+        fontFamily: [
+            '-apple-system',
+            'BlinkMacSystemFont',
+            '"Segoe UI"',
+            'Roboto',
+            '"Helvetica Neue"',
+            'Arial',
+            'sans-serif',
+            '"Apple Color Emoji"',
+            '"Segoe UI Emoji"',
+            '"Segoe UI Symbol"',
+        ].join(','),
     }
 }));
 

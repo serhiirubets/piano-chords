@@ -8,6 +8,7 @@ import {TabElement} from "./tab-element";
 import {deepCopy} from "../../utils/js-utils";
 import {Divider} from "@mui/material";
 import {
+    closestCenter,
     closestCorners,
     DndContext,
     DragOverlay,
@@ -17,7 +18,7 @@ import {
     useSensors
 } from "@dnd-kit/core";
 import {
-    horizontalListSortingStrategy,
+    horizontalListSortingStrategy, rectSortingStrategy, rectSwappingStrategy,
     SortableContext,
     sortableKeyboardCoordinates,
     useSortable
@@ -98,10 +99,10 @@ const SortableTabContainer = ({value, items, indicatorColor, onSortEnd, onChange
     return <DndContext
         modifiers={[restrictToHorizontalAxis,restrictToWindowEdges]}
         sensors={sensors}
-        collisionDetection={closestCorners}
+        collisionDetection={closestCenter}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}>
-        <SortableContext items={items} strategy={horizontalListSortingStrategy}>
+        <SortableContext items={items} strategy={rectSortingStrategy}>
             <Tabs
                 value={value}
                 onChange={onChange}

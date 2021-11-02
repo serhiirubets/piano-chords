@@ -13,7 +13,7 @@ export interface PlaybackModuleProps {
     iconColor?: string;
 }
 
-const StyledSlider = styled(Slider)(({ theme }) => ({
+export const StyledSlider = styled(Slider)(({ theme }) => ({
     '& .MuiSlider-thumb': {
         height: 10,
         width: 10,
@@ -51,14 +51,14 @@ export const PlaybackModule = ({iconColor}: PlaybackModuleProps) => {
 
 
                     </div>
-                    <StyledSlider
-                        style={{width: '80%', margin: "0 5px 0 5px", padding:"0 5px"}}
-                        onChange={(value, newValue)=>partialUpdateSettings({playbackTempo: (newValue as number) * -1})}
-                        defaultValue={-0.25}
-                        step={0.05}
-                        min={-1}
-                        max={-0.05}
-                    />
+                    {/*<StyledSlider*/}
+                    {/*    style={{width: '80%', margin: "0 5px 0 5px", padding:"0 5px"}}*/}
+                    {/*    onChange={(value, newValue)=>partialUpdateSettings({playbackTempo: (newValue as number) * -1})}*/}
+                    {/*    defaultValue={-0.25}*/}
+                    {/*    step={0.05}*/}
+                    {/*    min={-1}*/}
+                    {/*    max={-0.05}*/}
+                    {/*/>*/}
                 </div>
 
             )}

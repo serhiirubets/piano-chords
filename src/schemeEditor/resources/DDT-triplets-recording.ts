@@ -1,8 +1,8 @@
-export const DDTScheme =[
+export const DDTScheme = [
     [
-        "Куплет-1-1",
+        "Куплет-1",
         {
-            "name": "Часть 1",
+            "name": "Куплет-1",
             "index": 0,
             "bars": [
                 {
@@ -260,6 +260,11 @@ export const DDTScheme =[
                         {
                             "start": 4,
                             "length": 4
+                        },
+                        {
+                            "start": 4,
+                            "length": 4,
+                            "hand": "right"
                         }
                     ],
                     "defaultOctaveLeft": 3,
@@ -334,7 +339,7 @@ export const DDTScheme =[
                             "hand": "right",
                             "notes": [
                                 {
-                                    "id": "55c05d28-ec45-4995-9331-16f8cfe22438",
+                                    "id": "2629ccd7-2baf-4794-9018-7c2cb366eadf",
                                     "note": "bb",
                                     "octave": 4,
                                     "duration": 1,
@@ -342,7 +347,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "809af5e1-f25d-4d54-aad5-0563c156c675",
+                                    "id": "76774474-27a1-4437-95fa-c045ae92e0a3",
                                     "note": "bb",
                                     "octave": 4,
                                     "duration": 1,
@@ -350,7 +355,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "3a9e6c63-2876-463a-a87e-ba7b8e2f325a",
+                                    "id": "2f896159-9f27-4deb-96a8-e2490b05c72b",
                                     "note": "g",
                                     "octave": 4,
                                     "duration": 1,
@@ -358,7 +363,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "464a6a30-7f21-41c9-98a8-3c64c683b2fd",
+                                    "id": "0d8619be-a8dd-47e0-969e-46cc28b2c017",
                                     "note": "g",
                                     "octave": 4,
                                     "duration": 1,
@@ -366,7 +371,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "eddc5b0c-e6e0-494a-9335-0f755fceb8d6",
+                                    "id": "be1029bb-fd89-4363-8663-22dec371fc88",
                                     "note": "eb",
                                     "octave": 4,
                                     "duration": 1,
@@ -374,7 +379,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "9ec5da59-ce11-4a2f-9759-84c0a06586d1",
+                                    "id": "de8bb28a-27ed-4275-801d-e5b8cb92d518",
                                     "note": "eb",
                                     "octave": 4,
                                     "duration": 1,
@@ -382,7 +387,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "22ce74b4-4df8-4d95-a729-943443be5be4",
+                                    "id": "c5279a17-5d85-433f-a80b-9faab5dce313",
                                     "note": "d",
                                     "octave": 4,
                                     "duration": 1,
@@ -800,6 +805,11 @@ export const DDTScheme =[
                         {
                             "start": 4,
                             "length": 4
+                        },
+                        {
+                            "start": 4,
+                            "length": 4,
+                            "hand": "right"
                         }
                     ],
                     "defaultOctaveLeft": 3,
@@ -874,7 +884,7 @@ export const DDTScheme =[
                             "hand": "right",
                             "notes": [
                                 {
-                                    "id": "caf19ff2-6b85-4e97-9299-80d1451151e2",
+                                    "id": "4ee4a6b5-38a2-4e2f-a7fe-798072d8ab7d",
                                     "note": "d",
                                     "octave": 4,
                                     "duration": 1,
@@ -882,7 +892,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "983aa484-931b-4750-89eb-92931ca8f5e3",
+                                    "id": "cafa72c8-557f-4d45-a4b2-f64c9bf1f7f9",
                                     "note": "d",
                                     "octave": 4,
                                     "duration": 1,
@@ -890,7 +900,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "8ae5c7b5-c3bf-4c78-a36b-3ffb2e98d0bd",
+                                    "id": "c1aaf13a-d9f9-486a-9933-db307614ea83",
                                     "note": "c",
                                     "octave": 4,
                                     "duration": 1,
@@ -898,7 +908,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "be2e8af8-06a2-421e-b50b-1257db510316",
+                                    "id": "24154c4e-ade6-489b-abd2-91e4c1f33364",
                                     "note": "a",
                                     "octave": 3,
                                     "duration": 1,
@@ -906,7 +916,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "ab6a8595-9d1e-4d8b-909c-9e9785498096",
+                                    "id": "4bc18ff8-643e-4681-900a-caea61c3aa34",
                                     "note": "a",
                                     "octave": 3,
                                     "duration": 1,
@@ -914,7 +924,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "5abf4126-7629-4b10-a853-9435d01011d9",
+                                    "id": "1e4c6637-ce92-443a-89de-635f9b24c621",
                                     "note": "f#",
                                     "octave": 3,
                                     "duration": 1,
@@ -922,7 +932,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "de4a563e-a729-44f6-b08d-350a4bbfc0a8",
+                                    "id": "b64c54e4-2066-4390-a6b4-6d6187746ec0",
                                     "note": "f#",
                                     "octave": 3,
                                     "duration": 1,
@@ -1324,6 +1334,11 @@ export const DDTScheme =[
                         {
                             "start": 4,
                             "length": 4
+                        },
+                        {
+                            "start": 4,
+                            "length": 4,
+                            "hand": "right"
                         }
                     ],
                     "defaultOctaveLeft": 3,
@@ -1398,7 +1413,7 @@ export const DDTScheme =[
                             "hand": "right",
                             "notes": [
                                 {
-                                    "id": "55c05d28-ec45-4995-9331-16f8cfe22438",
+                                    "id": "0dd74afb-2fe0-4a8e-9e36-2cfc00736e50",
                                     "note": "bb",
                                     "octave": 4,
                                     "duration": 1,
@@ -1406,7 +1421,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "809af5e1-f25d-4d54-aad5-0563c156c675",
+                                    "id": "f73d7522-06a6-4019-99cc-221323153c10",
                                     "note": "bb",
                                     "octave": 4,
                                     "duration": 1,
@@ -1414,7 +1429,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "3a9e6c63-2876-463a-a87e-ba7b8e2f325a",
+                                    "id": "b569f8f1-8b9f-4c1b-ba72-56d951dcfdc5",
                                     "note": "g",
                                     "octave": 4,
                                     "duration": 1,
@@ -1422,7 +1437,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "464a6a30-7f21-41c9-98a8-3c64c683b2fd",
+                                    "id": "752db079-2017-4ba6-927b-39fc4cc3d1df",
                                     "note": "g",
                                     "octave": 4,
                                     "duration": 1,
@@ -1430,7 +1445,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "eddc5b0c-e6e0-494a-9335-0f755fceb8d6",
+                                    "id": "14666597-ffec-4e7a-a87f-27634e2bdfd9",
                                     "note": "eb",
                                     "octave": 4,
                                     "duration": 1,
@@ -1438,7 +1453,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "9ec5da59-ce11-4a2f-9759-84c0a06586d1",
+                                    "id": "727fa5ae-8b97-40df-b983-8aa98b2619f7",
                                     "note": "eb",
                                     "octave": 4,
                                     "duration": 1,
@@ -1446,7 +1461,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "22ce74b4-4df8-4d95-a729-943443be5be4",
+                                    "id": "349aa4fa-6431-407e-b7d9-5143f3a9c138",
                                     "note": "d",
                                     "octave": 4,
                                     "duration": 1,
@@ -1864,6 +1879,11 @@ export const DDTScheme =[
                         {
                             "start": 4,
                             "length": 4
+                        },
+                        {
+                            "start": 4,
+                            "length": 4,
+                            "hand": "right"
                         }
                     ],
                     "defaultOctaveLeft": 3,
@@ -1938,7 +1958,7 @@ export const DDTScheme =[
                             "hand": "right",
                             "notes": [
                                 {
-                                    "id": "8cbd57eb-90e3-4600-aa55-29faa57b5e0f",
+                                    "id": "ca1cac8f-5c06-4862-b674-0ae3dff84c41",
                                     "note": "f",
                                     "octave": 4,
                                     "duration": 1,
@@ -1946,7 +1966,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "264c0275-7e7b-44de-aeb2-7839ab5bcaae",
+                                    "id": "038a176d-6c9d-4701-bba8-9083edb8f12a",
                                     "note": "eb",
                                     "octave": 4,
                                     "duration": 1,
@@ -1954,7 +1974,2133 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "97443fba-249e-4f11-9f7f-c68e748bbe54",
+                                    "id": "ddb791e0-2f0d-4dff-9d46-fc29fb541818",
+                                    "note": "d",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        }
+                    ],
+                    "left": [
+                        {
+                            "originalText": "f2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "2d2fa089-47f1-4efb-95c2-c1adb492b96d",
+                                    "note": "f",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "f2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "b89659eb-134f-4eff-bfe3-1ba1bb58fe43",
+                                    "note": "f",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "c",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "c2610819-7a9b-4cc8-9660-366007328314",
+                                    "note": "c",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "left",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "f2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "c78dcc0c-d4d9-4524-a9cd-c300ad5dcb37",
+                                    "note": "f",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "f2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "e9fe9bb0-86dd-4166-a272-bd5efc54ceb6",
+                                    "note": "f",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "c",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "fe681eca-7027-488d-9dec-4f51bb15a36a",
+                                    "note": "c",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        }
+                    ],
+                    "size": 8
+                }
+            ]
+        }
+    ],
+    [
+        "Куплет-1-1",
+        {
+            "name": "Часть 1",
+            "parentName":"Куплет-1",
+            "index": 0,
+            "bars": [
+                {
+                    "id": "8ea8d0cd-8fd5-444c-8d5a-1e371e3d88a9",
+                    "triplets": [],
+                    "defaultOctaveLeft": 3,
+                    "defaultOctaveRight": 4,
+                    "right": [
+                        {
+                            "originalText": "bb4",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "f6322710-0f84-4c92-a017-52817f5f2657",
+                                    "note": "bb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "g4",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "9149bf15-5fd4-41a4-96c3-c039df7ef060",
+                                    "note": "g",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "bb4",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "9304829b-2b24-44a9-8399-236d89686f3f",
+                                    "note": "bb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "g4",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "c3e16c78-9b02-4219-89d9-23588008496a",
+                                    "note": "g",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "bb4",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "cdf1dd51-4e18-41c0-8354-943f552b00e6",
+                                    "note": "bb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "g4",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "a959a52f-c6fc-4b80-a3e4-a6b3fb4d3bd8",
+                                    "note": "g",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "bb4",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "5aa1d6d5-249f-4245-85ef-e2aa8a976a22",
+                                    "note": "bb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "g4",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "b28639c0-e45d-4cdf-82e3-ef2086e8f222",
+                                    "note": "g",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        }
+                    ],
+                    "left": [
+                        {
+                            "originalText": "g2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "2dc28bd2-4201-48cb-861e-5a6b9bc87abf",
+                                    "note": "g",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "g2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "d409a220-5a52-4ea9-8397-ee468ccfd1c8",
+                                    "note": "g",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "d",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "e711e4a0-7c32-49a9-ad10-e1767075fb69",
+                                    "note": "d",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "g2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "2ceac578-17c0-46a9-967c-9609ad057c2d",
+                                    "note": "g",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "g2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "259e5356-e635-4e05-9c80-3b582068593f",
+                                    "note": "g",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "d",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "b9661872-f1e2-4a2d-b177-5eb865f9caa3",
+                                    "note": "d",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        }
+                    ],
+                    "size": 8
+                },
+                {
+                    "id": "9fd97919-b2d9-41d6-9650-5a04d23ad7e9",
+                    "triplets": [
+                        {
+                            "start": 4,
+                            "length": 4
+                        },
+                        {
+                            "start": 4,
+                            "length": 4,
+                            "hand": "right"
+                        }
+                    ],
+                    "defaultOctaveLeft": 3,
+                    "defaultOctaveRight": 4,
+                    "right": [
+                        {
+                            "originalText": "bb",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "4a7d7b27-67c2-4cc5-b176-b2a1e9c35bf5",
+                                    "note": "bb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "g",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "cb2951d4-c0ae-4bc8-9060-f7a7f15e2963",
+                                    "note": "g",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "bb",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "a3d57c27-5e8d-438a-a294-77af8f7bd422",
+                                    "note": "bb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "g",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "c032dec5-be41-4f60-99a9-1dc0734d36a1",
+                                    "note": "g",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "eb g bb:eb g bb:d",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "2629ccd7-2baf-4794-9018-7c2cb366eadf",
+                                    "note": "bb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                },
+                                {
+                                    "id": "76774474-27a1-4437-95fa-c045ae92e0a3",
+                                    "note": "bb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 1.5,
+                                    "noteType": "regular"
+                                },
+                                {
+                                    "id": "2f896159-9f27-4deb-96a8-e2490b05c72b",
+                                    "note": "g",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                },
+                                {
+                                    "id": "0d8619be-a8dd-47e0-969e-46cc28b2c017",
+                                    "note": "g",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 1.5,
+                                    "noteType": "regular"
+                                },
+                                {
+                                    "id": "be1029bb-fd89-4363-8663-22dec371fc88",
+                                    "note": "eb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                },
+                                {
+                                    "id": "de8bb28a-27ed-4275-801d-e5b8cb92d518",
+                                    "note": "eb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 1.5,
+                                    "noteType": "regular"
+                                },
+                                {
+                                    "id": "c5279a17-5d85-433f-a80b-9faab5dce313",
+                                    "note": "d",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 3,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        }
+                    ],
+                    "left": [
+                        {
+                            "originalText": "g2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "c81dc7c1-f055-411e-9f18-924b7cc075b3",
+                                    "note": "g",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "g2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "fd0ee573-18ff-4720-a896-7f7f20bac1b0",
+                                    "note": "g",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "d",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "4e07e60b-f844-460a-ba83-d422b6af7273",
+                                    "note": "d",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "g2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "9196d7c6-00e6-434c-9b07-76cd86b2f81a",
+                                    "note": "g",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "g2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "aecb4c42-aae5-42bc-8c18-eebc674ef3f4",
+                                    "note": "g",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "d",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "da233399-6032-4399-b6cd-7bc688a97384",
+                                    "note": "d",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        }
+                    ],
+                    "size": 8
+                },
+                {
+                    "id": "9f902751-27d7-4ea1-8767-8c908176cf03",
+                    "triplets": [],
+                    "defaultOctaveLeft": 3,
+                    "defaultOctaveRight": 4,
+                    "right": [
+                        {
+                            "originalText": "c",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "923338cf-82e8-4f11-b0a5-4bf442e40486",
+                                    "note": "c",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "eb3",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "ad62ca14-a60a-43ad-949e-114e9f1ad469",
+                                    "note": "eb",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "c4 g3",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "6aac74d9-f82a-40fe-a926-95fbe1b6ee84",
+                                    "note": "c",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                },
+                                {
+                                    "id": "d211238e-2020-4e7b-800a-72c586442b1a",
+                                    "note": "g",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "eb3",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "b5769451-bd5e-4845-b5c7-4f35e9069a66",
+                                    "note": "eb",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "c4 g3",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "fdd8e0f3-eb5a-41dd-87d5-fef53c6fb1bb",
+                                    "note": "c",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                },
+                                {
+                                    "id": "b7c341c9-7e27-46a2-824d-07f64fee448b",
+                                    "note": "g",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "eb3",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "56aff30a-0392-4eb3-90d3-f4f8ba2663b4",
+                                    "note": "eb",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "g",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "aad4037f-0cf2-4444-b1b8-3e961f1d051a",
+                                    "note": "g",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "eb3",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "8bfea33b-be93-4aff-a3eb-61b4d500a994",
+                                    "note": "eb",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        }
+                    ],
+                    "left": [
+                        {
+                            "originalText": "c2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "4988c71a-08da-4490-8bc2-1f5fd40b4b57",
+                                    "note": "c",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "c2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "f9a846c4-a81b-4602-b82c-4d8ea82bdd8c",
+                                    "note": "c",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "c",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "25931c0b-661a-4558-9257-9a6570a1b8a1",
+                                    "note": "c",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "left",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "c2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "22737928-bc32-4cc2-a666-9389f125a3f4",
+                                    "note": "c",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "c2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "a1a267d4-4458-4157-96d8-4b4f92e56636",
+                                    "note": "c",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "c",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "7e6c14f1-c8df-4028-99f2-5c8edb9d55df",
+                                    "note": "c",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "left",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        }
+                    ],
+                    "size": 8
+                },
+                {
+                    "id": "2e2d8ca4-6b5d-4700-93fa-9efe76f14996",
+                    "triplets": [
+                        {
+                            "start": 4,
+                            "length": 4
+                        },
+                        {
+                            "start": 4,
+                            "length": 4,
+                            "hand": "right"
+                        }
+                    ],
+                    "defaultOctaveLeft": 3,
+                    "defaultOctaveRight": 4,
+                    "right": [
+                        {
+                            "originalText": "d",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "5b488d38-d6fb-4cfc-8883-fc99c47380a1",
+                                    "note": "d",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "f#3",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "3df46cc0-b86f-4978-8afc-1143f430734e",
+                                    "note": "f#",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "a3",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "5d04f2b2-01ab-43e7-bbe3-082e4b18993f",
+                                    "note": "a",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "f#3",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "afee776b-ebcf-4c68-82f9-fef3a3ff5186",
+                                    "note": "f#",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "f#3 a3 d:f#3 a3 d:c",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "4ee4a6b5-38a2-4e2f-a7fe-798072d8ab7d",
+                                    "note": "d",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                },
+                                {
+                                    "id": "cafa72c8-557f-4d45-a4b2-f64c9bf1f7f9",
+                                    "note": "d",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 1.5,
+                                    "noteType": "regular"
+                                },
+                                {
+                                    "id": "c1aaf13a-d9f9-486a-9933-db307614ea83",
+                                    "note": "c",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 3,
+                                    "noteType": "regular"
+                                },
+                                {
+                                    "id": "24154c4e-ade6-489b-abd2-91e4c1f33364",
+                                    "note": "a",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                },
+                                {
+                                    "id": "4bc18ff8-643e-4681-900a-caea61c3aa34",
+                                    "note": "a",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 1.5,
+                                    "noteType": "regular"
+                                },
+                                {
+                                    "id": "1e4c6637-ce92-443a-89de-635f9b24c621",
+                                    "note": "f#",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                },
+                                {
+                                    "id": "b64c54e4-2066-4390-a6b4-6d6187746ec0",
+                                    "note": "f#",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 1.5,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        }
+                    ],
+                    "left": [
+                        {
+                            "originalText": "d2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "8cf3993c-45a3-428d-9ead-a0f3cf8e164a",
+                                    "note": "d",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "d2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "ba1c8cc5-ce7b-43bb-906e-60fc768a8c09",
+                                    "note": "d",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "d",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "f3587e0a-df75-4df2-b54f-8ec673e86992",
+                                    "note": "d",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "left",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "d2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "de04a611-dadb-4d9d-a3c1-092a50544ba7",
+                                    "note": "d",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "d2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "6f80cd75-3052-4116-b02d-26c49b325592",
+                                    "note": "d",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "d",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "b3b71e93-597e-4737-8832-0c85b391817a",
+                                    "note": "d",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "left",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        }
+                    ],
+                    "size": 8
+                },
+                {
+                    "id": "5c138a50-41cd-438e-a3a3-2e0c6d550ff9",
+                    "triplets": [],
+                    "defaultOctaveLeft": 3,
+                    "defaultOctaveRight": 4,
+                    "right": [
+                        {
+                            "originalText": "bb4",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "f6322710-0f84-4c92-a017-52817f5f2657",
+                                    "note": "bb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "g4",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "9149bf15-5fd4-41a4-96c3-c039df7ef060",
+                                    "note": "g",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "bb4",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "9304829b-2b24-44a9-8399-236d89686f3f",
+                                    "note": "bb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "g4",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "c3e16c78-9b02-4219-89d9-23588008496a",
+                                    "note": "g",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "bb4",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "cdf1dd51-4e18-41c0-8354-943f552b00e6",
+                                    "note": "bb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "g4",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "a959a52f-c6fc-4b80-a3e4-a6b3fb4d3bd8",
+                                    "note": "g",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "bb4",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "5aa1d6d5-249f-4245-85ef-e2aa8a976a22",
+                                    "note": "bb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "g4",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "b28639c0-e45d-4cdf-82e3-ef2086e8f222",
+                                    "note": "g",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        }
+                    ],
+                    "left": [
+                        {
+                            "originalText": "g2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "2dc28bd2-4201-48cb-861e-5a6b9bc87abf",
+                                    "note": "g",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "g2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "d409a220-5a52-4ea9-8397-ee468ccfd1c8",
+                                    "note": "g",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "d",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "e711e4a0-7c32-49a9-ad10-e1767075fb69",
+                                    "note": "d",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "g2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "2ceac578-17c0-46a9-967c-9609ad057c2d",
+                                    "note": "g",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "g2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "259e5356-e635-4e05-9c80-3b582068593f",
+                                    "note": "g",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "d",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "b9661872-f1e2-4a2d-b177-5eb865f9caa3",
+                                    "note": "d",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        }
+                    ],
+                    "size": 8
+                },
+                {
+                    "id": "fc2725e9-ff35-4c32-91fd-ce335b858b00",
+                    "triplets": [
+                        {
+                            "start": 4,
+                            "length": 4
+                        },
+                        {
+                            "start": 4,
+                            "length": 4,
+                            "hand": "right"
+                        }
+                    ],
+                    "defaultOctaveLeft": 3,
+                    "defaultOctaveRight": 4,
+                    "right": [
+                        {
+                            "originalText": "bb",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "4a7d7b27-67c2-4cc5-b176-b2a1e9c35bf5",
+                                    "note": "bb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "g",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "cb2951d4-c0ae-4bc8-9060-f7a7f15e2963",
+                                    "note": "g",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "bb",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "a3d57c27-5e8d-438a-a294-77af8f7bd422",
+                                    "note": "bb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "g",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "c032dec5-be41-4f60-99a9-1dc0734d36a1",
+                                    "note": "g",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "eb g bb:eb g bb:d",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "0dd74afb-2fe0-4a8e-9e36-2cfc00736e50",
+                                    "note": "bb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                },
+                                {
+                                    "id": "f73d7522-06a6-4019-99cc-221323153c10",
+                                    "note": "bb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 1.5,
+                                    "noteType": "regular"
+                                },
+                                {
+                                    "id": "b569f8f1-8b9f-4c1b-ba72-56d951dcfdc5",
+                                    "note": "g",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                },
+                                {
+                                    "id": "752db079-2017-4ba6-927b-39fc4cc3d1df",
+                                    "note": "g",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 1.5,
+                                    "noteType": "regular"
+                                },
+                                {
+                                    "id": "14666597-ffec-4e7a-a87f-27634e2bdfd9",
+                                    "note": "eb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                },
+                                {
+                                    "id": "727fa5ae-8b97-40df-b983-8aa98b2619f7",
+                                    "note": "eb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 1.5,
+                                    "noteType": "regular"
+                                },
+                                {
+                                    "id": "349aa4fa-6431-407e-b7d9-5143f3a9c138",
+                                    "note": "d",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 3,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        }
+                    ],
+                    "left": [
+                        {
+                            "originalText": "g2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "c81dc7c1-f055-411e-9f18-924b7cc075b3",
+                                    "note": "g",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "g2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "fd0ee573-18ff-4720-a896-7f7f20bac1b0",
+                                    "note": "g",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "d",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "4e07e60b-f844-460a-ba83-d422b6af7273",
+                                    "note": "d",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "g2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "9196d7c6-00e6-434c-9b07-76cd86b2f81a",
+                                    "note": "g",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "g2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "aecb4c42-aae5-42bc-8c18-eebc674ef3f4",
+                                    "note": "g",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "d",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "da233399-6032-4399-b6cd-7bc688a97384",
+                                    "note": "d",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "right",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        }
+                    ],
+                    "size": 8
+                },
+                {
+                    "id": "c048e9c1-7336-4e36-9ffb-e414990332d2",
+                    "triplets": [],
+                    "defaultOctaveLeft": 3,
+                    "defaultOctaveRight": 4,
+                    "right": [
+                        {
+                            "originalText": "c",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "923338cf-82e8-4f11-b0a5-4bf442e40486",
+                                    "note": "c",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "eb3",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "ad62ca14-a60a-43ad-949e-114e9f1ad469",
+                                    "note": "eb",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "c4 g3",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "6aac74d9-f82a-40fe-a926-95fbe1b6ee84",
+                                    "note": "c",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                },
+                                {
+                                    "id": "d211238e-2020-4e7b-800a-72c586442b1a",
+                                    "note": "g",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "eb3",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "b5769451-bd5e-4845-b5c7-4f35e9069a66",
+                                    "note": "eb",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "c4 g3",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "fdd8e0f3-eb5a-41dd-87d5-fef53c6fb1bb",
+                                    "note": "c",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                },
+                                {
+                                    "id": "b7c341c9-7e27-46a2-824d-07f64fee448b",
+                                    "note": "g",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "eb3",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "56aff30a-0392-4eb3-90d3-f4f8ba2663b4",
+                                    "note": "eb",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "g",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "aad4037f-0cf2-4444-b1b8-3e961f1d051a",
+                                    "note": "g",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "eb3",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "8bfea33b-be93-4aff-a3eb-61b4d500a994",
+                                    "note": "eb",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        }
+                    ],
+                    "left": [
+                        {
+                            "originalText": "c2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "4988c71a-08da-4490-8bc2-1f5fd40b4b57",
+                                    "note": "c",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "c2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "f9a846c4-a81b-4602-b82c-4d8ea82bdd8c",
+                                    "note": "c",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "c",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "25931c0b-661a-4558-9257-9a6570a1b8a1",
+                                    "note": "c",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "left",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "c2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "22737928-bc32-4cc2-a666-9389f125a3f4",
+                                    "note": "c",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "c2",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "a1a267d4-4458-4157-96d8-4b4f92e56636",
+                                    "note": "c",
+                                    "octave": 2,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "c",
+                            "hand": "left",
+                            "notes": [
+                                {
+                                    "id": "7e6c14f1-c8df-4028-99f2-5c8edb9d55df",
+                                    "note": "c",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "",
+                            "hand": "left",
+                            "notes": [],
+                            "isPresent": false,
+                            "type": "regular"
+                        }
+                    ],
+                    "size": 8
+                },
+                {
+                    "id": "1ce8fd60-90ba-4d8c-b722-c3a9e8d94026",
+                    "triplets": [
+                        {
+                            "start": 4,
+                            "length": 4
+                        },
+                        {
+                            "start": 4,
+                            "length": 4,
+                            "hand": "right"
+                        }
+                    ],
+                    "defaultOctaveLeft": 3,
+                    "defaultOctaveRight": 4,
+                    "right": [
+                        {
+                            "originalText": "d",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "5a390ee4-18df-4dd4-b02a-a2d0d825494b",
+                                    "note": "d",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "regular"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "regular"
+                        },
+                        {
+                            "originalText": "f3",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "7ec6a946-ab20-49fe-a0f0-36dce1dcbb3b",
+                                    "note": "f",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "a3",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "22226cab-3a89-4967-b43d-afbe42dd5b2e",
+                                    "note": "a",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "f3",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "c3315145-14ab-4694-a99f-4d6a351c4661",
+                                    "note": "f",
+                                    "octave": 3,
+                                    "duration": 1,
+                                    "playbackOffset": 0,
+                                    "noteType": "feather"
+                                }
+                            ],
+                            "isPresent": true,
+                            "type": "feather"
+                        },
+                        {
+                            "originalText": "d:eb:f",
+                            "hand": "right",
+                            "notes": [
+                                {
+                                    "id": "ca1cac8f-5c06-4862-b674-0ae3dff84c41",
+                                    "note": "f",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 3,
+                                    "noteType": "regular"
+                                },
+                                {
+                                    "id": "038a176d-6c9d-4701-bba8-9083edb8f12a",
+                                    "note": "eb",
+                                    "octave": 4,
+                                    "duration": 1,
+                                    "playbackOffset": 1.5,
+                                    "noteType": "regular"
+                                },
+                                {
+                                    "id": "ddb791e0-2f0d-4dff-9d46-fc29fb541818",
                                     "note": "d",
                                     "octave": 4,
                                     "duration": 1,
@@ -2108,6 +4254,7 @@ export const DDTScheme =[
         "Куплет 1-2",
         {
             "name": "Часть 1",
+            "parentName":"Куплет-1",
             "index": 0,
             "bars": [
                 {
@@ -2365,6 +4512,11 @@ export const DDTScheme =[
                         {
                             "start": 4,
                             "length": 4
+                        },
+                        {
+                            "start": 4,
+                            "length": 4,
+                            "hand": "right"
                         }
                     ],
                     "defaultOctaveLeft": 3,
@@ -2439,7 +4591,7 @@ export const DDTScheme =[
                             "hand": "right",
                             "notes": [
                                 {
-                                    "id": "933cd3e1-3154-4275-823d-760d224d7926",
+                                    "id": "b747b154-b84c-4a18-8b2d-225d6ff3087d",
                                     "note": "d",
                                     "octave": 4,
                                     "duration": 1,
@@ -2447,7 +4599,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "3c2310c3-32b8-48ae-ac84-d6576408aec5",
+                                    "id": "e47c1849-a2c8-4729-a0c1-0d222a20519e",
                                     "note": "c",
                                     "octave": 4,
                                     "duration": 1,
@@ -2455,7 +4607,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "eb271d9e-dbbf-43b8-adac-292a8214359f",
+                                    "id": "e8713b8f-6b8f-4829-967f-c41e9482bd69",
                                     "note": "bb",
                                     "octave": 3,
                                     "duration": 1,
@@ -2857,6 +5009,11 @@ export const DDTScheme =[
                         {
                             "start": 4,
                             "length": 4
+                        },
+                        {
+                            "start": 4,
+                            "length": 4,
+                            "hand": "right"
                         }
                     ],
                     "defaultOctaveLeft": 3,
@@ -2922,7 +5079,7 @@ export const DDTScheme =[
                             "hand": "right",
                             "notes": [
                                 {
-                                    "id": "e0258f52-890d-4474-b1dc-a4ad4498177b",
+                                    "id": "d52d2195-bac8-4025-97b9-a17778066027",
                                     "note": "d",
                                     "octave": 4,
                                     "duration": 1,
@@ -2930,7 +5087,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "5245072c-009b-439d-bd43-c4519ffab33a",
+                                    "id": "0469aff8-63ce-40f2-bde8-6484f0d17679",
                                     "note": "d",
                                     "octave": 4,
                                     "duration": 1,
@@ -2938,7 +5095,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "94995417-4244-4cb6-8b0f-17d31887e76f",
+                                    "id": "4987c247-a3fe-4d3c-b0a4-30923ad452d0",
                                     "note": "c",
                                     "octave": 4,
                                     "duration": 1,
@@ -3340,6 +5497,11 @@ export const DDTScheme =[
                         {
                             "start": 4,
                             "length": 4
+                        },
+                        {
+                            "start": 4,
+                            "length": 4,
+                            "hand": "right"
                         }
                     ],
                     "defaultOctaveLeft": 3,
@@ -3414,7 +5576,7 @@ export const DDTScheme =[
                             "hand": "right",
                             "notes": [
                                 {
-                                    "id": "6a1d58f1-ab2c-461d-ac4a-291a4ef5a895",
+                                    "id": "a13d899f-b521-433c-bb03-4065e8d94ca4",
                                     "note": "eb",
                                     "octave": 4,
                                     "duration": 1,
@@ -3422,7 +5584,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "d595ff7d-a655-4f4d-a660-c4b37eb6a776",
+                                    "id": "5fd5143c-9704-465d-a743-6ab2f7f780f7",
                                     "note": "eb",
                                     "octave": 4,
                                     "duration": 1,
@@ -3430,7 +5592,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "c88767dc-e23a-4b45-8bee-55dab43f2810",
+                                    "id": "c6446e2b-93d3-4874-bfbf-5d4b8d72412b",
                                     "note": "d",
                                     "octave": 4,
                                     "duration": 1,
@@ -3438,7 +5600,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "3ba5b209-5e53-47cc-91fb-067d0223d9d4",
+                                    "id": "f8192590-168f-4321-b1a8-a7456d10f1a4",
                                     "note": "bb",
                                     "octave": 3,
                                     "duration": 1,
@@ -3446,7 +5608,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "0d6e5b62-e8fc-45f9-b250-63c7014f3033",
+                                    "id": "5ee65495-5a67-48de-9fb0-df82d4cf03ac",
                                     "note": "bb",
                                     "octave": 3,
                                     "duration": 1,
@@ -3864,6 +6026,11 @@ export const DDTScheme =[
                         {
                             "start": 4,
                             "length": 4
+                        },
+                        {
+                            "start": 4,
+                            "length": 4,
+                            "hand": "right"
                         }
                     ],
                     "defaultOctaveLeft": 3,
@@ -3954,7 +6121,7 @@ export const DDTScheme =[
                             "hand": "right",
                             "notes": [
                                 {
-                                    "id": "b18066b7-6b77-48b4-915e-3784329017df",
+                                    "id": "321c60c9-2ba7-4377-97bf-029302099d51",
                                     "note": "c",
                                     "octave": 5,
                                     "duration": 1,
@@ -3962,7 +6129,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "a3425755-93ea-4493-ad2d-fc97cb5e6541",
+                                    "id": "88224890-f2fc-4ec2-b490-725685c021d1",
                                     "note": "d",
                                     "octave": 4,
                                     "duration": 1,
@@ -3970,7 +6137,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "e7f0d8c6-6c81-4316-8a9a-b7bf5bb8345b",
+                                    "id": "e3ca913b-f141-4374-aebc-0bd4a7ef0f75",
                                     "note": "d",
                                     "octave": 4,
                                     "duration": 1,
@@ -3978,7 +6145,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "f6d575f8-d0af-4487-b8b4-e273a244aa00",
+                                    "id": "e3fe5fb0-7d6e-427c-aa1c-ddc71d5797f9",
                                     "note": "c",
                                     "octave": 4,
                                     "duration": 1,
@@ -3986,7 +6153,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "2a108163-6f1f-49bb-bc95-ac1b9e12dcbe",
+                                    "id": "ba7bc10a-02af-4ab2-a8c0-b2486acf29c3",
                                     "note": "a",
                                     "octave": 3,
                                     "duration": 1,
@@ -3994,7 +6161,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "b7410828-9b17-4a00-b912-b0f1f7a892bf",
+                                    "id": "488fb758-de26-4670-9189-cae13dade3f2",
                                     "note": "a",
                                     "octave": 3,
                                     "duration": 1,
@@ -4002,7 +6169,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "b480cdcd-9fb0-4f3d-99b7-a92bd244a1ee",
+                                    "id": "ebe43180-1cbc-4fe3-9df6-a2608ef2dd23",
                                     "note": "f#",
                                     "octave": 3,
                                     "duration": 1,
@@ -4010,7 +6177,7 @@ export const DDTScheme =[
                                     "noteType": "regular"
                                 },
                                 {
-                                    "id": "a387c765-06cc-47a0-a231-25623fa61f6e",
+                                    "id": "0f99080e-d75a-446c-9eef-d0137c000841",
                                     "note": "f#",
                                     "octave": 3,
                                     "duration": 1,

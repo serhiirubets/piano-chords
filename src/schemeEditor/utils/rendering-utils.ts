@@ -63,8 +63,8 @@ export const getExportViewportWidth = (barSize: number, isExporting: boolean) =>
 
 export const getQuadratNodeDimension = (isMasteringMode: boolean) => {
     return {
-        quadratWidth: isMasteringMode ? 32 : 40,
-        quadratDotWidth: isMasteringMode ? 16 : 20,
+        quadratWidth: isMasteringMode ? 35 : 40,
+        quadratDotWidth: isMasteringMode ? 17 : 20,
         quadratSmallDotWidth: isMasteringMode ? 8 : 10
     }
 }

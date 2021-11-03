@@ -1,6 +1,6 @@
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {Checkbox, FormControlLabel, Slider, Typography} from "@mui/material";
+import {Checkbox, FormControlLabel, ListItem, ListItemIcon, ListItemText, Slider, Typography} from "@mui/material";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Accordion from "@mui/material/Accordion";
 import React, {useContext} from "react";
@@ -12,7 +12,7 @@ import {PlaybackModule} from "./playback-module";
 export interface SaveLoadSettingsPanelProps {
 }
 
-export const PlaybackPanel = () => {
+export const SettingsPlaybackSection = () => {
     const {settings, partialUpdateSettings} = useContext(SettingsContext);
     const classes = useGlobalStyles();
 
@@ -22,9 +22,12 @@ export const PlaybackPanel = () => {
 
     return (<Accordion>
         <AccordionSummary
+            style={{padding: 0, margin: 0, maxHeight: "48px"}}
             expandIcon={<ExpandMoreIcon/>}
         >
-            <Typography className={classes.accordionHeading}>Воспроизведение</Typography>
+            <ListItem button key={"Playback"}>
+                <ListItemText inset primary="Настройки воспроизведения"/>
+            </ListItem>
         </AccordionSummary>
         <AccordionDetails>
             <div className={classes.cardRow}>

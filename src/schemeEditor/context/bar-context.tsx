@@ -13,7 +13,7 @@ const defaultSettings: BarContextData = {
     activeSheet: "Часть 1",
     activeSubSheet: null,
     activeTrack: null,
-    editableSheetName:"Часть 1",
+    editableSheetName: "Часть 1",
 
     bars: [new SkeletonData(8)],
     updateBars: (newValue) => {
@@ -85,8 +85,6 @@ export const BarContextProvider = (props: any) => {
         const trackNamesForActiveSheet = Array.from(sheets.entries())
             .filter(([key, value]) => value.parentName === activeSheetName && value.isTrack)
             .map(([key, value]) => key);
-        console.log(trackNamesForActiveSheet)
-        console.log('at state',activeTrack)
         if (activeTrack && trackNamesForActiveSheet.includes(activeTrack)) {
             return activeTrack
         }
@@ -97,11 +95,8 @@ export const BarContextProvider = (props: any) => {
     }
 
     const getActiveEditableSheet = () => {
-        console.log()
         const activeTrackValue = getActiveTrack();
-        console.log('at', activeTrackValue)
         const activeSubsheetValue = getActiveSubSheet();
-        console.log('ast', activeSubsheetValue)
         return activeTrackValue !== null ? activeTrackValue : activeSubsheetValue !== null ? activeSubsheetValue : getActiveSheet();
     }
 
@@ -111,7 +106,6 @@ export const BarContextProvider = (props: any) => {
 
     const updateQuads = (newBars: SkeletonData[]) => {
         const sheetToUpdate = sheets.get(getActiveEditableSheet());
-        console.log('updatingSheet',sheetToUpdate)
         const updatedMap = new Map<string, SheetData>(sheets);
         const updatedSheet = sheetToUpdate ? deepCopy(sheetToUpdate) : defaultSheet
         updatedSheet.bars = newBars;
@@ -124,7 +118,6 @@ export const BarContextProvider = (props: any) => {
 
     const updateSingleQuad = (quadIndex: number, quadData: SkeletonData) => {
         const sheetToUpdate = sheets.get(getActiveEditableSheet());
-        console.log('updatingSheet',sheetToUpdate)
         const updatedMap = new Map<string, SheetData>(sheets);
         const updatedSheet = sheetToUpdate ? deepCopy(sheetToUpdate) : defaultSheet
         const updatedBars = [...updatedSheet.bars]
@@ -141,23 +134,21 @@ export const BarContextProvider = (props: any) => {
         const record = {
             sheets: sheets,
             activeSheet: activeSheet,
-            activeSubSheet: activeSubSheet
+            activeSubSheet: activeSubSheet,
+            activeTrack: activeTrack
         }
         setHistoryRecords([...historyRecords, record])
-        console.log('history length', historyRecords.length)
-        console.log('history', [...historyRecords, record])
     }
 
     const rollbackHistory = () => {
         const rolledBackHistory = [...historyRecords]
         const previousHistoryItem = rolledBackHistory.pop()
-        console.log('historyItem', previousHistoryItem)
-        console.log('revertedHistory', rolledBackHistory)
         if (previousHistoryItem) {
 
             setSheets(previousHistoryItem.sheets)
             setActiveSheet(previousHistoryItem.activeSheet)
             setActiveSubSheet(previousHistoryItem.activeSubSheet)
+            setActiveTrack(previousHistoryItem.activeTrack)
         }
         setHistoryRecords(rolledBackHistory)
 

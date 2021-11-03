@@ -89,7 +89,7 @@ export const MasteringModeGrid = () => {
                                     style={{
                                         width: "100%",
                                         backgroundColor: activeTrack === track.name ? "white" : "#E6E6E3",
-                                        border: "1px solid black"
+                                        border: activeTrack === track.name ? "2px solid #42a5f5" : "1px solid black"
                                     }}>
                                     <MasteringModeTrackLine trackName={track.name}></MasteringModeTrackLine>
                                 </div>

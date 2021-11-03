@@ -16,7 +16,7 @@ const defaultSettings: EditorSettings = {
     editorElementRef: React.createRef<HTMLDivElement | null>(),
     isExportingInProgress: false,
     fileName: "Новая блок-схема",
-    isMasteringMode:true
+    isMasteringMode:false
 }
 
 export const SettingsContext = React.createContext({

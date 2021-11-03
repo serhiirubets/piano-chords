@@ -119,7 +119,7 @@ export const useGlobalStyles = makeStyles({
         backgroundColor: '#2c2c2c',
         display: 'flex',
         padding: '10px',
-        minHeight: '100vh',
+        minHeight: '70vh',
         position: "relative"
     },
     testContentArea: {

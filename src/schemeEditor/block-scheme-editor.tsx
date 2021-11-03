@@ -1,5 +1,5 @@
 import React, {useContext} from "react"
-import {EditorSettingsPanel} from "./components/menu/editor-settings-panel";
+import {SettingsPanel} from "./components/menu/settings-panel";
 import {SettingsContext} from "./context/settings-context";
 import {BlockSchemeWhitePage} from "./block-scheme-page";
 import {styled, useTheme} from '@mui/material/styles';
@@ -130,7 +130,9 @@ export const BlockSchemeEditor = () => {
                                 flexShrink: 0,
                                 '& .MuiDrawer-paper': {
                                     width: drawerWidth,
+                                    boxShadow: "0px 10px 18px -5px #888888"
                                 },
+
                             }}
                             variant="persistent"
                             anchor="right"
@@ -142,7 +144,7 @@ export const BlockSchemeEditor = () => {
                                 </IconButton>
                             </DrawerHeader>
                             <Divider/>
-                            <EditorSettingsPanel/>
+                            <SettingsPanel/>
                         </Drawer>
                     </Box>
 

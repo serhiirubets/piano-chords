@@ -8,9 +8,11 @@ import {collectBarsToPlay, getNotesToPlay, playNotes} from "../../utils/playback
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import StopRoundedIcon from "@mui/icons-material/StopRounded";
 import {BarContext} from "../../context/bar-context";
+import {SkeletonData} from "../../model/deprecated/skeleton-data";
 
 export interface PlaybackModuleProps {
     iconColor?: string;
+    bars? : SkeletonData[]
 }
 
 export const StyledSlider = styled(Slider)(({theme}) => ({
@@ -21,10 +23,13 @@ export const StyledSlider = styled(Slider)(({theme}) => ({
 }));
 
 
-export const PlaybackModule = ({iconColor}: PlaybackModuleProps) => {
+export const PlaybackModule = ({iconColor, bars}: PlaybackModuleProps) => {
     const {settings} = useContext(SettingsContext);
-    const {bars, activeSheet, activeSubSheet, sheets} = useContext(BarContext);
+    const {activeSheet, activeSubSheet, sheets} = useContext(BarContext);
 
+    const barsDataToPlay = bars ?
+        bars.map(bar => ({data:bar, relativePosition:0})) :
+        collectBarsToPlay(settings.isMasteringMode, activeSubSheet || activeSheet, sheets)
 
     return (
         <SoundfontProvider
@@ -37,10 +42,10 @@ export const PlaybackModule = ({iconColor}: PlaybackModuleProps) => {
 
                         <IconButton
                             onClick={() => {
-                                playNotes(getNotesToPlay(collectBarsToPlay(settings.isMasteringMode, activeSubSheet || activeSheet, sheets)), playNote, settings.playbackTempo, settings.alterGainForFeather, settings.quadratSize)
+                                playNotes(getNotesToPlay(barsDataToPlay), playNote, settings.playbackTempo, settings.alterGainForFeather, settings.quadratSize)
                             }}
                             size="large">
-                            <PlayArrowRoundedIcon fontSize="large" style={{fill: "#176503"}}/>
+                            <PlayArrowRoundedIcon fontSize="large" style={{fill: iconColor? iconColor: "#176503"}}/>
                         </IconButton>
                         <IconButton
                             onClick={() => {
@@ -48,7 +53,7 @@ export const PlaybackModule = ({iconColor}: PlaybackModuleProps) => {
                                 stopAllNotes();
                             }}
                             size="large">
-                            <StopRoundedIcon fontSize="large" style={{fill: "#ac0707"}}/>
+                            <StopRoundedIcon fontSize="large" style={{fill: iconColor? iconColor: "#ac0707"}}/>
                         </IconButton>
 
 

@@ -8,6 +8,7 @@ import {getNotesToPlay, playNotes} from "../../utils/playback-utils";
 import {SettingsContext} from "../../context/settings-context";
 import {BarContext} from "../../context/bar-context";
 import {deepCopy} from "../../utils/js-utils";
+import {getQuadratNodeDimension} from "../../utils/rendering-utils";
 
 export interface BlockSchemeSkeletonWrapperProps {
     index: number;
@@ -67,7 +68,7 @@ export const SkeletonWrapper = ({
             justifyContent: "center",
             flexDirection: "column",
             display: "flex",
-            maxWidth: QUADRAT_WIDTH * settings.quadratSize + 40
+            maxWidth: getQuadratNodeDimension(settings.isMasteringMode).quadratWidth * settings.quadratSize + 40
         }} onMouseEnter={handleMouseEnter} onMouseLeave={hadleMouseLeave}>
 
             <div style={{display: "flex", justifyContent: "flex-end", flexDirection: "row", width: "100%"}}>

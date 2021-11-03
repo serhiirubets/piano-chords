@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {BarContextData} from "../model/deprecated/bar-context-data";
 import {SkeletonData} from "../model/deprecated/skeleton-data";
-import {sheet} from "@emotion/css";
 import {SheetData} from "../model/deprecated/sheet-data";
 import {SelectionBuffer} from "../model/selection/selection-buffer";
 import {deepCopy} from "../utils/js-utils";
@@ -45,17 +44,21 @@ export const BarContextProvider = (props: any) => {
     const selectionBuffer = useRef<SelectionBuffer>(new SelectionBuffer());
     const history = useRef<HistoricalData[]>(new Array<HistoricalData>())
 
-    const defaultSheet = new SheetData();
+
+
+
+    const [quadSize, setQuadSize] = useState(8);
+
+    const defaultSheet = new SheetData(quadSize);
     defaultSheet.name = "Часть 1";
     defaultSheet.index = 0;
     defaultSheet.bars = emptyBars;
 
-    const [sheets, setSheets] = useState<Map<string, SheetData>>(new Map<string, SheetData>()
-        .set("Часть 1", defaultSheet))
     const [activeSheet, setActiveSheet] = useState<string>("")
     const [activeSubSheet, setActiveSubSheet] = useState<string | null>(null)
     const [activeTrack, setActiveTrack] = useState<string | null>(null)
-    const [quadSize, setQuadSize] = useState(8);
+    const [sheets, setSheets] = useState<Map<string, SheetData>>(new Map<string, SheetData>()
+        .set("Часть 1", defaultSheet))
     const [isTouched, setIsTouched] = useState(false);
     const [historyRecords, setHistoryRecords] = useState<HistoricalData[]>(new Array<HistoricalData>())
 

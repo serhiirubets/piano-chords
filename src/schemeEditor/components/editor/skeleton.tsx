@@ -60,7 +60,7 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
     const {bars, updateSingleBar, selectionBuffer, sheets} = useContext(BarContext);
     const {settings} = useContext(SettingsContext);
 
-    const skeletonData = (sheets.get(sheetName)|| new SheetData()).bars[skeletonIndex]
+    const skeletonData = (sheets.get(sheetName)|| new SheetData(settings.quadratSize)).bars[skeletonIndex]
     const [selectedNodes, setSelectedNodes] = useState<SelectionIndex[]>(new Array<SelectionIndex>());
     const [activeNodeIndex, setActiveNodeIndex] = useState<SelectionIndex | null>(null);
     const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);

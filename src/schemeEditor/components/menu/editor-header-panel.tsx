@@ -7,45 +7,22 @@ import {SkeletonNodeData} from "../../model/deprecated/skeleton-node-data";
 import {SkeletonData} from "../../model/deprecated/skeleton-data";
 import {OctaveNotationSelector} from "./octave-notation-selector";
 import {StyledSlider} from "./playback-module";
+import {recalculateBarsToNewSize} from "../../utils/skeleton-node-utils";
+import {deepCopyMap} from "../../utils/js-utils";
 
 
 export const EditorHeaderPanel = () => {
     const {settings, partialUpdateSettings} = useContext(SettingsContext);
-    const {undo, bars, updateBars} = useContext(BarContext);
+    const {undo, bars, updateBars, sheets, updateSheets} = useContext(BarContext);
     const [barSize, setBarSize] = useState<number>(settings.quadratSize);
+
     const recalculateBars = (newBarSize: number) => {
-        const rightHandCombined = new Array<SkeletonNodeData>()
-        const leftHandCombined = new Array<SkeletonNodeData>()
-        const newBars = new Array<SkeletonData>();
-
-        const chunkArray = (array: Array<SkeletonNodeData>, chunkSize: number) => {
-            return Array(Math.ceil(array.length / chunkSize)).fill(new SkeletonNodeData()).map((_, i) => array.slice(i * chunkSize, i * chunkSize + chunkSize))
-        }
-
-        const mergeIntoArray = (target, values) => {
-            for (let i = 0; i < target.length; i++) {
-                if (values[i] != undefined) {
-                    target[i] = values[i];
-                }
-            }
-        }
-
-        bars.forEach(bar => {
-            rightHandCombined.push(...bar.right);
-            leftHandCombined.push(...bar.left);
+        const updatedSheets = deepCopyMap(sheets);
+        updatedSheets.forEach((value,key)=> {
+            const updatedBars = recalculateBarsToNewSize(value.bars, newBarSize);
+            value.bars = updatedBars
         })
-
-        const rightHandChunks = chunkArray(rightHandCombined, newBarSize);
-        const leftHandChunks = chunkArray(leftHandCombined, newBarSize);
-
-        for (let i = 0; i < rightHandChunks.length; i++) {
-            const newSkeletonData = new SkeletonData(newBarSize)
-            mergeIntoArray(newSkeletonData.right, rightHandChunks[i]);
-            mergeIntoArray(newSkeletonData.left, leftHandChunks[i]);
-            newBars.push(newSkeletonData)
-        }
-
-        updateBars(newBars)
+        updateSheets(updatedSheets)
     }
 
     const handleQuadratSizeChange = (event) => {

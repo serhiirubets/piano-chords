@@ -12,6 +12,7 @@ import {getOctaveInRussianNotation, getOriginalText} from "../../utils/skeleton-
 import {getTripletEffectiveParameters} from "../../utils/triplet-utils";
 import {SettingsContext} from "../../context/settings-context";
 import {NoteEditPopupMenu} from "./subtitle/note-edit-popup-menu";
+import {getQuadratNodeDimension} from "../../utils/rendering-utils";
 
 
 export interface NodeSubtitleProps {
@@ -95,7 +96,7 @@ const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizon
 
 export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: NodeSubtitleProps) => {
     const {settings} = useContext(SettingsContext)
-    const MAX_HEIGHT = QUADRAT_WIDTH * 1.75;
+    const MAX_HEIGHT = getQuadratNodeDimension(settings.isMasteringMode).quadratWidth * 1.75;
     const RECOMMENDED_SCALE = MAX_HEIGHT / 30; //30 =2.5 octaves
     const FONT_HEIGHT = 18;
     const HAND_MULTIPLIER = midiSummary.hand === HandType.RIGHT ? -1 : 1;
@@ -155,10 +156,10 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: No
     const getNoteHorizontalOffset = (note: INote) => {
 
         if (note.playbackOffset === PlaybackOffset.NONE && note.duration === PlaybackDuration.HALF) {
-            return {right: QUADRAT_WIDTH / 2 + 1}
+            return {right: getQuadratNodeDimension(settings.isMasteringMode).quadratWidth / 2 + 1}
         }
         if (note.playbackOffset === PlaybackOffset.HALF && note.duration === PlaybackDuration.HALF) {
-            return {left: QUADRAT_WIDTH / 2 + 1}
+            return {left: getQuadratNodeDimension(settings.isMasteringMode).quadratWidth / 2 + 1}
         }
         if (tripletProps) {
             const paddingOffset = 0.33;
@@ -167,8 +168,8 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: No
 
             const middleOffset = (effectiveProps.standardOffsets[2] - effectiveProps.standardOffsets[0])/2
             const offsetLeft = indexOfNoteInTriplet === 1 ?
-                QUADRAT_WIDTH * ( middleOffset + paddingOffset):
-                QUADRAT_WIDTH * (effectiveProps.standardOffsets[indexOfNoteInTriplet] + paddingOffset);
+                getQuadratNodeDimension(settings.isMasteringMode).quadratWidth * ( middleOffset + paddingOffset):
+                getQuadratNodeDimension(settings.isMasteringMode).quadratWidth * (effectiveProps.standardOffsets[indexOfNoteInTriplet] + paddingOffset);
             return {left: offsetLeft}
         }
 
@@ -191,7 +192,7 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: No
             <div>
                 <div css={{
                     minHeight: MAX_HEIGHT,
-                    width: QUADRAT_WIDTH,
+                    width: getQuadratNodeDimension(settings.isMasteringMode).quadratWidth,
                     position: "relative",
                     textAlign: "center",
                 }}>{

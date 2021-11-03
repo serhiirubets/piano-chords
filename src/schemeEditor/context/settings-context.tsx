@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {EditorSettings} from "../model/editor-settings-data";
 import {HandType} from "../model/deprecated/skeleton-data";
-import {OctaveNotation, Octaves} from "../model/deprecated/octave";
+import {Octaves} from "../model/deprecated/octave";
 
 const defaultSettings: EditorSettings = {
     playbackTempo: 0.25,

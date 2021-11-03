@@ -19,3 +19,7 @@ export const groupBy = (list, keyGetter) => {
 export const  deepCopy = <T> (object:T) => {
     return JSON.parse(JSON.stringify(object)) as T
 }
+
+export const deepCopyMap = <K,V>(object:Map<K,V>) => {
+    return new Map(deepCopy(Array.from(object.entries()))) as Map<K, V>
+}

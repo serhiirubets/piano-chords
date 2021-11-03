@@ -1,4 +1,3 @@
-// import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
     Accordion,
@@ -15,9 +14,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
 import PublishRoundedIcon from "@mui/icons-material/PublishRounded";
 import PlaylistPlayRoundedIcon from "@mui/icons-material/PlaylistPlayRounded";
-// import Accordion from "@mui/material/Accordion";
 import React, {useContext, useEffect, useState} from "react";
-import {useGlobalStyles} from "../../../App";
 import Download from '@axetroy/react-download';
 import {SettingsContext} from "../../context/settings-context";
 import {EditorSettings} from "../../model/editor-settings-data";
@@ -26,7 +23,6 @@ import {DDTScheme} from "../../resources/DDT-triplets-recording";
 import {SheetData} from "../../model/deprecated/sheet-data";
 import {RefreshRounded} from "@mui/icons-material";
 import {NymphScheme} from "../../resources/Nymph-recording";
-
 
 
 export const SettingsSaveLoadSection = () => {

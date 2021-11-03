@@ -1,6 +1,6 @@
-import React, {useContext, useState} from "react"
+import React, {useContext, useEffect, useState} from "react"
 import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
-import {Button, Typography} from "@mui/material";
+import {Breadcrumbs, Button, Link, Snackbar, SnackbarOrigin, Typography} from "@mui/material";
 import {SettingsContext} from "../../context/settings-context";
 import {QUADRAT_WIDTH} from "../../model/global-constants";
 import {
@@ -17,6 +17,8 @@ import SortableItem from "./block-scheme-grid-new-item";
 import {BarContext} from "../../context/bar-context";
 import {SkeletonData} from "../../model/deprecated/skeleton-data";
 import {getExportViewportWidth, getFlexBasisValue, getPaddingValue} from "../../utils/rendering-utils";
+import {position} from "html2canvas/dist/types/css/property-descriptors/position";
+import {opacity} from "html2canvas/dist/types/css/property-descriptors/opacity";
 
 
 export const AddMoreButton = ({onClick, opacity}) => {
@@ -25,8 +27,8 @@ export const AddMoreButton = ({onClick, opacity}) => {
         marginTop: "20px",
         marginLeft: "20px",
         justifyContent: "center",
-        alignItems:"center",
-        alignContent:"center",
+        alignItems: "center",
+        alignContent: "center",
         opacity: opacity,
         flexBasis: getFlexBasisValue(settings.quadratSize, settings.isExportingInProgress, settings.isMenuOpen),
         // display: "none"
@@ -43,13 +45,21 @@ export const AddMoreButton = ({onClick, opacity}) => {
     </div>)
 }
 
+export interface SnackbarState extends SnackbarOrigin {
+    open: boolean;
+}
 
 export const BlockSchemeGridNew = () => {
-    const {bars, activeSheet, updateBars, editableSheetName} = useContext(BarContext);
+    const {bars, activeSheet, activeSubSheet, activeTrack, updateBars, editableSheetName} = useContext(BarContext);
     const {settings} = useContext(SettingsContext)
     const barIds = bars.map(data => data.id);
 
     const [activeId, setActiveId] = useState(null);
+    const [isSnackbarOpen, setSnackbarOpen] = React.useState(false);
+
+    useEffect(() => {
+        setSnackbarOpen(Boolean(activeTrack))
+    }, [activeTrack, settings.isMasteringMode])
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -77,7 +87,35 @@ export const BlockSchemeGridNew = () => {
     };
 
     return (
-        <div ref={settings.editorElementRef}>
+        <div ref={settings.editorElementRef} style={{height: "100%", position: "relative"}}>
+            {/*{activeTrack && <div style={{*/}
+            {/*    position: "absolute",*/}
+            {/*    top: "5",*/}
+            {/*    left: "5",*/}
+            {/*    display:"flex",*/}
+            {/*    flexDirection:"row"*/}
+            {/*}}>*/}
+            {/*    <Snackbar*/}
+            {/*        open={state.open}*/}
+            {/*        onClose={handleClose}*/}
+            {/*        TransitionComponent={state.Transition}*/}
+            {/*        message="I love snacks"*/}
+            {/*        key={state.Transition.name}*/}
+            {/*    />*/}
+            {/*</div>*/}
+            {/*}*/}
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right'
+                }}
+                open={isSnackbarOpen}
+                onClose={() =>
+                    setSnackbarOpen(false)
+                }
+                message={"Ceйчас открыто: "+activeTrack?.replace("#", ">")}
+                key="changeModeNotification"
+            />
             <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
@@ -103,7 +141,8 @@ export const BlockSchemeGridNew = () => {
                     <SortableContext items={bars} strategy={rectSortingStrategy}>
 
                         {bars.map((data, index) => (
-                            <SortableItem key={data.id} id={data.id} handle={true} value={data} idx={index} sheetName={editableSheetName}/>
+                            <SortableItem key={data.id} id={data.id} handle={true} value={data} idx={index}
+                                          sheetName={editableSheetName}/>
                         ))}
 
                         <AddMoreButton onClick={() => {

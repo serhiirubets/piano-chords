@@ -15,7 +15,7 @@ class PdfExporter extends PureComponent {
     }
 
     toPdf() {
-        const {targetRef, filename, x, y, options, onComplete, pageWidth, pageHeight} = this.props;
+        const {targetRef, filename, options, onComplete, pageHeight} = this.props;
         const source = targetRef || this.targetRef;
         const targetComponent = source.current || source;
         if (!targetComponent) {

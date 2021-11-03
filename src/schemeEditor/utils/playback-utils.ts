@@ -1,4 +1,4 @@
-import {HandType, SkeletonData} from "../model/deprecated/skeleton-data";
+import {SkeletonData} from "../model/deprecated/skeleton-data";
 import {PlaybackData} from "../model/deprecated/skeleton-node-data";
 import {INote, Note} from "../model/note-data";
 import {MidiNumbers} from 'react-piano';
@@ -62,7 +62,6 @@ export const isChord = (notes: Note[]) => {
             anyGroup = true;
         }
     })
-
     return anyGroup
 }
 
@@ -75,5 +74,5 @@ export const collectBarsToPlay = (isMasteringMode: boolean, activeSheetName: str
         })
         return tracksForSheet
     }
-    return (sheets.get(activeSheetName)||new SheetData()).bars.map((bar, idx) => ({data: bar, relativePosition: idx}))
+    return (sheets.get(activeSheetName)||new SheetData(8)).bars.map((bar, idx) => ({data: bar, relativePosition: idx}))
 }

@@ -1,8 +1,8 @@
 import {Slider, styled} from "@mui/material";
 import React, {useContext} from "react";
 import {SettingsContext} from "../../context/settings-context";
-import SoundfontProvider from "../../../components/piano-core/SoundfontProvider";
-import {audioContext, soundfontHostname} from "../../model/global-constants";
+import {SoundfontProvider} from "../../../components/piano-core/SoundfontProvider";
+import {audioContext, DEFAULT_INSTRUMENT, soundfontHostname} from "../../model/global-constants";
 import IconButton from "@mui/material/IconButton";
 import {collectBarsToPlay, getNotesToPlay, playNotes} from "../../utils/playback-utils";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
@@ -12,7 +12,7 @@ import {SkeletonData} from "../../model/deprecated/skeleton-data";
 
 export interface PlaybackModuleProps {
     iconColor?: string;
-    bars? : SkeletonData[]
+    bars?: SkeletonData[]
 }
 
 export const StyledSlider = styled(Slider)(({theme}) => ({
@@ -28,12 +28,12 @@ export const PlaybackModule = ({iconColor, bars}: PlaybackModuleProps) => {
     const {activeSheet, activeSubSheet, sheets} = useContext(BarContext);
 
     const barsDataToPlay = bars ?
-        bars.map(bar => ({data:bar, relativePosition:0})) :
+        bars.map(bar => ({data: bar, relativePosition: 0})) :
         collectBarsToPlay(settings.isMasteringMode, activeSubSheet || activeSheet, sheets)
 
     return (
         <SoundfontProvider
-            instrumentName="bright_acoustic_piano"
+            instrumentName={DEFAULT_INSTRUMENT}
             audioContext={audioContext}
             hostname={soundfontHostname}
             render={({playNote, stopNote, stopAllNotes}) => (
@@ -45,7 +45,7 @@ export const PlaybackModule = ({iconColor, bars}: PlaybackModuleProps) => {
                                 playNotes(getNotesToPlay(barsDataToPlay), playNote, settings.playbackTempo, settings.alterGainForFeather, settings.quadratSize)
                             }}
                             size="large">
-                            <PlayArrowRoundedIcon fontSize="large" style={{fill: iconColor? iconColor: "#176503"}}/>
+                            <PlayArrowRoundedIcon fontSize="large" style={{fill: iconColor ? iconColor : "#176503"}}/>
                         </IconButton>
                         <IconButton
                             onClick={() => {
@@ -53,7 +53,7 @@ export const PlaybackModule = ({iconColor, bars}: PlaybackModuleProps) => {
                                 stopAllNotes();
                             }}
                             size="large">
-                            <StopRoundedIcon fontSize="large" style={{fill: iconColor? iconColor: "#ac0707"}}/>
+                            <StopRoundedIcon fontSize="large" style={{fill: iconColor ? iconColor : "#ac0707"}}/>
                         </IconButton>
 
 

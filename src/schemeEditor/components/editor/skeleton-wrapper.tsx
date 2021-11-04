@@ -2,8 +2,8 @@ import React, {useContext, useState} from "react";
 import {v4 as uuid} from 'uuid';
 import {Skeleton} from "./skeleton";
 import {SkeletonWrapperControls} from "./skeleton-wrapper-controls";
-import {audioContext, QUADRAT_WIDTH, soundfontHostname} from "../../model/global-constants";
-import SoundfontProvider from "../../../components/piano-core/SoundfontProvider";
+import {audioContext, DEFAULT_INSTRUMENT, QUADRAT_WIDTH, soundfontHostname} from "../../model/global-constants";
+import {SoundfontProvider} from "../../../components/piano-core/SoundfontProvider";
 import {getNotesToPlay, playNotes} from "../../utils/playback-utils";
 import {SettingsContext} from "../../context/settings-context";
 import {BarContext} from "../../context/bar-context";
@@ -73,7 +73,7 @@ export const SkeletonWrapper = ({
 
             <div style={{display: "flex", justifyContent: "flex-end", flexDirection: "row", width: "100%"}}>
                 {isHovered ? <SoundfontProvider
-                        instrumentName="bright_acoustic_piano"
+                        instrumentName={DEFAULT_INSTRUMENT}
                         audioContext={audioContext}
                         hostname={soundfontHostname}
                         render={({playNote, stopNote, stopAllNotes}) => (

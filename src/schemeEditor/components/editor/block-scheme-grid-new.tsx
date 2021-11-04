@@ -1,6 +1,6 @@
-import React, {useContext, useState} from "react"
+import React, {useContext, useEffect, useState} from "react"
 import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
-import {Button, Typography} from "@mui/material";
+import {Button, Snackbar, SnackbarOrigin, Typography} from "@mui/material";
 import {SettingsContext} from "../../context/settings-context";
 import {QUADRAT_WIDTH} from "../../model/global-constants";
 import {
@@ -19,16 +19,16 @@ import {SkeletonData} from "../../model/deprecated/skeleton-data";
 import {getExportViewportWidth, getFlexBasisValue, getPaddingValue} from "../../utils/rendering-utils";
 
 
-const AddMoreButton = ({onClick, opacity}) => {
+export const AddMoreButton = ({onClick, opacity}) => {
     const {settings} = useContext(SettingsContext);
     return (<div key="addMoreButton" style={{
         marginTop: "20px",
-        marginLeft: "10px",
-        marginRight: "10px",
+        marginLeft: "20px",
         justifyContent: "center",
+        alignItems: "center",
+        alignContent: "center",
         opacity: opacity,
-        flexBasis: getFlexBasisValue(settings.quadratSize, settings.isExportingInProgress),
-        // display: "none"
+        flexBasis: getFlexBasisValue(settings.quadratSize, settings.isExportingInProgress, settings.isMenuOpen),
     }}>
         <Button variant="outlined" key="addNewSkeletonButton"
                 style={{
@@ -42,13 +42,21 @@ const AddMoreButton = ({onClick, opacity}) => {
     </div>)
 }
 
+export interface SnackbarState extends SnackbarOrigin {
+    open: boolean;
+}
 
 export const BlockSchemeGridNew = () => {
-    const {bars, activeSheet, updateBars} = useContext(BarContext);
+    const {bars, activeSheet, activeSubSheet, activeTrack, updateBars, editableSheetName} = useContext(BarContext);
     const {settings} = useContext(SettingsContext)
     const barIds = bars.map(data => data.id);
 
     const [activeId, setActiveId] = useState(null);
+    const [isSnackbarOpen, setSnackbarOpen] = React.useState(false);
+
+    useEffect(() => {
+        setSnackbarOpen(Boolean(activeTrack))
+    }, [activeTrack, settings.isMasteringMode])
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -76,7 +84,19 @@ export const BlockSchemeGridNew = () => {
     };
 
     return (
-        <div ref={settings.editorElementRef}>
+        <div ref={settings.editorElementRef} style={{height: "100%", position: "relative"}}>
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right'
+                }}
+                open={isSnackbarOpen}
+                onClose={() =>
+                    setSnackbarOpen(false)
+                }
+                message={"Ceйчас открыто: "+activeTrack?.replace("#", ">")}
+                key="changeModeNotification"
+            />
             <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
@@ -102,9 +122,9 @@ export const BlockSchemeGridNew = () => {
                     <SortableContext items={bars} strategy={rectSortingStrategy}>
 
                         {bars.map((data, index) => (
-                            <SortableItem key={data.id} id={data.id} handle={true} value={data} idx={index}/>
+                            <SortableItem key={data.id} id={data.id} handle={true} value={data} idx={index}
+                                          sheetName={editableSheetName}/>
                         ))}
-
                         <AddMoreButton onClick={() => {
                             updateBars
                             ([

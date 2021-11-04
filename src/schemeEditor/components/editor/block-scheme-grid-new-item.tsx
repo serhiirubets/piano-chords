@@ -4,6 +4,7 @@ import {CSS} from "@dnd-kit/utilities";
 import {getFlexBasisValue} from "../../utils/rendering-utils";
 import {SettingsContext} from "../../context/settings-context";
 import {SkeletonWrapper} from "./skeleton-wrapper";
+import {QUADRAT_WIDTH} from "../../model/global-constants";
 
 const SortableItem = (props) => {
     const {settings} = useContext(SettingsContext)
@@ -22,19 +23,18 @@ const SortableItem = (props) => {
         transition,
         margin: "10px",
         opacity: isDragging ? 0.3 : 1,
-        flexBasis: getFlexBasisValue(settings.quadratSize, settings.isExportingInProgress),
-        minWidth: "100px",
-        justifyContent: "center",
-        alignItems: "center",
+        flexBasis: getFlexBasisValue(settings.quadratSize, settings.isExportingInProgress, settings.isMenuOpen),
+        minWidth: QUADRAT_WIDTH * settings.quadratSize,
         padding: "0 50 0 50",
     };
 
     return (
         <div ref={setNodeRef} style={style}>
-            <div>
-                <SkeletonWrapper index={props.idx} id={props.id} sortableListeners={listeners}
+                <SkeletonWrapper index={props.idx}
+                                 id={props.id}
+                                 sheetName={props.sheetName}
+                                 sortableListeners={listeners}
                                  sortableAttributes={attributes}/>
-            </div>
         </div>
     );
 };

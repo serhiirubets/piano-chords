@@ -4,25 +4,32 @@ import {SettingsContext} from "../../context/settings-context";
 import SoundfontProvider from "../../../components/piano-core/SoundfontProvider";
 import {audioContext, soundfontHostname} from "../../model/global-constants";
 import IconButton from "@mui/material/IconButton";
-import {getNotesToPlay, playNotes} from "../../utils/playback-utils";
+import {collectBarsToPlay, getNotesToPlay, playNotes} from "../../utils/playback-utils";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import StopRoundedIcon from "@mui/icons-material/StopRounded";
 import {BarContext} from "../../context/bar-context";
+import {SkeletonData} from "../../model/deprecated/skeleton-data";
 
 export interface PlaybackModuleProps {
     iconColor?: string;
+    bars? : SkeletonData[]
 }
 
-export const StyledSlider = styled(Slider)(({ theme }) => ({
+export const StyledSlider = styled(Slider)(({theme}) => ({
     '& .MuiSlider-thumb': {
         height: 10,
         width: 10,
     }
 }));
 
-export const PlaybackModule = ({iconColor}: PlaybackModuleProps) => {
-    const {settings, partialUpdateSettings} = useContext(SettingsContext);
-    const {bars} = useContext(BarContext);
+
+export const PlaybackModule = ({iconColor, bars}: PlaybackModuleProps) => {
+    const {settings} = useContext(SettingsContext);
+    const {activeSheet, activeSubSheet, sheets} = useContext(BarContext);
+
+    const barsDataToPlay = bars ?
+        bars.map(bar => ({data:bar, relativePosition:0})) :
+        collectBarsToPlay(settings.isMasteringMode, activeSubSheet || activeSheet, sheets)
 
     return (
         <SoundfontProvider
@@ -30,15 +37,15 @@ export const PlaybackModule = ({iconColor}: PlaybackModuleProps) => {
             audioContext={audioContext}
             hostname={soundfontHostname}
             render={({playNote, stopNote, stopAllNotes}) => (
-                <div style={{display:"flex", flexDirection:"column"}}>
-                    <div style={{display:"flex", flexDirection: "row"}}>
+                <div style={{display: "flex", flexDirection: "column"}}>
+                    <div style={{display: "flex", flexDirection: "row"}}>
 
                         <IconButton
                             onClick={() => {
-                                playNotes(getNotesToPlay(bars), playNote, settings.playbackTempo, settings.alterGainForFeather)
+                                playNotes(getNotesToPlay(barsDataToPlay), playNote, settings.playbackTempo, settings.alterGainForFeather, settings.quadratSize)
                             }}
                             size="large">
-                            <PlayArrowRoundedIcon fontSize="large" style={{fill: "#176503"}}/>
+                            <PlayArrowRoundedIcon fontSize="large" style={{fill: iconColor? iconColor: "#176503"}}/>
                         </IconButton>
                         <IconButton
                             onClick={() => {
@@ -46,19 +53,11 @@ export const PlaybackModule = ({iconColor}: PlaybackModuleProps) => {
                                 stopAllNotes();
                             }}
                             size="large">
-                            <StopRoundedIcon fontSize="large" style={{fill: "#ac0707"}}/>
+                            <StopRoundedIcon fontSize="large" style={{fill: iconColor? iconColor: "#ac0707"}}/>
                         </IconButton>
 
 
                     </div>
-                    {/*<StyledSlider*/}
-                    {/*    style={{width: '80%', margin: "0 5px 0 5px", padding:"0 5px"}}*/}
-                    {/*    onChange={(value, newValue)=>partialUpdateSettings({playbackTempo: (newValue as number) * -1})}*/}
-                    {/*    defaultValue={-0.25}*/}
-                    {/*    step={0.05}*/}
-                    {/*    min={-1}*/}
-                    {/*    max={-0.05}*/}
-                    {/*/>*/}
                 </div>
 
             )}

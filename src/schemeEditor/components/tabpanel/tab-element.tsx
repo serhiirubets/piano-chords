@@ -38,9 +38,7 @@ export const TabElement = ({
         setMenuAnchorEl(e.currentTarget)
     }
     const handleSave = (newName: string) => {
-        console.log('saving',label,tabnameText,newName)
         onNameChange(newName);
-        console.log('saved')
         setEditMode(false);
     }
 

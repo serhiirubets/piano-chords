@@ -8,15 +8,23 @@ import {getNotesToPlay, playNotes} from "../../utils/playback-utils";
 import {SettingsContext} from "../../context/settings-context";
 import {BarContext} from "../../context/bar-context";
 import {deepCopy} from "../../utils/js-utils";
+import {getQuadratNodeDimension} from "../../utils/rendering-utils";
 
 export interface BlockSchemeSkeletonWrapperProps {
     index: number;
-    id:string,
-    sortableListeners? :any;
-    sortableAttributes? :any;
+    id: string,
+    sheetName: string,
+    sortableListeners?: any;
+    sortableAttributes?: any;
 }
 
-export const SkeletonWrapper = ({index, id, sortableListeners, sortableAttributes}: BlockSchemeSkeletonWrapperProps) => {
+export const SkeletonWrapper = ({
+                                    index,
+                                    id,
+                                    sortableListeners,
+                                    sortableAttributes,
+                                    sheetName
+                                }: BlockSchemeSkeletonWrapperProps) => {
     const [isHovered, setIsHovered] = useState<boolean>(false);
 
     const {settings} = useContext(SettingsContext);
@@ -46,7 +54,10 @@ export const SkeletonWrapper = ({index, id, sortableListeners, sortableAttribute
     }
 
     const handlePlayButtonClick = (playFunction) => {
-        playNotes(getNotesToPlay([bars[index]]), playFunction, settings.playbackTempo, settings.alterGainForFeather)
+        playNotes(getNotesToPlay([{
+            data: bars[index],
+            relativePosition: 0
+        }]), playFunction, settings.playbackTempo, settings.alterGainForFeather, settings.quadratSize)
     }
 
     return (
@@ -55,35 +66,35 @@ export const SkeletonWrapper = ({index, id, sortableListeners, sortableAttribute
             marginLeft: "10px",
             marginRight: "10px",
             justifyContent: "center",
-            flexDirection:"column",
-            display:"flex",
-            maxWidth:QUADRAT_WIDTH*settings.quadratSize+40
+            flexDirection: "column",
+            display: "flex",
+            maxWidth: getQuadratNodeDimension(settings.isMasteringMode).quadratWidth * settings.quadratSize + 40
         }} onMouseEnter={handleMouseEnter} onMouseLeave={hadleMouseLeave}>
 
-                <div style={{display: "flex", justifyContent: "flex-end", flexDirection: "row", width: "100%"}}>
-                    {isHovered ? <SoundfontProvider
-                            instrumentName="bright_acoustic_piano"
-                            audioContext={audioContext}
-                            hostname={soundfontHostname}
-                            render={({playNote, stopNote, stopAllNotes}) => (
-                                <div style={{display: "flex", flexDirection: "row", width: "100%"}}>
-                                    <SkeletonWrapperControls onStartPlaying={() => handlePlayButtonClick(playNote)}
-                                                             onStopPlaying={() => {
-                                                                 stopNote();
-                                                                 stopAllNotes();
-                                                             }}
-                                                             onCopy={handleCopyButtonClick}
-                                                             onClear={handleClearButtonClick}
-                                                             isDisplayed={true}
-                                                             id={id}
-                                                             sortableListeners={sortableListeners}
-                                                             sortableAttributes={sortableAttributes}
-                                    />
-                                </div>
-                            )}/>
-                        : (<div style={{height: 44, width: '100%'}}></div>)}
-                </div>
-                <Skeleton skeletonIndex={index}></Skeleton>
+            <div style={{display: "flex", justifyContent: "flex-end", flexDirection: "row", width: "100%"}}>
+                {isHovered ? <SoundfontProvider
+                        instrumentName="bright_acoustic_piano"
+                        audioContext={audioContext}
+                        hostname={soundfontHostname}
+                        render={({playNote, stopNote, stopAllNotes}) => (
+                            <div style={{display: "flex", flexDirection: "row", width: "100%"}}>
+                                <SkeletonWrapperControls onStartPlaying={() => handlePlayButtonClick(playNote)}
+                                                         onStopPlaying={() => {
+                                                             stopNote();
+                                                             stopAllNotes();
+                                                         }}
+                                                         onCopy={handleCopyButtonClick}
+                                                         onClear={handleClearButtonClick}
+                                                         isDisplayed={true}
+                                                         id={id}
+                                                         sortableListeners={sortableListeners}
+                                                         sortableAttributes={sortableAttributes}
+                                />
+                            </div>
+                        )}/>
+                    : (<div style={{height: 44, width: '100%'}}></div>)}
+            </div>
+            <Skeleton skeletonIndex={index} sheetName={sheetName}></Skeleton>
         </div>)
 }
 

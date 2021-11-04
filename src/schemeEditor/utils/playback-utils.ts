@@ -1,35 +1,37 @@
-import {HandType, SkeletonData} from "../model/deprecated/skeleton-data";
+import {SkeletonData} from "../model/deprecated/skeleton-data";
 import {PlaybackData} from "../model/deprecated/skeleton-node-data";
 import {INote, Note} from "../model/note-data";
 import {MidiNumbers} from 'react-piano';
 import {getPlaybackData} from "./skeleton-node-utils";
 import {groupBy} from "./js-utils";
+import {SheetData} from "../model/deprecated/sheet-data";
 
 
-export const getNotesToPlay = (bars: Array<SkeletonData>) => {
-    const notes = new Array<PlaybackData[]>();
-    bars.forEach(quadrat => {
-        for (let i = 0; i < quadrat.size; i++) {
-            const currentBeatNotes: PlaybackData[] = [...getPlaybackData(quadrat.left[i]),
-                ...getPlaybackData(quadrat.right[i])]
+export const getNotesToPlay = (bars: Array<{ data: SkeletonData, relativePosition: number }>) => {
+    const notes = new Array<{ data: PlaybackData[], relativePosition: number }>();
+    bars.forEach(({data, relativePosition}) => {
+        for (let i = 0; i < data.size; i++) {
+            const currentBeatNotes: PlaybackData[] = [...getPlaybackData(data.left[i]),
+                ...getPlaybackData(data.right[i])]
                 .flat(3);
-            notes.push(currentBeatNotes);
+            notes.push({data: currentBeatNotes, relativePosition: relativePosition});
         }
     })
     return notes;
 }
 
-export const playNotes = (beatsToPlay, playFunction, tempo, doDistinguishFeatherGain) => {
+export const playNotes = (beatsToPlay: { data: PlaybackData[], relativePosition: number }[], playFunction, tempo, doDistinguishFeatherGain, quadratSize) => {
     const STANDARD_DURATION = tempo * 1;
     const getGain = (beatPlayback) => doDistinguishFeatherGain ? beatPlayback.gain : 1
-
-    for (let i = 0; i <= beatsToPlay.length; i++) {
-        const currentBeat: PlaybackData[] = beatsToPlay[i];
+    for (let i = 0; i < beatsToPlay.length; i++) {
+        const currentBeat: PlaybackData[] = beatsToPlay[i].data;
         if (currentBeat === undefined) {
             continue;
         }
-        currentBeat.forEach(playback => {
-            const offset = STANDARD_DURATION * (i + 1 + playback.playbackOffset);
+        const index = beatsToPlay[i].relativePosition * quadratSize + i % quadratSize
+
+        currentBeat.forEach((playback) => {
+            const offset = STANDARD_DURATION * (index + playback.playbackOffset);
             playFunction(playback.midiNumber, offset, {duration: playback.duration, gain: getGain(playback)});
         })
     }
@@ -56,10 +58,21 @@ export const isChord = (notes: Note[]) => {
     const groupNotes = groupBy(notes, note => note.playbackOffset)
     let anyGroup = false;
     groupNotes.forEach(value => {
-        if(value.length > 1){
+        if (value.length > 1) {
             anyGroup = true;
         }
-    } )
-
+    })
     return anyGroup
+}
+
+export const collectBarsToPlay = (isMasteringMode: boolean, activeSheetName: string, sheets: Map<string, SheetData>) => {
+    if (isMasteringMode) {
+        const tracksForSheet = Array.from(sheets.entries()).filter(([key, value]) =>
+            value.parentName === activeSheetName && value.isTrack && !value.isMuted
+        ).flatMap(([key, value]) => {
+            return value.bars.map((bar, idx) => ({data: bar, relativePosition: idx}))
+        })
+        return tracksForSheet
+    }
+    return (sheets.get(activeSheetName)||new SheetData(8)).bars.map((bar, idx) => ({data: bar, relativePosition: idx}))
 }

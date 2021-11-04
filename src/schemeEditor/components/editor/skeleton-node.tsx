@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import React, {useContext, useEffect, useRef, useState} from "react";
-import {jsx} from "@emotion/react/macro";
-import {DOT_WIDTH, QUADRAT_WIDTH, SMALL_DOT_WIDTH} from "../../model/global-constants";
+import {css, jsx} from "@emotion/react/macro";
+import {getDotWidth, getSmallDotWidth} from "../../model/global-constants";
 import {SkeletonNodeData} from "../../model/deprecated/skeleton-node-data";
 import {TextField} from "@mui/material";
 import {HandType} from "../../model/deprecated/skeleton-data";
@@ -13,6 +13,7 @@ import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import {groupBy} from "../../utils/js-utils";
 import {getTripletEffectiveParameters} from "../../utils/triplet-utils";
 import {OctaveNotation, parseOctaveNotationToScientific} from "../../model/deprecated/octave";
+import {getQuadratNodeDimension} from "../../utils/rendering-utils";
 
 const NOTES_REGEX = /a-gmA-G#\s\/:/
 const SIXTEENS_SEPARATOR = '/'
@@ -124,10 +125,10 @@ function computeBorderStyle(selectionMode: NodeSelectionMode | string | undefine
     }
 }
 
-const computeTripletDisplayProps = (tripletPropsOrFallback: TripletHandlingProps) => {
+const computeTripletDisplayProps = (tripletPropsOrFallback: TripletHandlingProps, isMasteringMode:boolean) => {
     return {
         left: 0,
-        width: tripletPropsOrFallback.isHostingTriplet ? (QUADRAT_WIDTH) * tripletPropsOrFallback.tripletDuration : QUADRAT_WIDTH,
+        width: tripletPropsOrFallback.isHostingTriplet ? getQuadratNodeDimension(isMasteringMode).quadratWidth * tripletPropsOrFallback.tripletDuration : getQuadratNodeDimension(isMasteringMode).quadratWidth,
         zIndex: tripletPropsOrFallback.isHostingTriplet ? 3 : 1,
     }
 }
@@ -161,7 +162,6 @@ export const SkeletonNode = ({
                                  handType,
                                  selectionMode,
                                  onSelect,
-                                 onDeselect,
                                  tripletProps
                              }: BlockSchemeNodeProps) => {
     const transientInputValue = useRef(data.originalText);
@@ -173,11 +173,12 @@ export const SkeletonNode = ({
             /*NOOP*/
         }
     }
+    const {quadratWidth, quadratDotWidth, quadratSmallDotWidth} = getQuadratNodeDimension(settings.isMasteringMode)
 
     useEffect(() => {
         setInputText(data.originalText || getOriginalText(data.notes, settings.octaveNotation))
         transientInputValue.current = data.originalText
-    }, [data])
+    }, [data, settings.octaveNotation])
 
     const handeSelection = (event) => {
         if (!event.shiftKey && !event.ctrlKey && !event.metaKey) {
@@ -210,23 +211,16 @@ export const SkeletonNode = ({
     const handleSave = () => {
 
         if (transientInputValue.current === inputText) {
-            console.log('omitting save event as there were no changes')
             setEditMode(false);
             return
         }
-        console.log('transient', transientInputValue)
-        console.log('current', inputText)
-
-        console.log('saving data')
         const updatedNote = parseInputToTheNotes(inputText,
             settings.defaultOctaves.get(handType)!,
             tripletPropsOrFallback,
             settings.octaveNotation);
-        console.log('saving data', updatedNote)
         setData(updatedNote, inputText)
         setEditMode(false);
         transientInputValue.current = inputText;
-        console.log('newTransient', transientInputValue.current)
     }
 
     const prepareTripletItems = () => {
@@ -238,8 +232,8 @@ export const SkeletonNode = ({
 
         const tripletDot = (isPresent) =>
             <div css={{
-                width: idealTripletValues.is8thTriplet ? DOT_WIDTH : SMALL_DOT_WIDTH,
-                height: idealTripletValues.is8thTriplet ? DOT_WIDTH : SMALL_DOT_WIDTH,
+                width: idealTripletValues.is8thTriplet ? quadratDotWidth : quadratSmallDotWidth,
+                height: idealTripletValues.is8thTriplet ? quadratDotWidth : quadratSmallDotWidth,
                 transform: "rotateY(0deg) rotate(45deg)",
                 opacity: isPresent ? 100 : 0,
                 background: handType === HandType.RIGHT ? "red" : "green"
@@ -254,7 +248,7 @@ export const SkeletonNode = ({
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-                padding: (QUADRAT_WIDTH - DOT_WIDTH) / 2,
+                padding: (quadratWidth - quadratDotWidth) / 2,
                 opacity: isEditMode ? 0 : 100
             }}>
 
@@ -271,7 +265,7 @@ export const SkeletonNode = ({
             <div css={{
                 ...{
                     position: tripletPropsOrFallback.isHostingTriplet ? "absolute" : "relative",
-                    height: QUADRAT_WIDTH,
+                    height: quadratWidth,
                     flex: 1,
                     display: 'flex',
                     boxSizing: 'border-box',
@@ -285,7 +279,7 @@ export const SkeletonNode = ({
 
                 },
                 ...computeBorderStyle(selectionMode),
-                ...computeTripletDisplayProps(tripletPropsOrFallback)
+                ...computeTripletDisplayProps(tripletPropsOrFallback, settings.isMasteringMode)
             }}
                  tabIndex={-1}
             >
@@ -299,7 +293,7 @@ export const SkeletonNode = ({
                 {tripletPropsOrFallback.isHostingTriplet && data.isPresent && prepareTripletItems()}
                 <TextField
                     css={{
-                        width: (tripletPropsOrFallback.isHostingTriplet ? QUADRAT_WIDTH * tripletPropsOrFallback.tripletDuration : QUADRAT_WIDTH) - 8,
+                        width: tripletPropsOrFallback.isHostingTriplet ? quadratWidth * tripletPropsOrFallback.tripletDuration : quadratWidth - 8,
                         height: '100%',
                         opacity: isEditMode ? 100 : 0,
                         position: "absolute",

@@ -1,43 +1,37 @@
 import React, {useState} from 'react';
 import './App.css';
 import theme from "./core/theme-provider";
-import {
-    Card,
-    CardContent,
-    FormControlLabel,
-    Radio,
-    RadioGroup,
-    ThemeProvider,
-    Theme,
-    StyledEngineProvider,
-    Typography,
-} from '@mui/material';
+import {StyledEngineProvider, Theme, ThemeProvider,} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {BlockSchemeEditor} from "./schemeEditor/block-scheme-editor";
+import {BarContextProvider} from "./schemeEditor/context/bar-context";
+import {SettingsContextProvider} from "./schemeEditor/context/settings-context";
 
 
 declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface DefaultTheme extends Theme {
+    }
 }
 
 
 function App() {
-    const [selectedScale, setSelectedScale] = useState();
-    const [minorType, setMinorType] = useState();
 
-    const [mode, setMode] = useState('blockSchemeEditor')
     const classes = useGlobalStyles();
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
-                <div className="App">
-                    <div className={classes.contentArea}>
-                        <div className={classes.mainContentArea}>
-                            <BlockSchemeEditor/>
+                <SettingsContextProvider>
+                    <BarContextProvider>
+                        <div className="App">
+                            <div className={classes.contentArea}>
+                                <div className={classes.mainContentArea}>
+                                    <BlockSchemeEditor/>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    </BarContextProvider>
+                </SettingsContextProvider>
             </ThemeProvider>
         </StyledEngineProvider>
     );
@@ -52,13 +46,13 @@ export const useGlobalStyles = makeStyles({
     },
     controlPanelCard: {
         display: 'flex',
-        padding: '10px',
-        margin: '10px',
+        // padding: '10px',
+        // margin: '10px',
         width: '23vw',
         height: "100%",
-        position: 'fixed',
-        right: 0,
-        top: 0
+        // position: 'fixed',
+        // right: 0,
+        // top: 0
     },
     card: {
         display: 'flex',
@@ -68,19 +62,14 @@ export const useGlobalStyles = makeStyles({
     },
     thickCard: {
         display: 'flex',
-        // padding: '10px',
-        paddingTop: 0,
-        // margin: '10px',
         justifyContent: 'center',
         alignItems: 'center',
         flex: 2,
         width: '70vw',
         flexDirection: "column",
         overflowY: "scroll",
-        position: 'absolute',
         height: "100%",
-        top: 0,
-        left: 20
+        // marginRight: "20px"
     },
     fullScreenCard: {
         display: 'flex',
@@ -130,7 +119,7 @@ export const useGlobalStyles = makeStyles({
         backgroundColor: '#2c2c2c',
         display: 'flex',
         padding: '10px',
-        minHeight: '100vh',
+        minHeight: '70vh',
         position: "relative"
     },
     testContentArea: {
@@ -144,8 +133,9 @@ export const useGlobalStyles = makeStyles({
     },
     mainContentArea: {
         display: 'flex',
-        padding: '10px',
-        justifyContent: 'space-between'
+        padding: '0 10px',
+        justifyContent: 'space-between',
+        overflowY: "hidden"
     },
     paddedButton: {
         margin: '10px'
@@ -185,19 +175,14 @@ export const useGlobalStyles = makeStyles({
         fontSize: theme.typography.pxToRem(15),
         fontWeight: theme.typography.fontWeightRegular,
     },
-    header:{
+    header: {
         flexGrow: 1,
-        position:"fixed",
-        top:0,
-        left:0,
-        paddingLeft:0,
-        paddingRight:20,
+        position: "fixed",
+        top: 0,
+        left: 0,
         width: 'inherit',
-        height:75,
-        boxShadow: "0px 10px 18px -5px #888888",
-        zIndex:5,
-        backgroundColor: "#4f5b66",
-        alignSelf:"flex-start"
+        zIndex: 5,
+        alignSelf: "flex-start"
     }
 });
 

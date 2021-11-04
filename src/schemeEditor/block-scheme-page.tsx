@@ -3,7 +3,6 @@ import {Divider, Typography} from "@mui/material";
 // @ts-ignore
 import {BlockSchemeGrid} from "./components/editor/block-scheme-grid";
 import {SettingsContext} from "./context/settings-context";
-import {BarContext} from "./context/bar-context";
 import {ScrollableTabs} from "./components/tabpanel/tab-panel";
 import {PlaybackModule} from "./components/menu/playback-module";
 import IconButton from "@mui/material/IconButton";
@@ -12,15 +11,15 @@ import {getScaleSize} from "./utils/rendering-utils";
 import PdfExporter from "../core/pdf-exporter-class";
 import {EditorHeaderPanel} from "./components/menu/editor-header-panel";
 import {BlockSchemeGridNew} from "./components/editor/block-scheme-grid-new";
+import {MasteringModeGrid} from "./components/editor/mastering-mode-grid";
 
 
 export const BlockSchemeWhitePage = () => {
 
     const {settings, updateSettings} = useContext(SettingsContext);
-    const {activeSheet} = useContext(BarContext);
     return (
-        <div style={{flexDirection: "column", display: "flex", height: "100vh"}}>
-            <div style={{alignSelf: "flex-start", marginTop: 85, position: "sticky", top: 0, left: 0, width: "100%"}}>
+        <div style={{flexDirection: "column", display: "flex", height: "90vh"}}>
+            <div style={{alignSelf: "flex-start", position: "sticky", top: 0, left: 0, width: "100%"}}>
                 <div style={{
                     display: "flex",
                     flexDirection: "column",
@@ -40,8 +39,6 @@ export const BlockSchemeWhitePage = () => {
                                          filename="block-scheme.pdf"
                                          scale={getScaleSize(settings.quadratSize)}
                                          onComplete={() => updateSettings({...settings, isExportingInProgress: false})}>
-                                {/*beforeExport={() => updateSettings({...settings, isExportingInProgress: true})}*/}
-                                {/*afterExport={() => updateSettings({...settings, isExportingInProgress: false})}>*/}
 
                                 {({toPdf}) =>
                                     <IconButton
@@ -69,7 +66,7 @@ export const BlockSchemeWhitePage = () => {
             <div style={{overflow: "scroll", height: "100%", width: "100%", position: "relative"}}>
                 <div style={{
                     width: "100%",
-                    height: "100vh",
+                    height: "90vh",
                     backgroundColor: "#b4b4b4",
                     display: settings.isExportingInProgress ? "inherit" : "none",
                     zIndex: 100,
@@ -85,7 +82,7 @@ export const BlockSchemeWhitePage = () => {
                 </div>
 
                 <div style={{height: "100%", width: "100%"}}>
-                    <BlockSchemeGridNew></BlockSchemeGridNew>
+                    {settings.isMasteringMode? <MasteringModeGrid/> :  <BlockSchemeGridNew/>}
                 </div>
 
             </div>

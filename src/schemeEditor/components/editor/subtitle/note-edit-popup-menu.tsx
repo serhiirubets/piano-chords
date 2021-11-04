@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import React from "react";
+import React, {useState} from "react";
 import {jsx} from "@emotion/react/macro";
 import {INote, Note, NoteType} from "../../../model/note-data";
 import {HandType} from "../../../model/deprecated/skeleton-data";
@@ -16,19 +16,19 @@ export interface NoteContextMenuProps {
 export const NoteEditPopupMenu = ({note, onUpdateNote, hand, anchorEl, onClose}) => {
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
+    const [displayOctaveValue, setDisplayOctaveValue]= useState(note.displayOctave);
 
     const handleNoteUpdate = (data: Partial<INote>) => {
         const updatedNote = new Note({
             note: data.note || note.note,
             octave: data.octave || note.octave,
-            displayOctave: data.displayOctave || note.displayOctave,
+            displayOctave: data.displayOctave,
             applicature: data.applicature || note.applicature,
             duration: note.duration,
             playbackOffset: note.playbackOffset,
             noteType: data.noteType || note.noteType
         });
         onUpdateNote(updatedNote)
-
     }
 
     return (
@@ -104,11 +104,14 @@ export const NoteEditPopupMenu = ({note, onUpdateNote, hand, anchorEl, onClose})
                 <FormControlLabel
                     value="top"
                     control={<Checkbox
-                        checked={note.displayOctave}
-                        onChange={(e) => handleNoteUpdate({displayOctave: e.target.checked})}
+                        checked={displayOctaveValue}
+                        onChange={(e) => {
+                            setDisplayOctaveValue( e.target.checked)
+                            handleNoteUpdate({displayOctave: e.target.checked})
+                        }}
                     />}
                     label={<Typography
-                        style={{color: "gray", fontSize: "small"}}>Показывать октаву</Typography>}></FormControlLabel>
+                        style={{color: "gray", fontSize: "small"}}>Показывать октаву</Typography>}/>
 
             </div>
         </Popover>

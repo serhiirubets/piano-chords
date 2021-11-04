@@ -1,51 +1,28 @@
 import {Checkbox, Divider, FormControlLabel, IconButton, TextField, Tooltip, Typography} from "@mui/material";
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {SettingsContext} from "../../context/settings-context";
 import {BarContext} from "../../context/bar-context";
 import UndoRoundedIcon from '@mui/icons-material/UndoRounded';
-import {SkeletonNodeData} from "../../model/deprecated/skeleton-node-data";
-import {SkeletonData} from "../../model/deprecated/skeleton-data";
 import {OctaveNotationSelector} from "./octave-notation-selector";
 import {StyledSlider} from "./playback-module";
+import {recalculateBarsToNewSize} from "../../utils/skeleton-node-utils";
+import {deepCopyMap} from "../../utils/js-utils";
 
 
 export const EditorHeaderPanel = () => {
     const {settings, partialUpdateSettings} = useContext(SettingsContext);
-    const {undo, bars, updateBars} = useContext(BarContext);
+    const {undo, sheets, updateSheets} = useContext(BarContext);
     const [barSize, setBarSize] = useState<number>(settings.quadratSize);
+    console.log(settings)
+    useEffect(() => {setBarSize(settings.quadratSize)})
+
     const recalculateBars = (newBarSize: number) => {
-        const rightHandCombined = new Array<SkeletonNodeData>()
-        const leftHandCombined = new Array<SkeletonNodeData>()
-        const newBars = new Array<SkeletonData>();
-
-        const chunkArray = (array: Array<SkeletonNodeData>, chunkSize: number) => {
-            return Array(Math.ceil(array.length / chunkSize)).fill(new SkeletonNodeData()).map((_, i) => array.slice(i * chunkSize, i * chunkSize + chunkSize))
-        }
-
-        const mergeIntoArray = (target, values) => {
-            for (let i = 0; i < target.length; i++) {
-                if (values[i] != undefined) {
-                    target[i] = values[i];
-                }
-            }
-        }
-
-        bars.forEach(bar => {
-            rightHandCombined.push(...bar.right);
-            leftHandCombined.push(...bar.left);
+        const updatedSheets = deepCopyMap(sheets);
+        updatedSheets.forEach((value,key)=> {
+            const updatedBars = recalculateBarsToNewSize(value.bars, newBarSize);
+            value.bars = updatedBars
         })
-
-        const rightHandChunks = chunkArray(rightHandCombined, newBarSize);
-        const leftHandChunks = chunkArray(leftHandCombined, newBarSize);
-
-        for (let i = 0; i < rightHandChunks.length; i++) {
-            const newSkeletonData = new SkeletonData(newBarSize)
-            mergeIntoArray(newSkeletonData.right, rightHandChunks[i]);
-            mergeIntoArray(newSkeletonData.left, leftHandChunks[i]);
-            newBars.push(newSkeletonData)
-        }
-
-        updateBars(newBars)
+        updateSheets(updatedSheets)
     }
 
     const handleQuadratSizeChange = (event) => {
@@ -78,14 +55,14 @@ export const EditorHeaderPanel = () => {
                         checked={settings.displayApplicature}
                         onChange={(e) => partialUpdateSettings({displayApplicature: e.target.checked})}
                     />}
-                    label={<Typography style={{fontSize: "small"}}>Aппликатурa</Typography>}></FormControlLabel>
+                    label={<Typography style={{fontSize: "small"}}>Aппликатурa</Typography>}/>
                 <Divider orientation="vertical" flexItem/>
                 <FormControlLabel
                     control={<TextField
                         variant="outlined"
                         style={{width: 50, maxWidth: 50, paddingLeft: "20px",}}
                         size="small"
-                        defaultValue={barSize}
+                        value={barSize}
                         onChange={(event) => setBarSize(Number(event.target.value))}
                         onKeyUp={(event) => handleQuadratSizeChange(event)}
                         disabled={false}/>}
@@ -93,16 +70,16 @@ export const EditorHeaderPanel = () => {
                         fontSize: "small",
                         paddingLeft: "5px",
                         paddingRight: "10px"
-                    }}>Размер <br/> квадрата</Typography>}></FormControlLabel>
+                    }}>Размер <br/> квадрата</Typography>}/>
                 <Divider orientation="vertical" flexItem/>
                 <FormControlLabel
                     style={{width: 140, maxWidth: 140, paddingLeft: "20px"}}
-                    control={<OctaveNotationSelector></OctaveNotationSelector>}
+                    control={<OctaveNotationSelector/>}
                     label={<Typography style={{
                         fontSize: "small",
                         paddingLeft: "5px",
                         paddingRight: "10px"
-                    }}> Нотация <br/> октав</Typography>}></FormControlLabel>
+                    }}> Нотация <br/> октав</Typography>}/>
                 <Divider orientation="vertical" flexItem/>
                 <Tooltip title="Отменить" placement="top">
                     <IconButton component="span" size="large">

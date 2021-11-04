@@ -20,7 +20,7 @@ export const Octaves = {
         entries: [".sk", ".k", ".b", ".m", ".1", ".2", ".3", ".4"],
         defaultOctaveLeft: ".m",
         defaultOctaveRight: ".1",
-        regexpKeys: "\.skbm1-5",
+        regexpKeys: ".skbm1-5",
         regexp: RegExp(/(\.sk|\.k|\.b|\.m|\.1|\.2|\.3|\.4|\.5)/g),
     },
     MIDI: {

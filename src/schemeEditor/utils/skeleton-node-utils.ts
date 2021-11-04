@@ -91,3 +91,38 @@ export const copySkeleton = (originalData: SkeletonData) => {
     updatedSkeletonData.triplets = [...originalData.triplets]
     return updatedSkeletonData
 }
+
+export const recalculateBarsToNewSize = (bars: SkeletonData[], newBarSize: number) => {
+    const rightHandCombined = new Array<SkeletonNodeData>()
+    const leftHandCombined = new Array<SkeletonNodeData>()
+    const newBars = new Array<SkeletonData>();
+
+    const chunkArray = (array: Array<SkeletonNodeData>, chunkSize: number) => {
+        return Array(Math.ceil(array.length / chunkSize)).fill(new SkeletonNodeData()).map((_, i) => array.slice(i * chunkSize, i * chunkSize + chunkSize))
+    }
+
+    const mergeIntoArray = (target, values) => {
+        for (let i = 0; i < target.length; i++) {
+            if (values[i] != undefined) {
+                target[i] = values[i];
+            }
+        }
+    }
+
+    bars.forEach(bar => {
+        rightHandCombined.push(...bar.right);
+        leftHandCombined.push(...bar.left);
+    })
+
+    const rightHandChunks = chunkArray(rightHandCombined, newBarSize);
+    const leftHandChunks = chunkArray(leftHandCombined, newBarSize);
+
+    for (let i = 0; i < rightHandChunks.length; i++) {
+        const newSkeletonData = new SkeletonData(newBarSize)
+        mergeIntoArray(newSkeletonData.right, rightHandChunks[i]);
+        mergeIntoArray(newSkeletonData.left, leftHandChunks[i]);
+        newBars.push(newSkeletonData)
+    }
+
+    return newBars
+}

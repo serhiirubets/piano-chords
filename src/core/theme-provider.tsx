@@ -1,11 +1,25 @@
-import { createTheme, adaptV4Theme } from '@mui/material/styles';
+import {createTheme} from '@mui/material/styles';
 
-const theme = createTheme(adaptV4Theme({
+const theme = createTheme(({
+    palette: {
+        primary: {main: "#4f5b66"}
+    },
     typography: {
         button: {
             textTransform: 'none',
-            // margin:"3px"
-        }
+        },
+        fontFamily: [
+            '-apple-system',
+            'BlinkMacSystemFont',
+            '"Segoe UI"',
+            'Roboto',
+            '"Helvetica Neue"',
+            'Arial',
+            'sans-serif',
+            '"Apple Color Emoji"',
+            '"Segoe UI Emoji"',
+            '"Segoe UI Symbol"',
+        ].join(','),
     }
 }));
 

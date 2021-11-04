@@ -35,7 +35,8 @@ export const MasteringModeGrid = () => {
     const [activeId, setActiveId] = useState(null);
 
     const addTrack = (bars?: SkeletonData[]) => {
-        const barsArray = bars || new Array<SkeletonData>(trackLength > 1 ? trackLength : 1).fill(new SkeletonData(settings.quadratSize))
+        const getRandomSkeleton = () => new SkeletonData(settings.quadratSize)
+        const barsArray = bars || [...Array(trackLength > 1 ? trackLength : 1)].map(_ => getRandomSkeleton())
         const newTrack = new SheetData(settings.quadratSize)
         newTrack.parentName = effectiveSheet
         newTrack.isTrack = true

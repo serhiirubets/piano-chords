@@ -74,7 +74,7 @@ export const BulkEditPopupMenu = ({bulkUpdateOperationChange, anchorEl, onClose}
                 </div>
                 <div style={{padding: 10, display: "flex", flexDirection: "row"}}>
                     <FormControl sx={{m: 1, minWidth: 120}}>
-                        <InputLabel id="demo-simple-select-helper-label">Октава</InputLabel>
+                        <InputLabel id="demo-simple-select-helper-label" style={{fontSize:"small"}}>Октава</InputLabel>
                         <Select
                             labelId="demo-simple-select-autowidth-label"
                             id="demo-simple-select-autowidth"
@@ -85,18 +85,19 @@ export const BulkEditPopupMenu = ({bulkUpdateOperationChange, anchorEl, onClose}
                                 setOctave(num)
                             }}
                             autoWidth
-                            MenuProps={{disablePortal:true}}
+                            MenuProps={{disablePortal:true,
+                            MenuListProps:{dense:true}}}
                             label="Октава"
                             value={octave}
                         >
-                            <MenuItem value={0} style={selectMenuStyle}><Typography fontSize="small">Субконтроктава</Typography></MenuItem>
-                            <MenuItem value={1} style={selectMenuStyle}><Typography fontSize="small">Контроктава</Typography></MenuItem>
-                            <MenuItem value={2} style={selectMenuStyle}><Typography fontSize="small">Большая</Typography></MenuItem>
-                            <MenuItem value={3} style={selectMenuStyle}><Typography fontSize="small">Малая</Typography></MenuItem>
-                            <MenuItem value={4} style={selectMenuStyle}><Typography fontSize="small">1</Typography></MenuItem>
-                            <MenuItem value={5} style={selectMenuStyle}><Typography fontSize="small">2</Typography></MenuItem>
-                            <MenuItem value={6} style={selectMenuStyle}><Typography fontSize="small">3</Typography></MenuItem>
-                            <MenuItem value={7} style={selectMenuStyle}><Typography fontSize="small">4</Typography></MenuItem>
+                            <MenuItem value={0}><Typography fontSize="small">Субконтроктава</Typography></MenuItem>
+                            <MenuItem value={1}><Typography fontSize="small">Контроктава</Typography></MenuItem>
+                            <MenuItem value={2}><Typography fontSize="small">Большая</Typography></MenuItem>
+                            <MenuItem value={3}><Typography fontSize="small">Малая</Typography></MenuItem>
+                            <MenuItem value={4}><Typography fontSize="small">1</Typography></MenuItem>
+                            <MenuItem value={5}><Typography fontSize="small">2</Typography></MenuItem>
+                            <MenuItem value={6}><Typography fontSize="small">3</Typography></MenuItem>
+                            <MenuItem value={7}><Typography fontSize="small">4</Typography></MenuItem>
                         </Select>
                     </FormControl>
                 </div>

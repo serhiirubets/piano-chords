@@ -203,13 +203,15 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
 
         indices.forEach(selectionIndex => {
             const handDataToUpdate = getSkeletonHandData(updatedSkeletonData, selectionIndex.noteHand)
-            const updatedNode = {...handDataToUpdate[selectionIndex.index]}
-            const updatedNotes = bulkUpdateFunction(updatedNode.notes)
-            updatedNode.notes = updatedNotes
-            updatedNode.originalText = getOriginalText(updatedNotes, settings.octaveNotation)
-            updatedNode.type = updatedNotes.some(note => note.noteType === NoteType.FEATHER) ? NoteType.FEATHER : NoteType.REGULAR
-            handDataToUpdate[selectionIndex.index] = updatedNode
-            setSkeletonHandData(updatedSkeletonData, handDataToUpdate, selectionIndex.noteHand);
+            if(handDataToUpdate[selectionIndex.index].isPresent){
+                const updatedNode = {...handDataToUpdate[selectionIndex.index]}
+                const updatedNotes = bulkUpdateFunction(updatedNode.notes)
+                updatedNode.notes = updatedNotes
+                updatedNode.originalText = getOriginalText(updatedNotes, settings.octaveNotation)
+                updatedNode.type = updatedNotes.some(note => note.noteType === NoteType.FEATHER) ? NoteType.FEATHER : NoteType.REGULAR
+                handDataToUpdate[selectionIndex.index] = updatedNode
+                setSkeletonHandData(updatedSkeletonData, handDataToUpdate, selectionIndex.noteHand);
+            }
         })
         updateSingleBar(skeletonIndex, updatedSkeletonData)
     }

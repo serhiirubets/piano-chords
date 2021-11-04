@@ -10,4 +10,6 @@ export const PRINTABLE_AREA_ID = "printable-area";
 // webkitAudioContext fallback needed to support Safari
 export const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 export const soundfontHostname = 'https://d1pzp51pvbm36p.cloudfront.net';
-
+export const DEFAULT_INSTRUMENT = "bright_acoustic_piano"
+export const SOUNDFONT_FORMAT = "mp3"
+export const SOUNDFONT_FONT = "MusyngKite"

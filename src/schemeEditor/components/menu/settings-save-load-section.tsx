@@ -23,15 +23,15 @@ import {DDTScheme} from "../../resources/DDT-triplets-recording";
 import {SheetData} from "../../model/deprecated/sheet-data";
 import {RefreshRounded} from "@mui/icons-material";
 import {NymphScheme} from "../../resources/Nymph-recording";
+import {Octaves} from "../../model/deprecated/octave";
 
 
 export const SettingsSaveLoadSection = () => {
     const {settings, updateSettings} = useContext(SettingsContext);
-    const {sheets, updateSheets, updateActiveSheet, isTouched} = useContext(BarContext);
+    const {sheets, updateSheets, updateActiveSheet, updateActiveSubSheet,isTouched, updateBars} = useContext(BarContext);
     const SHEETS_LOCALSTORAGE_KEY = "sheets_autosave";
     const SAVE_NAME = 'Новая блок-схема'
 
-    const [demoFile, setDemoFile] = useState('nymphetamine');
     let fileReader;
     let filename;
 
@@ -39,11 +39,7 @@ export const SettingsSaveLoadSection = () => {
     const loadFromLocalstorage = () => {
         const sheetsLocalstorageValue = localStorage.getItem(SHEETS_LOCALSTORAGE_KEY);
         if (sheetsLocalstorageValue) {
-            const memorizedScheme = (sheetsLocalstorageValue ? new Map(JSON.parse(sheetsLocalstorageValue)) : []) as Map<string, SheetData>;
-            const firstSheet = Array.from(memorizedScheme.keys())[0]
-            updateSheets(memorizedScheme)
-            updateActiveSheet(firstSheet)
-            partialUpdateSettings({quadratSize: memorizedScheme.get(firstSheet)!.bars[0].size})
+            parseSaveFileAndUpdateModel(sheetsLocalstorageValue)
         }
     }
 
@@ -54,15 +50,10 @@ export const SettingsSaveLoadSection = () => {
         if (!isTouched) {
             return;
         }
-        localStorage.setItem(SHEETS_LOCALSTORAGE_KEY, JSON.stringify(Array.from(sheets.entries())));
+        localStorage.setItem(SHEETS_LOCALSTORAGE_KEY, JSON.stringify(prepareSaveFile()));
 
 
     }, [sheets]);
-
-
-    const handleDemoSongSelection = (event: SelectChangeEvent<string>) => {
-        setDemoFile(event.target.value as string);
-    };
 
     const reloadDemoFile = (fileString) => {
         const memorizedScheme = (fileString ? new Map(JSON.parse(fileString)) : []) as Map<string, SheetData>;
@@ -79,11 +70,7 @@ export const SettingsSaveLoadSection = () => {
 
     const handleReadPersistedFile = (e) => {
         const stringifiedData = fileReader.result;
-        const memorizedScheme = (stringifiedData ? new Map(JSON.parse(stringifiedData)) : []) as Map<string, SheetData>;
-        const firstSheet = Array.from(memorizedScheme.keys()).filter(value => value !== null)[0]
-        updateSheets(memorizedScheme)
-        updateActiveSheet(firstSheet)
-        partialUpdateSettings({quadratSize: memorizedScheme.get(firstSheet)!.bars[0].size, fileName: filename})
+        parseSaveFileAndUpdateModel(stringifiedData)
     }
 
     const handleSaveFileSelected = (e) => {
@@ -96,11 +83,54 @@ export const SettingsSaveLoadSection = () => {
         fileReader.readAsText(file)
     }
 
+    const prepareSaveFile = () => {
+        const saveObject = {
+            settings:{
+                quadratSize: settings.quadratSize,
+                octaveNotation: settings.octaveNotation,
+            },
+            data: Array.from(sheets.entries())
+        }
+        console.log(saveObject)
+        return saveObject
+    }
+
+    const parseSaveFileAndUpdateModel = (stringifiedData) => {
+        const saveObject = JSON.parse(stringifiedData)
+        const partialSettings = saveObject.settings || {}
+        const barData = saveObject.data
+        const processedBarData = (barData || []).map(([key, value])=> {
+            const valueAsSheet = new SheetData(value.bars.size)
+            valueAsSheet.name = value.name;
+            valueAsSheet.parentName = value.parentName
+            valueAsSheet.bars = value.bars
+            valueAsSheet.index = value.index
+            valueAsSheet.isTrack = value.isTrack
+            return [key, value]
+        })
+
+        const restoredSheetsData = new Map(processedBarData) as Map<string, SheetData>;
+        console.log(restoredSheetsData)
+
+        const firstSheet = Array.from(restoredSheetsData.keys()).filter(value => value !== null)[0]
+        const subSheets = Array.from(restoredSheetsData.values()).filter(value => value.parentName == firstSheet)
+        const firstSubSheet = subSheets.length > 0? subSheets[0].name : null
+        console.log(firstSheet)
+        updateBars(restoredSheetsData.get(firstSheet)!.bars)
+        updateSheets(restoredSheetsData)
+        updateActiveSheet(firstSheet)
+        updateActiveSubSheet(firstSubSheet)
+        partialUpdateSettings({fileName: filename,
+            octaveNotation: partialSettings.octaveNotation || Octaves.SCIENTIFIC,
+            quadratSize: partialSettings.quadratSize || restoredSheetsData.get(firstSheet)!.bars.length
+        })
+    }
+
     return (
         <Grid container direction="column" spacing={1}>
 
             <Download file={`${SAVE_NAME}.json`}
-                      content={JSON.stringify(Array.from(sheets.entries()), null, 2)}
+                      content={JSON.stringify(prepareSaveFile(), null, 2)}
             >
                 <ListItem button key={"Save"}>
                     <ListItemIcon>

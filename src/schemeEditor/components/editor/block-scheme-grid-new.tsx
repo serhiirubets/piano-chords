@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react"
 import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
-import {Breadcrumbs, Button, Link, Snackbar, SnackbarOrigin, Typography} from "@mui/material";
+import {Button, Snackbar, SnackbarOrigin, Typography} from "@mui/material";
 import {SettingsContext} from "../../context/settings-context";
 import {QUADRAT_WIDTH} from "../../model/global-constants";
 import {
@@ -17,8 +17,6 @@ import SortableItem from "./block-scheme-grid-new-item";
 import {BarContext} from "../../context/bar-context";
 import {SkeletonData} from "../../model/deprecated/skeleton-data";
 import {getExportViewportWidth, getFlexBasisValue, getPaddingValue} from "../../utils/rendering-utils";
-import {position} from "html2canvas/dist/types/css/property-descriptors/position";
-import {opacity} from "html2canvas/dist/types/css/property-descriptors/opacity";
 
 
 export const AddMoreButton = ({onClick, opacity}) => {
@@ -31,7 +29,6 @@ export const AddMoreButton = ({onClick, opacity}) => {
         alignContent: "center",
         opacity: opacity,
         flexBasis: getFlexBasisValue(settings.quadratSize, settings.isExportingInProgress, settings.isMenuOpen),
-        // display: "none"
     }}>
         <Button variant="outlined" key="addNewSkeletonButton"
                 style={{
@@ -88,22 +85,6 @@ export const BlockSchemeGridNew = () => {
 
     return (
         <div ref={settings.editorElementRef} style={{height: "100%", position: "relative"}}>
-            {/*{activeTrack && <div style={{*/}
-            {/*    position: "absolute",*/}
-            {/*    top: "5",*/}
-            {/*    left: "5",*/}
-            {/*    display:"flex",*/}
-            {/*    flexDirection:"row"*/}
-            {/*}}>*/}
-            {/*    <Snackbar*/}
-            {/*        open={state.open}*/}
-            {/*        onClose={handleClose}*/}
-            {/*        TransitionComponent={state.Transition}*/}
-            {/*        message="I love snacks"*/}
-            {/*        key={state.Transition.name}*/}
-            {/*    />*/}
-            {/*</div>*/}
-            {/*}*/}
             <Snackbar
                 anchorOrigin={{
                     vertical: 'bottom',
@@ -144,7 +125,6 @@ export const BlockSchemeGridNew = () => {
                             <SortableItem key={data.id} id={data.id} handle={true} value={data} idx={index}
                                           sheetName={editableSheetName}/>
                         ))}
-
                         <AddMoreButton onClick={() => {
                             updateBars
                             ([

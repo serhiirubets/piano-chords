@@ -1,7 +1,9 @@
 import {SkeletonData} from "./skeleton-data";
 
 export class SheetData {
-    constructor(private barsize) {}
+    constructor(private barsize) {
+        this.barsize = barsize;
+    }
 
     public name;
     public index;

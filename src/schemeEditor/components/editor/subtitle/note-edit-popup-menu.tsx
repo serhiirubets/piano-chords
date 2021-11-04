@@ -1,8 +1,8 @@
 /** @jsx jsx */
 import React, {useState} from "react";
 import {jsx} from "@emotion/react/macro";
-import {INote, Note, NoteType} from "../../../model/note-data";
-import {HandType} from "../../../model/deprecated/skeleton-data";
+import {INote, Note, NoteType} from "../../../../model/note-data";
+import {HandType} from "../../../../model/deprecated/skeleton-data";
 import {Checkbox, FormControlLabel, Popover, TextField, Typography} from "@mui/material";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import {FeatherSwitch} from "./feather-switch";

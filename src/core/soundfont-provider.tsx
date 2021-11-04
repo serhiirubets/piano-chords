@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import Soundfont, {Player} from "soundfont-player";
-import {SOUNDFONT_FONT, SOUNDFONT_FORMAT} from "../../schemeEditor/model/global-constants";
+import {SOUNDFONT_FONT, SOUNDFONT_FORMAT} from "../model/global-constants";
 
 export const SoundfontProvider = ({
                                       instrumentName,

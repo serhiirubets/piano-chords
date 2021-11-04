@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {INote, Note, NoteType} from "../../model/note-data";
+import {INote, Note, NoteType} from "../../../model/note-data";
 import {
     Button,
     Checkbox, FormControl,

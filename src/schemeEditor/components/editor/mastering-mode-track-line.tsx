@@ -1,23 +1,23 @@
 import React, {useContext, useEffect, useState} from "react"
 import {Button, ListItemText, Menu, MenuItem, MenuList, TextField, ToggleButton, Typography} from "@mui/material";
-import {SettingsContext} from "../../context/settings-context";
-import {QUADRAT_WIDTH} from "../../model/global-constants";
+import {SettingsContext} from "../../../context/settings-context";
+import {QUADRAT_WIDTH} from "../../../model/global-constants";
 import {closestCenter, DndContext, DragOverlay, PointerSensor, useSensor, useSensors} from "@dnd-kit/core";
 import {arrayMove, rectSortingStrategy, SortableContext, useSortable} from '@dnd-kit/sortable'
 import SortableItem from "./block-scheme-grid-new-item";
-import {BarContext} from "../../context/bar-context";
-import {SkeletonData} from "../../model/deprecated/skeleton-data";
+import {BarContext} from "../../../context/bar-context";
+import {SkeletonData} from "../../../model/deprecated/skeleton-data";
 import {restrictToHorizontalAxis} from "@dnd-kit/modifiers";
 import {AddMoreButton} from "./block-scheme-grid-new";
-import {SheetData} from "../../model/deprecated/sheet-data";
+import {SheetData} from "../../../model/deprecated/sheet-data";
 import {ScrollSyncPane} from 'react-scroll-sync';
 import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded';
 import VolumeMuteRoundedIcon from '@mui/icons-material/VolumeMuteRounded';
-import {deepCopy, deepCopyMap} from "../../utils/js-utils";
+import {deepCopy, deepCopyMap} from "../../../utils/js-utils";
 import {CSS} from "@dnd-kit/utilities";
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import {PlaybackModule} from "../menu/playback-module";
-import {getQuadratNodeDimension} from "../../utils/rendering-utils";
+import {getQuadratNodeDimension} from "../../../utils/rendering-utils";
 
 const MasteringLineHeader = ({trackName, dragListeners, dragAttributes}) => {
     const {updateActiveTrack, sheets, activeSheet, activeSubSheet, updateSheets} = useContext(BarContext);

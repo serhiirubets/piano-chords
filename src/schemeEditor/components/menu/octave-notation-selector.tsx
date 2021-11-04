@@ -12,10 +12,10 @@ import {
     MenuItem,
     Tooltip
 } from "@mui/material";
-import {SettingsContext} from "../../context/settings-context";
-import {OctaveNotation, Octaves} from "../../model/deprecated/octave";
-import {BarContext} from "../../context/bar-context";
-import {deepCopy} from "../../utils/js-utils";
+import {SettingsContext} from "../../../context/settings-context";
+import {OctaveNotation, Octaves} from "../../../model/deprecated/octave";
+import {BarContext} from "../../../context/bar-context";
+import {deepCopy} from "../../../utils/js-utils";
 
 const OctaveTooltip = ({octaveNotations}) => {
     const notations = octaveNotations.split(',')

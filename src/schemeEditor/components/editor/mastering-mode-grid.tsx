@@ -2,15 +2,15 @@ import React, {useContext, useEffect, useState} from "react"
 import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
 import {Button, Typography} from "@mui/material";
 import {ScrollSync} from 'react-scroll-sync';
-import {BarContext} from "../../context/bar-context";
+import {BarContext} from "../../../context/bar-context";
 import {MasteringModeTrackLine} from "./mastering-mode-track-line";
-import {SheetData} from "../../model/deprecated/sheet-data";
+import {SheetData} from "../../../model/deprecated/sheet-data";
 import {closestCenter, DndContext, DragOverlay, PointerSensor, useSensor, useSensors} from "@dnd-kit/core";
 import {SortableContext, verticalListSortingStrategy} from "@dnd-kit/sortable";
 import {handleSheetsDragNDrop} from "../tabpanel/tab-panel";
-import {deepCopy, deepCopyMap} from "../../utils/js-utils";
-import {SkeletonData} from "../../model/deprecated/skeleton-data";
-import {SettingsContext} from "../../context/settings-context";
+import {deepCopy, deepCopyMap} from "../../../utils/js-utils";
+import {SkeletonData} from "../../../model/deprecated/skeleton-data";
+import {SettingsContext} from "../../../context/settings-context";
 
 
 export const MasteringModeGrid = () => {

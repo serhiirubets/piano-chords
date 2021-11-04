@@ -1,4 +1,4 @@
-import {TripletHandlingProps} from "../components/editor/skeleton";
+import {TripletHandlingProps} from "../schemeEditor/components/editor/skeleton";
 import {PlaybackDuration} from "../model/note-data";
 import {HandType, TripletData} from "../model/deprecated/skeleton-data";
 import {SelectionIndex} from "../model/selection/selection-index";

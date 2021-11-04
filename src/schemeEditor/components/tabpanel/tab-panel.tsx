@@ -2,10 +2,10 @@ import React, {useContext, useState} from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import {BarContext} from "../../context/bar-context";
-import {SheetData} from "../../model/deprecated/sheet-data";
+import {BarContext} from "../../../context/bar-context";
+import {SheetData} from "../../../model/deprecated/sheet-data";
 import {TabElement} from "./tab-element";
-import {deepCopy, deepCopyMap} from "../../utils/js-utils";
+import {deepCopy, deepCopyMap} from "../../../utils/js-utils";
 import {Divider} from "@mui/material";
 import {
     closestCenter,
@@ -21,7 +21,7 @@ import {CSS} from "@dnd-kit/utilities";
 
 import {restrictToHorizontalAxis, restrictToWindowEdges,} from '@dnd-kit/modifiers';
 import {settings} from "cluster";
-import {SettingsContext} from "../../context/settings-context";
+import {SettingsContext} from "../../../context/settings-context";
 
 interface TabPanelProps {
     children?: React.ReactNode;

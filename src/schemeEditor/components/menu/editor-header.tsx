@@ -3,7 +3,7 @@ import createStyles from '@mui/styles/createStyles';
 import makeStyles from '@mui/styles/makeStyles';
 import withStyles from '@mui/styles/withStyles';
 import React, {useContext} from "react";
-import {SettingsContext} from "../../context/settings-context";
+import {SettingsContext} from "../../../context/settings-context";
 import {HelpDialog} from "../help-screen-short";
 import {useGlobalStyles} from "../../../App";
 import MenuIcon from '@mui/icons-material/Menu';

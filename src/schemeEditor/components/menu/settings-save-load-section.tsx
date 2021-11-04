@@ -16,14 +16,14 @@ import PublishRoundedIcon from "@mui/icons-material/PublishRounded";
 import PlaylistPlayRoundedIcon from "@mui/icons-material/PlaylistPlayRounded";
 import React, {useContext, useEffect, useState} from "react";
 import Download from '@axetroy/react-download';
-import {SettingsContext} from "../../context/settings-context";
-import {EditorSettings} from "../../model/editor-settings-data";
-import {BarContext} from "../../context/bar-context";
+import {SettingsContext} from "../../../context/settings-context";
+import {EditorSettings} from "../../../model/editor-settings-data";
+import {BarContext} from "../../../context/bar-context";
 import {DDTScheme} from "../../resources/DDT-triplets-recording";
-import {SheetData} from "../../model/deprecated/sheet-data";
+import {SheetData} from "../../../model/deprecated/sheet-data";
 import {RefreshRounded} from "@mui/icons-material";
 import {NymphScheme} from "../../resources/Nymph-recording";
-import {Octaves} from "../../model/deprecated/octave";
+import {Octaves} from "../../../model/deprecated/octave";
 
 
 export const SettingsSaveLoadSection = () => {

@@ -1,12 +1,12 @@
 import {Checkbox, Divider, FormControlLabel, IconButton, TextField, Tooltip, Typography} from "@mui/material";
 import React, {useContext, useEffect, useState} from "react";
-import {SettingsContext} from "../../context/settings-context";
-import {BarContext} from "../../context/bar-context";
+import {SettingsContext} from "../../../context/settings-context";
+import {BarContext} from "../../../context/bar-context";
 import UndoRoundedIcon from '@mui/icons-material/UndoRounded';
 import {OctaveNotationSelector} from "./octave-notation-selector";
 import {StyledSlider} from "./playback-module";
-import {recalculateBarsToNewSize} from "../../utils/skeleton-node-utils";
-import {deepCopyMap} from "../../utils/js-utils";
+import {recalculateBarsToNewSize} from "../../../utils/skeleton-node-utils";
+import {deepCopyMap} from "../../../utils/js-utils";
 
 
 export const EditorHeaderPanel = () => {

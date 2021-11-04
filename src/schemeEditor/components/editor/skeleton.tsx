@@ -2,21 +2,21 @@
 import React, {useCallback, useContext, useState} from "react";
 import {css, jsx} from "@emotion/react/macro";
 import {SkeletonNode} from "./skeleton-node";
-import {BarContext} from "../../context/bar-context";
-import {HandType, TripletData} from "../../model/deprecated/skeleton-data";
-import {INote, Note, NoteType} from "../../model/note-data";
-import {SkeletonNodeData} from "../../model/deprecated/skeleton-node-data";
+import {BarContext} from "../../../context/bar-context";
+import {HandType, TripletData} from "../../../model/deprecated/skeleton-data";
+import {INote, Note, NoteType} from "../../../model/note-data";
+import {SkeletonNodeData} from "../../../model/deprecated/skeleton-node-data";
 import {NodeSubtitle} from "./node-subtitle";
-import {getMidiNumber} from "../../utils/playback-utils";
+import {getMidiNumber} from "../../../utils/playback-utils";
 import {ClickAwayListener, Divider, ListItemText, Menu, MenuItem, MenuList} from "@mui/material";
-import {deepCopy, distinct} from "../../utils/js-utils";
-import {getTripletByIndex, getTripletDurationByIndex, isPartOfTriplet} from "../../utils/triplet-utils";
+import {deepCopy, distinct} from "../../../utils/js-utils";
+import {getTripletByIndex, getTripletDurationByIndex, isPartOfTriplet} from "../../../utils/triplet-utils";
 import {BulkEditPopupMenu} from "./bulk-edit-popup-menu";
-import {SettingsContext} from "../../context/settings-context";
-import {copySkeleton, getOriginalText, getSkeletonHandData, setSkeletonHandData} from "../../utils/skeleton-node-utils";
-import {SelectionIndex} from "../../model/selection/selection-index";
-import {getIndicesLengthAndMinPosition, getPositionRelativeToSelectionStart} from "../../utils/selection-buffer-utils";
-import {SheetData} from "../../model/deprecated/sheet-data";
+import {SettingsContext} from "../../../context/settings-context";
+import {copySkeleton, getOriginalText, getSkeletonHandData, setSkeletonHandData} from "../../../utils/skeleton-node-utils";
+import {SelectionIndex} from "../../../model/selection/selection-index";
+import {getIndicesLengthAndMinPosition, getPositionRelativeToSelectionStart} from "../../../utils/selection-buffer-utils";
+import {SheetData} from "../../../model/deprecated/sheet-data";
 
 export enum NodeSelectionMode {
     NONE = "0000",

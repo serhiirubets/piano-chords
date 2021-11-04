@@ -1,14 +1,14 @@
 import {Slider, styled} from "@mui/material";
 import React, {useContext} from "react";
-import {SettingsContext} from "../../context/settings-context";
-import {SoundfontProvider} from "../../../components/piano-core/SoundfontProvider";
-import {audioContext, DEFAULT_INSTRUMENT, soundfontHostname} from "../../model/global-constants";
+import {SettingsContext} from "../../../context/settings-context";
+import {SoundfontProvider} from "../../../core/soundfont-provider";
+import {audioContext, DEFAULT_INSTRUMENT, soundfontHostname} from "../../../model/global-constants";
 import IconButton from "@mui/material/IconButton";
-import {collectBarsToPlay, getNotesToPlay, playNotes} from "../../utils/playback-utils";
+import {collectBarsToPlay, getNotesToPlay, playNotes} from "../../../utils/playback-utils";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import StopRoundedIcon from "@mui/icons-material/StopRounded";
-import {BarContext} from "../../context/bar-context";
-import {SkeletonData} from "../../model/deprecated/skeleton-data";
+import {BarContext} from "../../../context/bar-context";
+import {SkeletonData} from "../../../model/deprecated/skeleton-data";
 
 export interface PlaybackModuleProps {
     iconColor?: string;

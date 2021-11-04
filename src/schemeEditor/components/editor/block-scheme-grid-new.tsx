@@ -1,8 +1,8 @@
 import React, {useContext, useEffect, useState} from "react"
 import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
 import {Button, Snackbar, SnackbarOrigin, Typography} from "@mui/material";
-import {SettingsContext} from "../../context/settings-context";
-import {QUADRAT_WIDTH} from "../../model/global-constants";
+import {SettingsContext} from "../../../context/settings-context";
+import {QUADRAT_WIDTH} from "../../../model/global-constants";
 import {
     closestCenter,
     DndContext,
@@ -14,9 +14,9 @@ import {
 } from "@dnd-kit/core";
 import {arrayMove, rectSortingStrategy, SortableContext, sortableKeyboardCoordinates} from '@dnd-kit/sortable'
 import SortableItem from "./block-scheme-grid-new-item";
-import {BarContext} from "../../context/bar-context";
-import {SkeletonData} from "../../model/deprecated/skeleton-data";
-import {getExportViewportWidth, getFlexBasisValue, getPaddingValue} from "../../utils/rendering-utils";
+import {BarContext} from "../../../context/bar-context";
+import {SkeletonData} from "../../../model/deprecated/skeleton-data";
+import {getExportViewportWidth, getFlexBasisValue, getPaddingValue} from "../../../utils/rendering-utils";
 
 
 export const AddMoreButton = ({onClick, opacity}) => {

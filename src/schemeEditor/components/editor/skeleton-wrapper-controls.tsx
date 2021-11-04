@@ -7,7 +7,7 @@ import FileCopyRoundedIcon from '@mui/icons-material/FileCopyRounded';
 import OpenWithRoundedIcon from '@mui/icons-material/OpenWithRounded';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import StopRoundedIcon from '@mui/icons-material/StopRounded';
-import {DRAGGABLE_CLASSNAME} from "../../model/global-constants";
+import {DRAGGABLE_CLASSNAME} from "../../../model/global-constants";
 
 export interface BlockSchemeSkeletonWrapperProps {
     id: string,

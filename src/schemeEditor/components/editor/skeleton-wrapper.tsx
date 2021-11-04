@@ -2,13 +2,13 @@ import React, {useContext, useState} from "react";
 import {v4 as uuid} from 'uuid';
 import {Skeleton} from "./skeleton";
 import {SkeletonWrapperControls} from "./skeleton-wrapper-controls";
-import {audioContext, DEFAULT_INSTRUMENT, QUADRAT_WIDTH, soundfontHostname} from "../../model/global-constants";
-import {SoundfontProvider} from "../../../components/piano-core/SoundfontProvider";
-import {getNotesToPlay, playNotes} from "../../utils/playback-utils";
-import {SettingsContext} from "../../context/settings-context";
-import {BarContext} from "../../context/bar-context";
-import {deepCopy} from "../../utils/js-utils";
-import {getQuadratNodeDimension} from "../../utils/rendering-utils";
+import {audioContext, DEFAULT_INSTRUMENT, QUADRAT_WIDTH, soundfontHostname} from "../../../model/global-constants";
+import {SoundfontProvider} from "../../../core/soundfont-provider";
+import {getNotesToPlay, playNotes} from "../../../utils/playback-utils";
+import {SettingsContext} from "../../../context/settings-context";
+import {BarContext} from "../../../context/bar-context";
+import {deepCopy} from "../../../utils/js-utils";
+import {getQuadratNodeDimension} from "../../../utils/rendering-utils";
 
 export interface BlockSchemeSkeletonWrapperProps {
     index: number;

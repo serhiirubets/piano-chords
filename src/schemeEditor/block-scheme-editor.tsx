@@ -1,6 +1,6 @@
 import React, {useContext} from "react"
 import {SettingsPanel} from "./components/menu/settings-panel";
-import {SettingsContext} from "./context/settings-context";
+import {SettingsContext} from "../context/settings-context";
 import {BlockSchemeWhitePage} from "./block-scheme-page";
 import {styled, useTheme} from '@mui/material/styles';
 import Box from '@mui/material/Box';

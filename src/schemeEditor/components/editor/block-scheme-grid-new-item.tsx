@@ -1,10 +1,10 @@
 import React, {useContext} from "react";
 import {useSortable} from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
-import {getFlexBasisValue} from "../../utils/rendering-utils";
-import {SettingsContext} from "../../context/settings-context";
+import {getFlexBasisValue} from "../../../utils/rendering-utils";
+import {SettingsContext} from "../../../context/settings-context";
 import {SkeletonWrapper} from "./skeleton-wrapper";
-import {QUADRAT_WIDTH} from "../../model/global-constants";
+import {QUADRAT_WIDTH} from "../../../model/global-constants";
 
 const SortableItem = (props) => {
     const {settings} = useContext(SettingsContext)

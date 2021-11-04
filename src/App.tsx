@@ -4,8 +4,8 @@ import theme from "./core/theme-provider";
 import {StyledEngineProvider, Theme, ThemeProvider,} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import {BlockSchemeEditor} from "./schemeEditor/block-scheme-editor";
-import {BarContextProvider} from "./schemeEditor/context/bar-context";
-import {SettingsContextProvider} from "./schemeEditor/context/settings-context";
+import {BarContextProvider} from "./context/bar-context";
+import {SettingsContextProvider} from "./context/settings-context";
 
 
 declare module '@mui/styles/defaultTheme' {

@@ -1,19 +1,19 @@
 /** @jsx jsx */
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {css, jsx} from "@emotion/react/macro";
-import {getDotWidth, getSmallDotWidth} from "../../model/global-constants";
-import {SkeletonNodeData} from "../../model/deprecated/skeleton-node-data";
+import {getDotWidth, getSmallDotWidth} from "../../../model/global-constants";
+import {SkeletonNodeData} from "../../../model/deprecated/skeleton-node-data";
 import {TextField} from "@mui/material";
-import {HandType} from "../../model/deprecated/skeleton-data";
-import {Note, PlaybackDuration, PlaybackOffset} from "../../model/note-data";
-import {SettingsContext} from "../../context/settings-context";
-import {getEffectiveNodeColor, getOriginalText} from "../../utils/skeleton-node-utils";
+import {HandType} from "../../../model/deprecated/skeleton-data";
+import {Note, PlaybackDuration, PlaybackOffset} from "../../../model/note-data";
+import {SettingsContext} from "../../../context/settings-context";
+import {getEffectiveNodeColor, getOriginalText} from "../../../utils/skeleton-node-utils";
 import {NodeSelectionMode, TripletHandlingProps} from "./skeleton";
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
-import {groupBy} from "../../utils/js-utils";
-import {getTripletEffectiveParameters} from "../../utils/triplet-utils";
-import {OctaveNotation, parseOctaveNotationToScientific} from "../../model/deprecated/octave";
-import {getQuadratNodeDimension} from "../../utils/rendering-utils";
+import {groupBy} from "../../../utils/js-utils";
+import {getTripletEffectiveParameters} from "../../../utils/triplet-utils";
+import {OctaveNotation, parseOctaveNotationToScientific} from "../../../model/deprecated/octave";
+import {getQuadratNodeDimension} from "../../../utils/rendering-utils";
 
 const NOTES_REGEX = /a-gmA-G#\s\/:/
 const SIXTEENS_SEPARATOR = '/'

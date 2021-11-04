@@ -5,7 +5,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Accordion from "@mui/material/Accordion";
 import React, {useContext} from "react";
 import {useGlobalStyles} from "../../../App";
-import {SettingsContext} from "../../context/settings-context";
+import {SettingsContext} from "../../../context/settings-context";
 import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded";
 import {PlaybackModule} from "./playback-module";
 

@@ -1,7 +1,7 @@
 import React, {useContext} from "react"
-import {SettingsPanel} from "./components/menu/settings-panel";
+import {SettingsPanel} from "./menu/settings-panel";
 import {SettingsContext} from "../context/settings-context";
-import {BlockSchemeWhitePage} from "./block-scheme-page";
+import {BlockSchemeEditorPage} from "./block-scheme-page";
 import {styled, useTheme} from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -121,7 +121,7 @@ export const BlockSchemeEditor = () => {
                         <Main open={open}>
                             <DrawerHeader/>
                             <Box
-                                style={{width: open ? `calc(100% - ${drawerWidth}px)` : "100%"}}><BlockSchemeWhitePage/>
+                                style={{width: open ? `calc(100% - ${drawerWidth}px)` : "100%"}}><BlockSchemeEditorPage/>
                             </Box>
                         </Main>
                         <Drawer

@@ -1,4 +1,4 @@
-import {SkeletonNodeData, IBlockSchemeNodeData} from "./skeleton-node-data";
+import {SkeletonNodeData} from "./skeleton-node-data";
 import {v4 as uuid} from 'uuid';
 
 export class SkeletonData {

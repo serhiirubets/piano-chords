@@ -1,20 +1,18 @@
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {Checkbox, FormControlLabel, ListItem, ListItemIcon, ListItemText, Slider, Typography} from "@mui/material";
+import {Checkbox, FormControlLabel, ListItem, ListItemText, Slider, Typography} from "@mui/material";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Accordion from "@mui/material/Accordion";
 import React, {useContext} from "react";
-import {useGlobalStyles} from "../../../App";
-import {SettingsContext} from "../../../context/settings-context";
+import {SettingsContext} from "../../context/settings-context";
 import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded";
-import {PlaybackModule} from "./playback-module";
+import {PlaybackModule} from "../reusable/playback-module";
 
 export interface SaveLoadSettingsPanelProps {
 }
 
 export const SettingsPlaybackSection = () => {
     const {settings, partialUpdateSettings} = useContext(SettingsContext);
-    const classes = useGlobalStyles();
 
     const handleNoteDurationChange = (event: any, newValue: number | number[]) => {
         partialUpdateSettings({playbackTempo: (newValue as number) * -1});
@@ -30,10 +28,10 @@ export const SettingsPlaybackSection = () => {
             </ListItem>
         </AccordionSummary>
         <AccordionDetails>
-            <div className={classes.cardRow}>
-                <div className={classes.cardColumn}>
+            <div style={{display: "flex", flexDirection: "row"}}>
+                <div style={{display: "flex", flexDirection: "column"}}>
                     <div style={{display: "flex", flexDirection: "row"}}>
-                        <SpeedRoundedIcon></SpeedRoundedIcon>
+                        <SpeedRoundedIcon/>
                         <Typography id="discrete-slider" gutterBottom>
                             Темп
                         </Typography>
@@ -54,7 +52,7 @@ export const SettingsPlaybackSection = () => {
                             checked={settings.alterGainForFeather}
                             onChange={(e) => partialUpdateSettings({alterGainForFeather: e.target.checked})}
                         />}
-                        label="Различать оперение по громкости"></FormControlLabel>
+                        label="Различать оперение по громкости"/>
                 </div>
             </div>
 

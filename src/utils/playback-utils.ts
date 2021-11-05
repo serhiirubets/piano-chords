@@ -47,7 +47,7 @@ export const getMidiNumber = (noteData: INote) => {
 }
 
 export const getNoteRoot = (note: string) => {
-    return note.length == 2 ? note.substr(0, 1) : note;
+    return note.length === 2 ? note.substr(0, 1) : note;
 }
 
 

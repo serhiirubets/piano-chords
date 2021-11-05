@@ -1,14 +1,13 @@
-import React, {useContext, useEffect, useState} from "react"
+import React, {useContext, useState} from "react"
 import {Button, ListItemText, Menu, MenuItem, MenuList, TextField, ToggleButton, Typography} from "@mui/material";
-import {SettingsContext} from "../../../context/settings-context";
-import {QUADRAT_WIDTH} from "../../../model/global-constants";
+import {SettingsContext} from "../../context/settings-context";
 import {closestCenter, DndContext, DragOverlay, PointerSensor, useSensor, useSensors} from "@dnd-kit/core";
 import {arrayMove, rectSortingStrategy, SortableContext, useSortable} from '@dnd-kit/sortable'
-import SortableItem from "./block-scheme-grid-new-item";
-import {BarContext} from "../../../context/bar-context";
+import BlockSchemeGridItem from "./block-scheme-grid-item";
+import {BarContext} from "../../context/bar-context";
 import {SkeletonData} from "../../../model/skeleton-entities-data/skeleton-data";
 import {restrictToHorizontalAxis} from "@dnd-kit/modifiers";
-import {AddMoreButton} from "./block-scheme-grid-new";
+import {AddMoreButton} from "./block-scheme-grid";
 import {SheetData} from "../../../model/skeleton-entities-data/sheet-data";
 import {ScrollSyncPane} from 'react-scroll-sync';
 import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded';
@@ -16,7 +15,7 @@ import VolumeMuteRoundedIcon from '@mui/icons-material/VolumeMuteRounded';
 import {deepCopy, deepCopyMap} from "../../../utils/js-utils";
 import {CSS} from "@dnd-kit/utilities";
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import {PlaybackModule} from "../menu/playback-module";
+import {PlaybackModule} from "../reusable/playback-module";
 import {getQuadratNodeDimension} from "../../../utils/rendering-utils";
 
 const MasteringLineHeader = ({trackName, dragListeners, dragAttributes}) => {
@@ -63,11 +62,9 @@ const MasteringLineHeader = ({trackName, dragListeners, dragAttributes}) => {
     const handleRename = () => {
         const activeTrackSheet = sheets.get(trackName);
         if (activeTrackSheet) {
-            console.log('updatedName')
             const updatedFullName = (activeSubSheet || activeSheet) + " # " + updatedName;
             const updatedSheet = deepCopy(activeTrackSheet);
             updatedSheet.name = updatedFullName;
-            console.log('updated sheet', updatedFullName)
             storeSheetInState(trackName, updatedSheet)
             updateActiveTrack(updatedFullName)
         }
@@ -204,7 +201,7 @@ export const MasteringModeTrackLine = (props) => {
     const {trackName, isAddMoreDisplayed} = props;
     const {updateBars, updateActiveTrack, sheets, activeTrack} = useContext(BarContext);
     const {settings} = useContext(SettingsContext)
-    const bars = (sheets.get(trackName) || new SheetData(settings.quadratSize)).bars
+    const bars = (sheets.get(trackName) || new SheetData(settings.barSize)).bars
     const barIds = bars.map(data => data.id);
 
     const [activeId, setActiveId] = useState(null);
@@ -279,13 +276,12 @@ export const MasteringModeTrackLine = (props) => {
                     }}>
                         <SortableContext items={bars} strategy={rectSortingStrategy}>
                             {bars.map((data, index) => (
-                                <SortableItem key={data.id} id={data.id} handle={true} value={data} idx={index}
-                                              sheetName={trackName}/>
+                                <BlockSchemeGridItem key={data.id} id={data.id} handle={true} value={data} idx={index}
+                                                     sheetName={trackName}/>
                             ))}
                             {isAddMoreDisplayed &&
                             <AddMoreButton onClick={() => {
-                                console.log('updating bars', trackName)
-                                updateBars([...bars, new SkeletonData(settings.quadratSize)])
+                                updateBars([...bars, new SkeletonData(settings.barSize)])
                             }}
                                            opacity={settings.isExportingInProgress ? 0 : 100}/>
                             }
@@ -294,7 +290,7 @@ export const MasteringModeTrackLine = (props) => {
                                     <div
                                         style={{
                                             height: 284,
-                                            width: getQuadratNodeDimension(settings.isMasteringMode).quadratWidth * settings.quadratSize,
+                                            width: getQuadratNodeDimension(settings.isMasteringMode).quadratWidth * settings.barSize,
                                             backgroundColor: "silver",
                                             opacity: "50%"
                                         }}

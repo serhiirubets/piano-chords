@@ -7,8 +7,8 @@ import {getOctaveNotationFromScientific, OctaveNotation} from "../model/skeleton
 
 export const getEffectiveNodeColor = (data: SkeletonNodeData, isHostingTriplet: boolean) => {
     return isHostingTriplet ? "yellow" :
-        data.hand == HandType.LEFT ? "green" :
-            data.type == NoteType.FEATHER ? "#2196f3" : "red";
+        data.hand === HandType.LEFT ? "green" :
+            data.type === NoteType.FEATHER ? "#2196f3" : "red";
 }
 
 export const getAllMidiNumbers = (data: SkeletonNodeData) => {
@@ -103,7 +103,7 @@ export const recalculateBarsToNewSize = (bars: SkeletonData[], newBarSize: numbe
 
     const mergeIntoArray = (target, values) => {
         for (let i = 0; i < target.length; i++) {
-            if (values[i] != undefined) {
+            if (values[i] !== undefined) {
                 target[i] = values[i];
             }
         }

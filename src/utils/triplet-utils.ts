@@ -1,6 +1,6 @@
-import {TripletHandlingProps} from "../schemeEditor/components/editor/skeleton";
+import {TripletHandlingProps} from "../components/editor/skeleton-entities/skeleton";
 import {PlaybackDuration} from "../model/skeleton-entities-data/note-data";
-import {HandType, TripletData} from "../model/skeleton-entities-data/skeleton-data";
+import {TripletData} from "../model/skeleton-entities-data/skeleton-data";
 import {SelectionIndex} from "../model/selection/selection-index";
 
 export const getTripletEffectiveParameters = (tripletProps: TripletHandlingProps) => {

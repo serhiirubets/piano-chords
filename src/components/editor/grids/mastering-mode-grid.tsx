@@ -2,15 +2,15 @@ import React, {useContext, useEffect, useState} from "react"
 import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
 import {Button, Typography} from "@mui/material";
 import {ScrollSync} from 'react-scroll-sync';
-import {BarContext} from "../../../context/bar-context";
+import {BarContext} from "../../context/bar-context";
 import {MasteringModeTrackLine} from "./mastering-mode-track-line";
 import {SheetData} from "../../../model/skeleton-entities-data/sheet-data";
 import {closestCenter, DndContext, DragOverlay, PointerSensor, useSensor, useSensors} from "@dnd-kit/core";
 import {SortableContext, verticalListSortingStrategy} from "@dnd-kit/sortable";
-import {handleSheetsDragNDrop} from "../tabpanel/tab-panel";
+import {handleSheetsDragNDrop} from "../editor-header/tab-panel";
 import {deepCopy, deepCopyMap} from "../../../utils/js-utils";
 import {SkeletonData} from "../../../model/skeleton-entities-data/skeleton-data";
-import {SettingsContext} from "../../../context/settings-context";
+import {SettingsContext} from "../../context/settings-context";
 
 
 export const MasteringModeGrid = () => {
@@ -20,10 +20,11 @@ export const MasteringModeGrid = () => {
     const tracks = Array.from(sheets.entries()).filter(([key, value]) => value.parentName === effectiveSheet && value.isTrack).map(([key, value]) => value).sort((a, b) => a.index - b.index)
 
     const [trackLength, setTrackLength] = useState(0)
+
     useEffect(() => {
         const maxLength = Math.max(...tracks.map(track => track.bars.length))
         setTrackLength(maxLength)
-    }, [sheets])
+    }, [sheets,tracks])
 
     useEffect(() => {
         const effectiveSheetData = sheets.get(effectiveSheet)
@@ -35,9 +36,9 @@ export const MasteringModeGrid = () => {
     const [activeId, setActiveId] = useState(null);
 
     const addTrack = (bars?: SkeletonData[]) => {
-        const getRandomSkeleton = () => new SkeletonData(settings.quadratSize)
+        const getRandomSkeleton = () => new SkeletonData(settings.barSize)
         const barsArray = bars || [...Array(trackLength > 1 ? trackLength : 1)].map(_ => getRandomSkeleton())
-        const newTrack = new SheetData(settings.quadratSize)
+        const newTrack = new SheetData(settings.barSize)
         newTrack.parentName = effectiveSheet
         newTrack.isTrack = true
         newTrack.isMuted = false
@@ -54,7 +55,7 @@ export const MasteringModeGrid = () => {
         const updatedSheets = deepCopyMap(sheets)
         tracks.forEach(original => {
             const updatedTrack = deepCopy(original)
-            updatedTrack.bars = [...original.bars, new SkeletonData(settings.quadratSize)]
+            updatedTrack.bars = [...original.bars, new SkeletonData(settings.barSize)]
             updatedSheets.delete(original.name)
             updatedSheets.set(original.name, updatedTrack)
         })

@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from "react"
 import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
 import {Button, Snackbar, SnackbarOrigin, Typography} from "@mui/material";
-import {SettingsContext} from "../../../context/settings-context";
+import {SettingsContext} from "../../context/settings-context";
 import {QUADRAT_WIDTH} from "../../../model/global-constants";
 import {
     closestCenter,
@@ -13,8 +13,8 @@ import {
     useSensors
 } from "@dnd-kit/core";
 import {arrayMove, rectSortingStrategy, SortableContext, sortableKeyboardCoordinates} from '@dnd-kit/sortable'
-import SortableItem from "./block-scheme-grid-new-item";
-import {BarContext} from "../../../context/bar-context";
+import BlockSchemeGridItem from "./block-scheme-grid-item";
+import {BarContext} from "../../context/bar-context";
 import {SkeletonData} from "../../../model/skeleton-entities-data/skeleton-data";
 import {getExportViewportWidth, getFlexBasisValue, getPaddingValue} from "../../../utils/rendering-utils";
 
@@ -28,12 +28,12 @@ export const AddMoreButton = ({onClick, opacity}) => {
         alignItems: "center",
         alignContent: "center",
         opacity: opacity,
-        flexBasis: getFlexBasisValue(settings.quadratSize, settings.isExportingInProgress, settings.isMenuOpen),
+        flexBasis: getFlexBasisValue(settings.barSize, settings.isExportingInProgress, settings.isMenuOpen),
     }}>
         <Button variant="outlined" key="addNewSkeletonButton"
                 style={{
                     height: 284,
-                    width: QUADRAT_WIDTH * settings.quadratSize,
+                    width: QUADRAT_WIDTH * settings.barSize,
                     opacity: opacity
                 }}
                 onClick={onClick}>
@@ -46,8 +46,8 @@ export interface SnackbarState extends SnackbarOrigin {
     open: boolean;
 }
 
-export const BlockSchemeGridNew = () => {
-    const {bars, activeSheet, activeSubSheet, activeTrack, updateBars, editableSheetName} = useContext(BarContext);
+export const BlockSchemeGrid = () => {
+    const {bars, activeSheet, activeTrack, updateBars, editableSheetName} = useContext(BarContext);
     const {settings} = useContext(SettingsContext)
     const barIds = bars.map(data => data.id);
 
@@ -115,22 +115,22 @@ export const BlockSchemeGridNew = () => {
                     display: "flex",
                     flexDirection: "row",
                     flexWrap: "wrap",
-                    width: getExportViewportWidth(settings.quadratSize, settings.isExportingInProgress),
-                    padding: getPaddingValue(settings.quadratSize, settings.isExportingInProgress),
+                    width: getExportViewportWidth(settings.barSize, settings.isExportingInProgress),
+                    padding: getPaddingValue(settings.barSize, settings.isExportingInProgress),
                 }}>
 
                     <SortableContext items={bars} strategy={rectSortingStrategy}>
 
                         {bars.map((data, index) => (
-                            <SortableItem key={data.id} id={data.id} handle={true} value={data} idx={index}
-                                          sheetName={editableSheetName}/>
+                            <BlockSchemeGridItem key={data.id} id={data.id} handle={true} value={data} idx={index}
+                                                 sheetName={editableSheetName}/>
                         ))}
                         <AddMoreButton onClick={() => {
                             updateBars
                             ([
                                 ...bars, new SkeletonData
                                 (
-                                    settings.quadratSize)])
+                                    settings.barSize)])
                         }}
                                        opacity={settings.isExportingInProgress ? 0 : 100}/>
                         <DragOverlay>
@@ -138,7 +138,7 @@ export const BlockSchemeGridNew = () => {
                                 <div
                                     style={{
                                         height: 284,
-                                        width: QUADRAT_WIDTH * settings.quadratSize,
+                                        width: QUADRAT_WIDTH * settings.barSize,
                                         backgroundColor: "silver",
                                         opacity: "50%"
                                     }}

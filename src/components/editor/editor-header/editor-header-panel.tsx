@@ -1,10 +1,10 @@
 import {Checkbox, Divider, FormControlLabel, IconButton, TextField, Tooltip, Typography} from "@mui/material";
 import React, {useContext, useEffect, useState} from "react";
-import {SettingsContext} from "../../../context/settings-context";
-import {BarContext} from "../../../context/bar-context";
+import {SettingsContext} from "../../context/settings-context";
+import {BarContext} from "../../context/bar-context";
 import UndoRoundedIcon from '@mui/icons-material/UndoRounded';
 import {OctaveNotationSelector} from "./octave-notation-selector";
-import {StyledSlider} from "./playback-module";
+import {StyledSlider} from "../reusable/playback-module";
 import {recalculateBarsToNewSize} from "../../../utils/skeleton-node-utils";
 import {deepCopyMap} from "../../../utils/js-utils";
 
@@ -12,9 +12,8 @@ import {deepCopyMap} from "../../../utils/js-utils";
 export const EditorHeaderPanel = () => {
     const {settings, partialUpdateSettings} = useContext(SettingsContext);
     const {undo, sheets, updateSheets} = useContext(BarContext);
-    const [barSize, setBarSize] = useState<number>(settings.quadratSize);
-    console.log(settings)
-    useEffect(() => {setBarSize(settings.quadratSize)})
+    const [barSize, setBarSize] = useState<number>(settings.barSize);
+    useEffect(() => {setBarSize(settings.barSize)}, [settings])
 
     const recalculateBars = (newBarSize: number) => {
         const updatedSheets = deepCopyMap(sheets);
@@ -28,7 +27,7 @@ export const EditorHeaderPanel = () => {
     const handleQuadratSizeChange = (event) => {
 
         if (event.key === 'Enter') {
-            partialUpdateSettings({quadratSize: barSize});
+            partialUpdateSettings({barSize: barSize});
             recalculateBars(barSize);
         }
     }

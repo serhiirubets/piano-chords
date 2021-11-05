@@ -18,8 +18,6 @@ export const SoundfontProvider = ({
 
 
     const loadInstrument = async (instrumentName, format, font) => {
-        // Re-trigger loading state
-        console.log("loading instrument", instrumentName, format, font)
         const instrument = await Soundfont.instrument(audioContext, instrumentName, {
             format: format,
             soundfont: font,
@@ -31,12 +29,9 @@ export const SoundfontProvider = ({
     };
 
     const playNote = (midiNumber, timestampOffset = 0, options: { duration?: number, gain?: number }, instrumentName?) => {
-        console.log('Instruments during playback time', instruments)
-
         audioContext.resume().then(() => {
-
             if (!instruments) {
-                console.log('no instruments found')
+                console.warn('no instruments found')
                 return
             }
             const audioNode = instruments.play(midiNumber, audioContext.currentTime + timestampOffset, options);
@@ -69,13 +64,10 @@ export const SoundfontProvider = ({
 
         audioContext.resume().then(() => {
             const runningAudioNodes = Object.values(activeAudioNodes);
-            console.log(runningAudioNodes)
             runningAudioNodes
                 .flatMap(node => Object.values(node))
                 .forEach((node: any) => {
                     if (node) {
-                        console.log(node)
-
                         node.stop();
                     }
                 });

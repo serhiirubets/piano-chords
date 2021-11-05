@@ -1,4 +1,4 @@
-import {List, ListItem, ListItemIcon, ListItemText, ListSubheader} from "@mui/material";
+import {List, ListItem, ListItemIcon, ListItemText} from "@mui/material";
 import React from "react";
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import {SettingsExportSection} from "./settings-export-section";

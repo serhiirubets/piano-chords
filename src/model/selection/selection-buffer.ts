@@ -72,10 +72,6 @@ export class SelectionBuffer {
     doesBufferMatchSelection = (selectionIndices: SelectionIndex[]) => {
         const bufferFootprint = prepareFootprintFromIndices(this.getAllKeys(), Array.from(this.tripletStorage.values()))
         const selectionFootprint = prepareFootprintFromIndices(selectionIndices)
-
-        console.log('bufferFootprint', bufferFootprint)
-        console.log('selectionFootprint', selectionFootprint)
-
         return bufferFootprint === selectionFootprint
     }
 

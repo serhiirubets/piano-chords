@@ -1,10 +1,10 @@
 import React, {useEffect, useRef, useState} from "react";
-import {BarContextData} from "../model/context-data-models/bar-context-data";
-import {SkeletonData} from "../model/skeleton-entities-data/skeleton-data";
-import {SheetData} from "../model/skeleton-entities-data/sheet-data";
-import {SelectionBuffer} from "../model/selection/selection-buffer";
-import {deepCopy} from "../utils/js-utils";
-import {HistoricalData} from "../model/history/historical-data";
+import {BarContextData} from "../../model/context-data-models/bar-context-data";
+import {SkeletonData} from "../../model/skeleton-entities-data/skeleton-data";
+import {SheetData} from "../../model/skeleton-entities-data/sheet-data";
+import {SelectionBuffer} from "../../model/selection/selection-buffer";
+import {deepCopy} from "../../utils/js-utils";
+import {HistoricalData} from "../../model/history/historical-data";
 
 const defaultSettings: BarContextData = {
     sheets: new Map<string, SheetData>(),
@@ -42,10 +42,6 @@ export const BarContext = React.createContext(defaultSettings);
 export const BarContextProvider = (props: any) => {
     const emptyBars = [new SkeletonData(8)];
     const selectionBuffer = useRef<SelectionBuffer>(new SelectionBuffer());
-    const history = useRef<HistoricalData[]>(new Array<HistoricalData>())
-
-
-
 
     const [quadSize, setQuadSize] = useState(8);
 
@@ -105,7 +101,7 @@ export const BarContextProvider = (props: any) => {
 
     useEffect(() => {
         setActiveSheet(getActiveSheet());
-    }, [sheets, activeSheet])
+    }, [sheets])
 
     const updateQuads = (newBars: SkeletonData[]) => {
         const sheetToUpdate = sheets.get(getActiveEditableSheet());

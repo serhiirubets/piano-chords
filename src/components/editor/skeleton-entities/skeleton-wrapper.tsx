@@ -2,11 +2,11 @@ import React, {useContext, useState} from "react";
 import {v4 as uuid} from 'uuid';
 import {Skeleton} from "./skeleton";
 import {SkeletonWrapperControls} from "./skeleton-wrapper-controls";
-import {audioContext, DEFAULT_INSTRUMENT, QUADRAT_WIDTH, soundfontHostname} from "../../../model/global-constants";
+import {audioContext, DEFAULT_INSTRUMENT, soundfontHostname} from "../../../model/global-constants";
 import {SoundfontProvider} from "../../../core/soundfont-provider";
 import {getNotesToPlay, playNotes} from "../../../utils/playback-utils";
-import {SettingsContext} from "../../../context/settings-context";
-import {BarContext} from "../../../context/bar-context";
+import {SettingsContext} from "../../../components/context/settings-context";
+import {BarContext} from "../../../components/context/bar-context";
 import {deepCopy} from "../../../utils/js-utils";
 import {getQuadratNodeDimension} from "../../../utils/rendering-utils";
 
@@ -57,7 +57,7 @@ export const SkeletonWrapper = ({
         playNotes(getNotesToPlay([{
             data: bars[index],
             relativePosition: 0
-        }]), playFunction, settings.playbackTempo, settings.alterGainForFeather, settings.quadratSize)
+        }]), playFunction, settings.playbackTempo, settings.alterGainForFeather, settings.barSize)
     }
 
     return (
@@ -68,7 +68,7 @@ export const SkeletonWrapper = ({
             justifyContent: "center",
             flexDirection: "column",
             display: "flex",
-            maxWidth: getQuadratNodeDimension(settings.isMasteringMode).quadratWidth * settings.quadratSize + 40
+            maxWidth: getQuadratNodeDimension(settings.isMasteringMode).quadratWidth * settings.barSize + 40
         }} onMouseEnter={handleMouseEnter} onMouseLeave={hadleMouseLeave}>
 
             <div style={{display: "flex", justifyContent: "flex-end", flexDirection: "row", width: "100%"}}>

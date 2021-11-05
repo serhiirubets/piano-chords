@@ -2,7 +2,7 @@
 import React, {useCallback, useContext, useState} from "react";
 import {css, jsx} from "@emotion/react/macro";
 import {SkeletonNode} from "./skeleton-node";
-import {BarContext} from "../../../context/bar-context";
+import {BarContext} from "../../context/bar-context";
 import {HandType, TripletData} from "../../../model/skeleton-entities-data/skeleton-data";
 import {INote, Note, NoteType} from "../../../model/skeleton-entities-data/note-data";
 import {SkeletonNodeData} from "../../../model/skeleton-entities-data/skeleton-node-data";
@@ -11,11 +11,19 @@ import {getMidiNumber} from "../../../utils/playback-utils";
 import {ClickAwayListener, Divider, ListItemText, Menu, MenuItem, MenuList} from "@mui/material";
 import {deepCopy, distinct} from "../../../utils/js-utils";
 import {getTripletByIndex, getTripletDurationByIndex, isPartOfTriplet} from "../../../utils/triplet-utils";
-import {BulkEditPopupMenu} from "./bulk-edit-popup-menu";
-import {SettingsContext} from "../../../context/settings-context";
-import {copySkeleton, getOriginalText, getSkeletonHandData, setSkeletonHandData} from "../../../utils/skeleton-node-utils";
+import {BulkEditPopupMenu} from "./popup-menus/bulk-edit-popup-menu";
+import {SettingsContext} from "../../context/settings-context";
+import {
+    copySkeleton,
+    getOriginalText,
+    getSkeletonHandData,
+    setSkeletonHandData
+} from "../../../utils/skeleton-node-utils";
 import {SelectionIndex} from "../../../model/selection/selection-index";
-import {getIndicesLengthAndMinPosition, getPositionRelativeToSelectionStart} from "../../../utils/selection-buffer-utils";
+import {
+    getIndicesLengthAndMinPosition,
+    getPositionRelativeToSelectionStart
+} from "../../../utils/selection-buffer-utils";
 import {SheetData} from "../../../model/skeleton-entities-data/sheet-data";
 
 export enum NodeSelectionMode {
@@ -44,11 +52,6 @@ const isHostingTriplet = (triplets: TripletData[], idx: SelectionIndex) => {
         .filter(triplet => triplet.start === idx.index).length > 0
 }
 
-const getCommonValueOfTheAttributeOrDefault = (notes: Note[], attribute: string, defaultValue: string | number | boolean) => {
-    let commonValue = notes.length > 0 ? notes[0][attribute] : defaultValue;
-    return notes.every(note => note[attribute] === commonValue) ? commonValue : defaultValue
-}
-
 const getSelectedIndicesInHand = (selectedNodes: SelectionIndex[], noteHand: HandType) => {
     return selectedNodes
         .filter(index => index.noteHand === noteHand)
@@ -60,7 +63,7 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
     const {bars, updateSingleBar, selectionBuffer, sheets} = useContext(BarContext);
     const {settings} = useContext(SettingsContext);
 
-    const skeletonData = (sheets.get(sheetName)|| new SheetData(settings.quadratSize)).bars[skeletonIndex]
+    const skeletonData = (sheets.get(sheetName)|| new SheetData(settings.barSize)).bars[skeletonIndex]
     const [selectedNodes, setSelectedNodes] = useState<SelectionIndex[]>(new Array<SelectionIndex>());
     const [activeNodeIndex, setActiveNodeIndex] = useState<SelectionIndex | null>(null);
     const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
@@ -320,14 +323,12 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
     const clearTriplet = (hostIndex: SelectionIndex) => {
         const tripletDataToRemove = getTripletByIndex(skeletonData.triplets, hostIndex);
         if (!tripletDataToRemove) {
-            console.log('not found triplet data by index', hostIndex)
             return;
         }
 
         const indexOfTriplet = skeletonData.triplets.indexOf(tripletDataToRemove);
 
         if (indexOfTriplet < 0) {
-            console.log('not found triplet data ', tripletDataToRemove)
             return;
         }
 
@@ -346,13 +347,6 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
             tripletDuration: getTripletDurationByIndex(skeletonData.triplets, selectionIndex) || 0,
             handleClearTriplet: clearTriplet
         }
-    }
-
-    const getNotesBySelectedIndices = (handType: HandType) => {
-        const handNotes = handType === HandType.LEFT ? skeletonData.left : skeletonData.right;
-        return handNotes
-            .filter((el, index) => selectedNodes.includes(index))
-            .flatMap(node => node.notes)
     }
 
     return (

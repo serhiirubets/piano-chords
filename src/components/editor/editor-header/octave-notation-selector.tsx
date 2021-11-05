@@ -12,9 +12,9 @@ import {
     MenuItem,
     Tooltip
 } from "@mui/material";
-import {SettingsContext} from "../../../context/settings-context";
+import {SettingsContext} from "../../context/settings-context";
 import {OctaveNotation, Octaves} from "../../../model/skeleton-entities-data/octave-data";
-import {BarContext} from "../../../context/bar-context";
+import {BarContext} from "../../context/bar-context";
 import {deepCopy} from "../../../utils/js-utils";
 
 const OctaveTooltip = ({octaveNotations}) => {
@@ -65,7 +65,6 @@ export const OctaveNotationSelector = () => {
             setDialogOpened(true)
         }
         const updatedBars = deepCopy(bars);
-        console.log(updatedBars)
         updatedBars.forEach(bar => {
             bar.left.forEach(node => {
                 node.originalText = ''

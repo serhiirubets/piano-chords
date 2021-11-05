@@ -1,5 +1,4 @@
 // @ts-ignore
-import {MidiNumbers} from 'react-piano';
 import {v4 as uuid} from 'uuid';
 
 export enum PlaybackDuration {
@@ -58,20 +57,6 @@ export class Note implements INote {
             noteType: other["_noteType"]
         })
     }
-
-
-    // public getMidiNumber = () => {
-    //     const isSharp = this.note.endsWith('#');
-    //     const isFlat = this.note.length === 2 && this.note.endsWith('b')
-    //     const midiModifier = isSharp ? 1 : isFlat ? -1 : 0;
-    //     const rootNote = this.getNoteRoot(this.note)
-    //     const midiNumber = MidiNumbers.fromNote(rootNote + this.octave)
-    //     return midiNumber + midiModifier
-    // }
-    //
-    // private getNoteRoot = (note: string) => {
-    //     return note.length == 2 ? note.substr(0, 1) : note;
-    // }
 
 }
 

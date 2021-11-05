@@ -2,7 +2,7 @@ import React, {useContext, useState} from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import {BarContext} from "../../../context/bar-context";
+import {BarContext} from "../../context/bar-context";
 import {SheetData} from "../../../model/skeleton-entities-data/sheet-data";
 import {TabElement} from "./tab-element";
 import {deepCopy, deepCopyMap} from "../../../utils/js-utils";
@@ -20,15 +20,7 @@ import {rectSortingStrategy, SortableContext, sortableKeyboardCoordinates, useSo
 import {CSS} from "@dnd-kit/utilities";
 
 import {restrictToHorizontalAxis, restrictToWindowEdges,} from '@dnd-kit/modifiers';
-import {settings} from "cluster";
-import {SettingsContext} from "../../../context/settings-context";
-
-interface TabPanelProps {
-    children?: React.ReactNode;
-    index: any;
-    value: any;
-}
-
+import {SettingsContext} from "../../context/settings-context";
 
 const SortableTabItem = ({sheetName, onTabSelect, handleNameChange, onRemoveTriggered, style, onDuplicate}) => {
     const {
@@ -42,7 +34,7 @@ const SortableTabItem = ({sheetName, onTabSelect, handleNameChange, onRemoveTrig
 
     const transitionStyle = {
         transform: CSS.Transform.toString(transform),
-        // transition,
+        transition,
         cursor: isDragging ? "grab" : "auto",
         opacity: isDragging ? 0.1 : 1,
         ...style
@@ -242,7 +234,7 @@ export const ScrollableTabs = () => {
     };
 
     const handleAdditionOfSheet = () => {
-        const newSheet = new SheetData(settings.quadratSize);
+        const newSheet = new SheetData(settings.barSize);
         newSheet.index = sheetNames.length;
         newSheet.name = "Часть " + (newSheet.index + 1);
 
@@ -253,7 +245,7 @@ export const ScrollableTabs = () => {
     }
 
     const handleAdditionOfSubSheet = () => {
-        const newSheet = new SheetData(settings.quadratSize);
+        const newSheet = new SheetData(settings.barSize);
         newSheet.index = subSheetNames.length;
         newSheet.name = activeSheet + "-" + (newSheet.index + 1);
         newSheet.parentName = activeSheet
@@ -270,7 +262,6 @@ export const ScrollableTabs = () => {
         if (!existingSheetData) {
             return
         }
-        console.log('copying', sheetNameToCopy)
         const newSheet = deepCopy(existingSheetData);
         newSheet.index = sheetNames.length;
         newSheet.name = "Копия " + sheetNameToCopy;
@@ -285,8 +276,6 @@ export const ScrollableTabs = () => {
                     copiedSubSheet.name = newSheet.name + " " + copiedSubSheet.name
                 }
                 copiedSubSheet.parentName = newSheet.name
-                console.log(copiedSubSheet)
-                console.log(sheet)
                 updatedSheets.set(copiedSubSheet.name, copiedSubSheet)
             }
         }
@@ -323,14 +312,11 @@ export const ScrollableTabs = () => {
     const handleSheetNameChange = (newName: string) => {
         const existingNames = Array.from(sheets.keys())
         if (existingNames.includes(newName)) {
-            console.log('existing', existingNames)
-            console.log('new name', newName)
             alert("Невозможно переименовать, такое имя листа уже занято")
             return;
         }
 
         const sheetData = sheets.get(activeSheet);
-        console.log('saving', sheetData)
         const updatedSheets = deepCopyMap(sheets)
         if (sheetData) {
             const updatedSheetData = deepCopy(sheetData)
@@ -341,7 +327,6 @@ export const ScrollableTabs = () => {
                 }
             })
             updatedSheets.delete(activeSheet);
-            console.log('saving after update', updatedSheets)
             updatedSheets.set(newName, updatedSheetData);
         }
 

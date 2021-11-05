@@ -5,7 +5,7 @@ import {INote, Note, NoteType} from "../../../../model/skeleton-entities-data/no
 import {HandType} from "../../../../model/skeleton-entities-data/skeleton-data";
 import {Checkbox, FormControlLabel, Popover, TextField, Typography} from "@mui/material";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
-import {FeatherSwitch} from "./feather-switch";
+import {FeatherSwitch} from "../../reusable/feather-switch";
 
 export interface NoteContextMenuProps {
     note: INote;

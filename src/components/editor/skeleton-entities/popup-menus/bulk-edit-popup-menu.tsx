@@ -1,22 +1,22 @@
 import React, {useState} from "react";
-import {INote, Note, NoteType} from "../../../model/skeleton-entities-data/note-data";
+import {INote, Note, NoteType} from "../../../../model/skeleton-entities-data/note-data";
 import {
     Button,
-    Checkbox, FormControl,
-    FormControlLabel, InputLabel,
-    MenuItem, MenuList,
+    Checkbox,
+    FormControl,
+    FormControlLabel,
+    InputLabel,
+    MenuItem,
     Popover,
     Select,
-    SelectChangeEvent,
     TextField,
     Typography
 } from "@mui/material";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
-import {FeatherSwitch} from "./subtitle/feather-switch";
+import {FeatherSwitch} from "../../reusable/feather-switch";
 
 
 export interface BulkEditPopupMenu {
-    //index of node in skeleton
     bulkUpdateOperationChange: any;
     anchorEl: any;
     onClose: (e: any) => void;
@@ -33,7 +33,6 @@ export const BulkEditPopupMenu = ({bulkUpdateOperationChange, anchorEl, onClose}
     const id = open ? 'bulk-edit-menu-popover' : undefined;
 
     const handleNotesUpdate = (data: Partial<INote>) => {
-        console.log(data)
         const updateOperation = (notes: INote[]) => {
             return notes.map(originalNote => {
                     return new Note({
@@ -74,21 +73,18 @@ export const BulkEditPopupMenu = ({bulkUpdateOperationChange, anchorEl, onClose}
                 </div>
                 <div style={{padding: 10, display: "flex", flexDirection: "row"}}>
                     <FormControl sx={{m: 1, minWidth: 120}}>
-                        <InputLabel id="demo-simple-select-helper-label" style={{fontSize:"small"}}>Октава</InputLabel>
+                        <InputLabel id="octave-selector-label" style={{fontSize:"small"}}>Октава</InputLabel>
                         <Select
-                            labelId="demo-simple-select-autowidth-label"
-                            id="demo-simple-select-autowidth"
-                            // value={octave}
+                            labelId="octave-selector-label"
+                            id="octave-selector"
+                            value={octave}
                             onChange={(e) => {
-                                const num = Number(e.target.value)
-                                console.log('value',num)
-                                setOctave(num)
+                                setOctave(Number(e.target.value))
                             }}
                             autoWidth
                             MenuProps={{disablePortal:true,
                             MenuListProps:{dense:true}}}
                             label="Октава"
-                            value={octave}
                         >
                             <MenuItem value={0}><Typography fontSize="small">Субконтроктава</Typography></MenuItem>
                             <MenuItem value={1}><Typography fontSize="small">Контроктава</Typography></MenuItem>
@@ -127,10 +123,8 @@ export const BulkEditPopupMenu = ({bulkUpdateOperationChange, anchorEl, onClose}
                 <FormControlLabel
                     value="top"
                     control={<Checkbox
-                        // checked={note.displayOctave}
                         onChange={(e) => {
                             setDisplayOctave(e.target.checked)
-                            // handleNotesUpdate({displayOctave: e.target.checked})}
                         }}
                     />}
                     label={<Typography
@@ -149,9 +143,4 @@ export const BulkEditPopupMenu = ({bulkUpdateOperationChange, anchorEl, onClose}
             </div>
         </Popover>
     )
-}
-
-const selectMenuStyle = {
-    margin:"5x",
-    padding:"5px 7 px"
 }

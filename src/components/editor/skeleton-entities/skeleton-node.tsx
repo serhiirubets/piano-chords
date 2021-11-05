@@ -1,11 +1,11 @@
 /** @jsx jsx */
 import React, {useContext, useEffect, useRef, useState} from "react";
-import {css, jsx} from "@emotion/react/macro";
+import {jsx} from "@emotion/react/macro";
 import {SkeletonNodeData} from "../../../model/skeleton-entities-data/skeleton-node-data";
 import {TextField} from "@mui/material";
 import {HandType} from "../../../model/skeleton-entities-data/skeleton-data";
 import {Note, PlaybackDuration, PlaybackOffset} from "../../../model/skeleton-entities-data/note-data";
-import {SettingsContext} from "../../../context/settings-context";
+import {SettingsContext} from "../../context/settings-context";
 import {getEffectiveNodeColor, getOriginalText} from "../../../utils/skeleton-node-utils";
 import {NodeSelectionMode, TripletHandlingProps} from "./skeleton";
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
@@ -33,11 +33,11 @@ export interface BlockSchemeNodeProps {
 
 
 const parseInputToTheNotes = (stringValue: string, defaultOctave: number, tripletProps: TripletHandlingProps, octaveNotation: OctaveNotation): Note[] => {
-    if (stringValue.length == 0) {
+    if (stringValue.length === 0) {
         return []
     }
     if (stringValue.includes(SIXTEENS_SEPARATOR)) {
-        const getOffset = index => index % 2 == 0 ? PlaybackOffset.NONE : PlaybackOffset.HALF;
+        const getOffset = index => index % 2 === 0 ? PlaybackOffset.NONE : PlaybackOffset.HALF;
         const sixteensParts = stringValue.split(SIXTEENS_SEPARATOR);
         return sixteensParts
             .flatMap((sixteens, index) => parseNoteOrChord(sixteens, defaultOctave, PlaybackDuration.HALF, getOffset(index), octaveNotation));
@@ -201,7 +201,6 @@ export const SkeletonNode = ({
             handleSave()
         }
         const DISALLOWED_KEYS = new RegExp(`[^${NOTES_REGEX.source}${settings.octaveNotation.regexpKeys}]+`)
-        console.log('DIsallowed keys', DISALLOWED_KEYS)
         const filteredValues = event.target.value.replace(DISALLOWED_KEYS, '');
         event.target.value = filteredValues || "";
         setInputText(filteredValues);

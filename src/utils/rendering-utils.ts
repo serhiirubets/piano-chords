@@ -75,7 +75,7 @@ export const renderToPdf = async (settings: SettingContextData, toPdf?) => {
         logging: true,
         useCORS: true,
         allowTaint: true,
-        scale: getScaleSize(settings.quadratSize),
+        scale: getScaleSize(settings.barSize),
     }).then((canvas) => {
         const data = canvas.toDataURL('image/jpeg', 1);
         const pdf = new jsPDF({unit: 'mm', format: 'a4', orientation: 'portrait'});

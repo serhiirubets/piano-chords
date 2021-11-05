@@ -1,7 +1,7 @@
 import {ListItem, ListItemIcon, ListItemText} from "@mui/material";
 import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
 import React, {useContext} from "react";
-import {SettingsContext} from "../../../context/settings-context";
+import {SettingsContext} from "../../context/settings-context";
 import PdfExporter from "../../../core/pdf-exporter-class";
 
 export const SettingsExportSection = () => {

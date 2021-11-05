@@ -11,7 +11,7 @@ export interface BarContextData {
     activeTrack:string|null;
 
     bars: SkeletonData[];
-    updateBars: (newQuads: SkeletonData[]) => any;
+    updateBars: (newBars: SkeletonData[]) => any;
     updateSingleBar: (barIndex: number, barDara:SkeletonData) => any;
     selectionBuffer:MutableRefObject<SelectionBuffer>;
 

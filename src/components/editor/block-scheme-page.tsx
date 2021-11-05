@@ -1,20 +1,18 @@
 import React, {useContext} from "react"
 import {Divider, Typography} from "@mui/material";
-// @ts-ignore
-import {BlockSchemeGrid} from "./components/editor/block-scheme-grid";
 import {SettingsContext} from "../context/settings-context";
-import {ScrollableTabs} from "./components/tabpanel/tab-panel";
-import {PlaybackModule} from "./components/menu/playback-module";
+import {ScrollableTabs} from "./editor-header/tab-panel";
+import {PlaybackModule} from "./reusable/playback-module";
 import IconButton from "@mui/material/IconButton";
 import {PrintRounded} from "@mui/icons-material";
-import {getScaleSize} from "../utils/rendering-utils";
-import PdfExporter from "../core/pdf-exporter-class";
-import {EditorHeaderPanel} from "./components/menu/editor-header-panel";
-import {BlockSchemeGridNew} from "./components/editor/block-scheme-grid-new";
-import {MasteringModeGrid} from "./components/editor/mastering-mode-grid";
+import {getScaleSize} from "../../utils/rendering-utils";
+import PdfExporter from "../../core/pdf-exporter-class";
+import {EditorHeaderPanel} from "./editor-header/editor-header-panel";
+import {BlockSchemeGrid} from "./grids/block-scheme-grid";
+import {MasteringModeGrid} from "./grids/mastering-mode-grid";
 
 
-export const BlockSchemeWhitePage = () => {
+export const BlockSchemeEditorPage = () => {
 
     const {settings, updateSettings} = useContext(SettingsContext);
     return (
@@ -37,7 +35,7 @@ export const BlockSchemeWhitePage = () => {
                             <Divider orientation="vertical" flexItem/>
                             <PdfExporter targetRef={settings.editorElementRef}
                                          filename="block-scheme.pdf"
-                                         scale={getScaleSize(settings.quadratSize)}
+                                         scale={getScaleSize(settings.barSize)}
                                          onComplete={() => updateSettings({...settings, isExportingInProgress: false})}>
 
                                 {({toPdf}) =>
@@ -82,7 +80,7 @@ export const BlockSchemeWhitePage = () => {
                 </div>
 
                 <div style={{height: "100%", width: "100%"}}>
-                    {settings.isMasteringMode? <MasteringModeGrid/> :  <BlockSchemeGridNew/>}
+                    {settings.isMasteringMode? <MasteringModeGrid/> :  <BlockSchemeGrid/>}
                 </div>
 
             </div>

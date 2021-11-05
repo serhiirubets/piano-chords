@@ -4,21 +4,20 @@ import {jsx} from "@emotion/react/macro";
 import {INote, Note, PlaybackDuration, PlaybackOffset} from "../../../model/skeleton-entities-data/note-data";
 import {HandType} from "../../../model/skeleton-entities-data/skeleton-data";
 import {SkeletonNodeData} from "../../../model/skeleton-entities-data/skeleton-node-data";
-import {QUADRAT_WIDTH} from "../../../model/global-constants";
 import {compareByMidiNumbers, getMidiNumber, isChord} from "../../../utils/playback-utils";
 import {HandMidiSummary, TripletHandlingProps} from "./skeleton";
 import {ClickAwayListener} from "@mui/material";
 import {getOctaveInRussianNotation, getOriginalText} from "../../../utils/skeleton-node-utils";
 import {getTripletEffectiveParameters} from "../../../utils/triplet-utils";
-import {SettingsContext} from "../../../context/settings-context";
-import {NoteEditPopupMenu} from "./subtitle/note-edit-popup-menu";
+import {SettingsContext} from "../../context/settings-context";
+import {NoteEditPopupMenu} from "./popup-menus/note-edit-popup-menu";
 import {getQuadratNodeDimension} from "../../../utils/rendering-utils";
 
 
 export interface NodeSubtitleProps {
     nodeData: SkeletonNodeData;
     midiSummary: HandMidiSummary;
-    setExternalNoteObject?: any;//(INote, number) => SetStateAction<INote>;
+    setExternalNoteObject?: any;
     index?: number;
     handType?: HandType;
     chord?: INote[],
@@ -89,7 +88,7 @@ const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizon
                                  hand={hand}
                                  onUpdateNote={onUpdateNote}
                                  onClose={handlePopoverClose}
-                ></NoteEditPopupMenu>
+                />
             </div>
         </ClickAwayListener>)
 }
@@ -205,7 +204,7 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: No
                                 height={constainsChords ? getChordNoteRelativeTop(note, nodeData.notes,nodeData.hand) : getSingleNoteRelativeTop(note)}
                                 fontHeight={FONT_HEIGHT}
                                 horizontalOffset={getNoteHorizontalOffset(note)}
-                            ></NodeSubtitleItem>
+                            />
                         )
                 }
                 </div>

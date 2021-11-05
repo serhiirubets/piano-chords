@@ -3,12 +3,11 @@ import {OctaveNotation} from "../skeleton-entities-data/octave-data";
 
 export interface SettingContextData {
     playbackTempo: number;
-    quadratSize: number;
+    barSize: number;
     displayApplicature? : boolean;
     alterGainForFeather:boolean;
     octaveNotation:OctaveNotation;
 
-    autosave:boolean;
     isMenuOpen: boolean;
 
     defaultOctaves: Map<HandType, number>;
@@ -19,8 +18,4 @@ export interface SettingContextData {
 
     isMasteringMode:boolean;
 
-}
-
-interface Dictionary<V> {
-    [Key: string]: V;
 }

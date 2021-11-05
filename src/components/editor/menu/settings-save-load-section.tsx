@@ -6,9 +6,9 @@ import PublishRoundedIcon from "@mui/icons-material/PublishRounded";
 import PlaylistPlayRoundedIcon from "@mui/icons-material/PlaylistPlayRounded";
 import React, {useContext, useEffect} from "react";
 import Download from '@axetroy/react-download';
-import {SettingsContext} from "../../../context/settings-context";
+import {SettingsContext} from "../../context/settings-context";
 import {SettingContextData} from "../../../model/context-data-models/settings-context-data";
-import {BarContext} from "../../../context/bar-context";
+import {BarContext} from "../../context/bar-context";
 import {DDTScheme} from "../../../resources/DDT-triplets-recording";
 import {SheetData} from "../../../model/skeleton-entities-data/sheet-data";
 import {RefreshRounded} from "@mui/icons-material";
@@ -18,7 +18,14 @@ import {Octaves} from "../../../model/skeleton-entities-data/octave-data";
 
 export const SettingsSaveLoadSection = () => {
     const {settings, updateSettings} = useContext(SettingsContext);
-    const {sheets, updateSheets, updateActiveSheet, updateActiveSubSheet,isTouched, updateBars} = useContext(BarContext);
+    const {
+        sheets,
+        updateSheets,
+        updateActiveSheet,
+        updateActiveSubSheet,
+        isTouched,
+        updateBars
+    } = useContext(BarContext);
     const SHEETS_LOCALSTORAGE_KEY = "sheets_autosave";
     const SAVE_NAME = 'Новая блок-схема'
 
@@ -34,23 +41,18 @@ export const SettingsSaveLoadSection = () => {
     }
 
     useEffect(() => {
-        if (!settings.autosave) {
-            return;
-        }
         if (!isTouched) {
             return;
         }
         localStorage.setItem(SHEETS_LOCALSTORAGE_KEY, JSON.stringify(prepareSaveFile()));
-
-
-    }, [sheets]);
+    }, [sheets, isTouched]);
 
     const reloadDemoFile = (fileString) => {
         const memorizedScheme = (fileString ? new Map(JSON.parse(fileString)) : []) as Map<string, SheetData>;
         const firstSheet = Array.from(memorizedScheme.keys())[0]
         updateSheets(memorizedScheme)
         updateActiveSheet(firstSheet)
-        partialUpdateSettings({quadratSize: memorizedScheme.get(firstSheet)!.bars[0].size})
+        partialUpdateSettings({barSize: memorizedScheme.get(firstSheet)!.bars[0].size})
     }
 
     const partialUpdateSettings = (value: Partial<SettingContextData>) => {
@@ -75,13 +77,12 @@ export const SettingsSaveLoadSection = () => {
 
     const prepareSaveFile = () => {
         const saveObject = {
-            settings:{
-                quadratSize: settings.quadratSize,
+            settings: {
+                quadratSize: settings.barSize,
                 octaveNotation: settings.octaveNotation,
             },
             data: Array.from(sheets.entries())
         }
-        console.log(saveObject)
         return saveObject
     }
 
@@ -89,7 +90,7 @@ export const SettingsSaveLoadSection = () => {
         const saveObject = JSON.parse(stringifiedData)
         const partialSettings = saveObject.settings || {}
         const barData = saveObject.data
-        const processedBarData = (barData || []).map(([key, value])=> {
+        const processedBarData = (barData || []).map(([key, value]) => {
             const valueAsSheet = new SheetData(value.bars.size)
             valueAsSheet.name = value.name;
             valueAsSheet.parentName = value.parentName
@@ -100,19 +101,18 @@ export const SettingsSaveLoadSection = () => {
         })
 
         const restoredSheetsData = new Map(processedBarData) as Map<string, SheetData>;
-        console.log(restoredSheetsData)
 
         const firstSheet = Array.from(restoredSheetsData.keys()).filter(value => value !== null)[0]
-        const subSheets = Array.from(restoredSheetsData.values()).filter(value => value.parentName == firstSheet)
-        const firstSubSheet = subSheets.length > 0? subSheets[0].name : null
-        console.log(firstSheet)
+        const subSheets = Array.from(restoredSheetsData.values()).filter(value => value.parentName === firstSheet)
+        const firstSubSheet = subSheets.length > 0 ? subSheets[0].name : null
         updateBars(restoredSheetsData.get(firstSheet)!.bars)
         updateSheets(restoredSheetsData)
         updateActiveSheet(firstSheet)
         updateActiveSubSheet(firstSubSheet)
-        partialUpdateSettings({fileName: filename,
+        partialUpdateSettings({
+            fileName: filename,
             octaveNotation: partialSettings.octaveNotation || Octaves.SCIENTIFIC,
-            quadratSize: partialSettings.quadratSize || restoredSheetsData.get(firstSheet)!.bars.length
+            barSize: partialSettings.quadratSize || restoredSheetsData.get(firstSheet)!.bars.length
         })
     }
 

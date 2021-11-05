@@ -117,8 +117,7 @@ export const TabElement = ({
                          onContextMenu={handleContextMenuClick}
                          {...draggableListeners}
                          {...draggableAttributes}
-                    ></Tab>
-                    {/*<MoveTabButton></MoveTabButton>*/}
+                    />
                 </div>
             </div>
         </ClickAwayListener>

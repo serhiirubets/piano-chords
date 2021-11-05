@@ -1,13 +1,13 @@
 import {Slider, styled} from "@mui/material";
 import React, {useContext} from "react";
-import {SettingsContext} from "../../../context/settings-context";
+import {SettingsContext} from "../../context/settings-context";
 import {SoundfontProvider} from "../../../core/soundfont-provider";
 import {audioContext, DEFAULT_INSTRUMENT, soundfontHostname} from "../../../model/global-constants";
 import IconButton from "@mui/material/IconButton";
 import {collectBarsToPlay, getNotesToPlay, playNotes} from "../../../utils/playback-utils";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import StopRoundedIcon from "@mui/icons-material/StopRounded";
-import {BarContext} from "../../../context/bar-context";
+import {BarContext} from "../../context/bar-context";
 import {SkeletonData} from "../../../model/skeleton-entities-data/skeleton-data";
 
 export interface PlaybackModuleProps {
@@ -42,7 +42,7 @@ export const PlaybackModule = ({iconColor, bars}: PlaybackModuleProps) => {
 
                         <IconButton
                             onClick={() => {
-                                playNotes(getNotesToPlay(barsDataToPlay), playNote, settings.playbackTempo, settings.alterGainForFeather, settings.quadratSize)
+                                playNotes(getNotesToPlay(barsDataToPlay), playNote, settings.playbackTempo, settings.alterGainForFeather, settings.barSize)
                             }}
                             size="large">
                             <PlayArrowRoundedIcon fontSize="large" style={{fill: iconColor ? iconColor : "#176503"}}/>

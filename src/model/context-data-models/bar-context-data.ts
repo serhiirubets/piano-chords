@@ -1,5 +1,5 @@
-import {SkeletonData} from "./skeleton-data";
-import {SheetData} from "./sheet-data";
+import {SkeletonData} from "../skeleton-entities-data/skeleton-data";
+import {SheetData} from "../skeleton-entities-data/sheet-data";
 import {SelectionBuffer} from "../selection/selection-buffer";
 import {MutableRefObject} from "react";
 

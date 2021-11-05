@@ -1,8 +1,8 @@
 import {SelectionIndex} from "./selection-index";
-import {SkeletonNodeData} from "../deprecated/skeleton-node-data";
-import {TripletData} from "../deprecated/skeleton-data";
-import {getIndicesLengthAndMinPosition, prepareFootprintFromIndices} from "../../utils/selection-buffer-utils";
+import {SkeletonNodeData} from "../skeleton-entities-data/skeleton-node-data";
+import {TripletData} from "../skeleton-entities-data/skeleton-data";
 import {deepCopy} from "../../utils/js-utils";
+import {getIndicesLengthAndMinPosition, prepareFootprintFromIndices} from "../../utils/selection-buffer-utils";
 
 export class SelectionBuffer {
     private storage = new Map<SelectionIndex, SkeletonNodeData>()

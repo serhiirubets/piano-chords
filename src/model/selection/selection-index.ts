@@ -1,4 +1,4 @@
-import {HandType} from "../deprecated/skeleton-data";
+import {HandType} from "../skeleton-entities-data/skeleton-data";
 
 export interface SelectionIndex {
     index: number,

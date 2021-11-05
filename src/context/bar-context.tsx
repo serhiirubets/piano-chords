@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
-import {BarContextData} from "../model/deprecated/bar-context-data";
-import {SkeletonData} from "../model/deprecated/skeleton-data";
-import {SheetData} from "../model/deprecated/sheet-data";
+import {BarContextData} from "../model/context-data-models/bar-context-data";
+import {SkeletonData} from "../model/skeleton-entities-data/skeleton-data";
+import {SheetData} from "../model/skeleton-entities-data/sheet-data";
 import {SelectionBuffer} from "../model/selection/selection-buffer";
 import {deepCopy} from "../utils/js-utils";
 import {HistoricalData} from "../model/history/historical-data";

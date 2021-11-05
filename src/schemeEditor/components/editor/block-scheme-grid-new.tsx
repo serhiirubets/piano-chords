@@ -15,7 +15,7 @@ import {
 import {arrayMove, rectSortingStrategy, SortableContext, sortableKeyboardCoordinates} from '@dnd-kit/sortable'
 import SortableItem from "./block-scheme-grid-new-item";
 import {BarContext} from "../../../context/bar-context";
-import {SkeletonData} from "../../../model/deprecated/skeleton-data";
+import {SkeletonData} from "../../../model/skeleton-entities-data/skeleton-data";
 import {getExportViewportWidth, getFlexBasisValue, getPaddingValue} from "../../../utils/rendering-utils";
 
 

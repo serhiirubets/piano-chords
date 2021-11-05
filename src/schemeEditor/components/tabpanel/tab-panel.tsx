@@ -3,7 +3,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import {BarContext} from "../../../context/bar-context";
-import {SheetData} from "../../../model/deprecated/sheet-data";
+import {SheetData} from "../../../model/skeleton-entities-data/sheet-data";
 import {TabElement} from "./tab-element";
 import {deepCopy, deepCopyMap} from "../../../utils/js-utils";
 import {Divider} from "@mui/material";

@@ -1,9 +1,9 @@
 import React, {useState} from "react";
-import {EditorSettings} from "../model/editor-settings-data";
-import {HandType} from "../model/deprecated/skeleton-data";
-import {Octaves} from "../model/deprecated/octave";
+import {SettingContextData} from "../model/context-data-models/settings-context-data";
+import {HandType} from "../model/skeleton-entities-data/skeleton-data";
+import {Octaves} from "../model/skeleton-entities-data/octave-data";
 
-const defaultSettings: EditorSettings = {
+const defaultSettings: SettingContextData = {
     playbackTempo: 0.25,
     quadratSize: 8,
     displayApplicature: false,
@@ -23,13 +23,13 @@ export const SettingsContext = React.createContext({
     settings: defaultSettings,
     updateSettings: (value, cb?) => {
     },
-    partialUpdateSettings: (partialSettings: Partial<EditorSettings>) => {
+    partialUpdateSettings: (partialSettings: Partial<SettingContextData>) => {
     }
 });
 
 export const SettingsContextProvider = (props: any) => {
-    const [settings, setSettings] = useState<EditorSettings>(defaultSettings);
-    const partialUpdateSettings = (value: Partial<EditorSettings>) => {
+    const [settings, setSettings] = useState<SettingContextData>(defaultSettings);
+    const partialUpdateSettings = (value: Partial<SettingContextData>) => {
         console.log('updatingSettings', value)
         setSettings({...settings, ...value})
     }

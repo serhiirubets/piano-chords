@@ -11,5 +11,4 @@ export class SheetData {
     public isMuted;
     public parentName;
     public bars = [new SkeletonData(this.barsize)];
-
 }

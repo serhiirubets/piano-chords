@@ -1,9 +1,9 @@
-import {PlaybackData, SkeletonNodeData} from "../model/deprecated/skeleton-node-data";
-import {INote, Note, NoteType} from "../model/note-data";
-import {HandType, SkeletonData} from "../model/deprecated/skeleton-data";
+import {PlaybackData, SkeletonNodeData} from "../model/skeleton-entities-data/skeleton-node-data";
+import {INote, NoteType} from "../model/skeleton-entities-data/note-data";
+import {HandType, SkeletonData} from "../model/skeleton-entities-data/skeleton-data";
 import {getMidiNumber} from "./playback-utils";
 import {groupBy} from "./js-utils";
-import {getOctaveNotationFromScientific, OctaveNotation} from "../model/deprecated/octave";
+import {getOctaveNotationFromScientific, OctaveNotation} from "../model/skeleton-entities-data/octave-data";
 
 export const getEffectiveNodeColor = (data: SkeletonNodeData, isHostingTriplet: boolean) => {
     return isHostingTriplet ? "yellow" :

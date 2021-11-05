@@ -1,7 +1,7 @@
-import {HandType} from "./deprecated/skeleton-data";
-import {OctaveNotation} from "./deprecated/octave";
+import {HandType} from "../skeleton-entities-data/skeleton-data";
+import {OctaveNotation} from "../skeleton-entities-data/octave-data";
 
-export interface EditorSettings {
+export interface SettingContextData {
     playbackTempo: number;
     quadratSize: number;
     displayApplicature? : boolean;

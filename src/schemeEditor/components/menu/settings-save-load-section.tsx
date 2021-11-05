@@ -1,29 +1,19 @@
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {
-    Accordion,
-    AccordionSummary,
-    Divider,
-    Grid,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    SelectChangeEvent
-} from "@mui/material";
+import {Accordion, AccordionSummary, Divider, Grid, List, ListItem, ListItemIcon, ListItemText} from "@mui/material";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
 import PublishRoundedIcon from "@mui/icons-material/PublishRounded";
 import PlaylistPlayRoundedIcon from "@mui/icons-material/PlaylistPlayRounded";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect} from "react";
 import Download from '@axetroy/react-download';
 import {SettingsContext} from "../../../context/settings-context";
-import {EditorSettings} from "../../../model/editor-settings-data";
+import {SettingContextData} from "../../../model/context-data-models/settings-context-data";
 import {BarContext} from "../../../context/bar-context";
-import {DDTScheme} from "../../resources/DDT-triplets-recording";
-import {SheetData} from "../../../model/deprecated/sheet-data";
+import {DDTScheme} from "../../../resources/DDT-triplets-recording";
+import {SheetData} from "../../../model/skeleton-entities-data/sheet-data";
 import {RefreshRounded} from "@mui/icons-material";
-import {NymphScheme} from "../../resources/Nymph-recording";
-import {Octaves} from "../../../model/deprecated/octave";
+import {NymphScheme} from "../../../resources/Nymph-recording";
+import {Octaves} from "../../../model/skeleton-entities-data/octave-data";
 
 
 export const SettingsSaveLoadSection = () => {
@@ -63,7 +53,7 @@ export const SettingsSaveLoadSection = () => {
         partialUpdateSettings({quadratSize: memorizedScheme.get(firstSheet)!.bars[0].size})
     }
 
-    const partialUpdateSettings = (value: Partial<EditorSettings>) => {
+    const partialUpdateSettings = (value: Partial<SettingContextData>) => {
         updateSettings({...settings, ...value})
     }
 

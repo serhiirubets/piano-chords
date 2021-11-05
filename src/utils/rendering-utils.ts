@@ -1,6 +1,6 @@
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import {EditorSettings} from "../model/editor-settings-data";
+import {SettingContextData} from "../model/context-data-models/settings-context-data";
 
 export const getFlexBasisValue = (barSize: number, isExporting: boolean, isMenuOpen: boolean) => {
     if (isExporting) {
@@ -70,7 +70,7 @@ export const getQuadratNodeDimension = (isMasteringMode: boolean) => {
 }
 
 
-export const renderToPdf = async (settings: EditorSettings, toPdf?) => {
+export const renderToPdf = async (settings: SettingContextData, toPdf?) => {
     html2canvas(settings.editorElementRef.current, {
         logging: true,
         useCORS: true,

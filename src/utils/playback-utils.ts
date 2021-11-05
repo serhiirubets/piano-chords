@@ -1,10 +1,10 @@
-import {SkeletonData} from "../model/deprecated/skeleton-data";
-import {PlaybackData} from "../model/deprecated/skeleton-node-data";
-import {INote, Note} from "../model/note-data";
+import {SkeletonData} from "../model/skeleton-entities-data/skeleton-data";
+import {PlaybackData} from "../model/skeleton-entities-data/skeleton-node-data";
+import {INote, Note} from "../model/skeleton-entities-data/note-data";
 import {MidiNumbers} from 'react-piano';
 import {getPlaybackData} from "./skeleton-node-utils";
 import {groupBy} from "./js-utils";
-import {SheetData} from "../model/deprecated/sheet-data";
+import {SheetData} from "../model/skeleton-entities-data/sheet-data";
 
 
 export const getNotesToPlay = (bars: Array<{ data: SkeletonData, relativePosition: number }>) => {

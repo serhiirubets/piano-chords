@@ -6,10 +6,10 @@ import {closestCenter, DndContext, DragOverlay, PointerSensor, useSensor, useSen
 import {arrayMove, rectSortingStrategy, SortableContext, useSortable} from '@dnd-kit/sortable'
 import SortableItem from "./block-scheme-grid-new-item";
 import {BarContext} from "../../../context/bar-context";
-import {SkeletonData} from "../../../model/deprecated/skeleton-data";
+import {SkeletonData} from "../../../model/skeleton-entities-data/skeleton-data";
 import {restrictToHorizontalAxis} from "@dnd-kit/modifiers";
 import {AddMoreButton} from "./block-scheme-grid-new";
-import {SheetData} from "../../../model/deprecated/sheet-data";
+import {SheetData} from "../../../model/skeleton-entities-data/sheet-data";
 import {ScrollSyncPane} from 'react-scroll-sync';
 import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded';
 import VolumeMuteRoundedIcon from '@mui/icons-material/VolumeMuteRounded';

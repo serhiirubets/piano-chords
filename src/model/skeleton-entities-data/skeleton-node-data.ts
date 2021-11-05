@@ -1,5 +1,5 @@
 import {HandType} from "./skeleton-data";
-import {Note, NoteType} from "../note-data";
+import {Note, NoteType} from "./note-data";
 import {v4 as uuid} from 'uuid';
 
 export interface IBlockSchemeNodeData {

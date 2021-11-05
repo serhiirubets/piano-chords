@@ -1,9 +1,9 @@
 /** @jsx jsx */
 import React, {useContext} from "react";
 import {jsx} from "@emotion/react/macro";
-import {INote, Note, PlaybackDuration, PlaybackOffset} from "../../../model/note-data";
-import {HandType} from "../../../model/deprecated/skeleton-data";
-import {SkeletonNodeData} from "../../../model/deprecated/skeleton-node-data";
+import {INote, Note, PlaybackDuration, PlaybackOffset} from "../../../model/skeleton-entities-data/note-data";
+import {HandType} from "../../../model/skeleton-entities-data/skeleton-data";
+import {SkeletonNodeData} from "../../../model/skeleton-entities-data/skeleton-node-data";
 import {QUADRAT_WIDTH} from "../../../model/global-constants";
 import {compareByMidiNumbers, getMidiNumber, isChord} from "../../../utils/playback-utils";
 import {HandMidiSummary, TripletHandlingProps} from "./skeleton";

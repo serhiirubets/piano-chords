@@ -8,7 +8,7 @@ import {collectBarsToPlay, getNotesToPlay, playNotes} from "../../../utils/playb
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import StopRoundedIcon from "@mui/icons-material/StopRounded";
 import {BarContext} from "../../../context/bar-context";
-import {SkeletonData} from "../../../model/deprecated/skeleton-data";
+import {SkeletonData} from "../../../model/skeleton-entities-data/skeleton-data";
 
 export interface PlaybackModuleProps {
     iconColor?: string;

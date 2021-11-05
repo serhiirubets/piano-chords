@@ -13,7 +13,7 @@ import {
     Tooltip
 } from "@mui/material";
 import {SettingsContext} from "../../../context/settings-context";
-import {OctaveNotation, Octaves} from "../../../model/deprecated/octave";
+import {OctaveNotation, Octaves} from "../../../model/skeleton-entities-data/octave-data";
 import {BarContext} from "../../../context/bar-context";
 import {deepCopy} from "../../../utils/js-utils";
 

@@ -1,5 +1,5 @@
 import {SelectionIndex} from "../model/selection/selection-index";
-import {HandType, TripletData} from "../model/deprecated/skeleton-data";
+import {HandType, TripletData} from "../model/skeleton-entities-data/skeleton-data";
 import {getTripletByIndex} from "./triplet-utils";
 
 export const prepareFootprintFromIndices = (indicesArray: SelectionIndex[], triplets?: TripletData[]) => {

@@ -3,9 +3,9 @@ import React, {useCallback, useContext, useState} from "react";
 import {css, jsx} from "@emotion/react/macro";
 import {SkeletonNode} from "./skeleton-node";
 import {BarContext} from "../../../context/bar-context";
-import {HandType, TripletData} from "../../../model/deprecated/skeleton-data";
-import {INote, Note, NoteType} from "../../../model/note-data";
-import {SkeletonNodeData} from "../../../model/deprecated/skeleton-node-data";
+import {HandType, TripletData} from "../../../model/skeleton-entities-data/skeleton-data";
+import {INote, Note, NoteType} from "../../../model/skeleton-entities-data/note-data";
+import {SkeletonNodeData} from "../../../model/skeleton-entities-data/skeleton-node-data";
 import {NodeSubtitle} from "./node-subtitle";
 import {getMidiNumber} from "../../../utils/playback-utils";
 import {ClickAwayListener, Divider, ListItemText, Menu, MenuItem, MenuList} from "@mui/material";
@@ -16,7 +16,7 @@ import {SettingsContext} from "../../../context/settings-context";
 import {copySkeleton, getOriginalText, getSkeletonHandData, setSkeletonHandData} from "../../../utils/skeleton-node-utils";
 import {SelectionIndex} from "../../../model/selection/selection-index";
 import {getIndicesLengthAndMinPosition, getPositionRelativeToSelectionStart} from "../../../utils/selection-buffer-utils";
-import {SheetData} from "../../../model/deprecated/sheet-data";
+import {SheetData} from "../../../model/skeleton-entities-data/sheet-data";
 
 export enum NodeSelectionMode {
     NONE = "0000",

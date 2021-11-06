@@ -97,7 +97,7 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: No
     const {settings} = useContext(SettingsContext)
     const MAX_HEIGHT = getQuadratNodeDimension(settings.isMasteringMode).quadratWidth * 1.75;
     const RECOMMENDED_SCALE = MAX_HEIGHT / 30; //30 =2.5 octaves
-    const FONT_HEIGHT = 18;
+    const FONT_HEIGHT = 23;
     const HAND_MULTIPLIER = midiSummary.hand === HandType.RIGHT ? -1 : 1;
     const optimalScale = (MAX_HEIGHT - FONT_HEIGHT) / Math.abs(midiSummary.lowestMidi - midiSummary.higestMidi)
 

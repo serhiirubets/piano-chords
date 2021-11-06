@@ -11,10 +11,14 @@ import {SettingContextData} from "../../../model/context-data-models/settings-co
 import {BarContext} from "../../context/bar-context";
 import {DDTScheme} from "../../../resources/DDT-triplets-recording";
 import {SheetData} from "../../../model/skeleton-entities-data/sheet-data";
-import {RefreshRounded} from "@mui/icons-material";
+import {DownloadRounded, RefreshRounded} from "@mui/icons-material";
 import {NymphScheme} from "../../../resources/Nymph-recording";
 import {Octaves} from "../../../model/skeleton-entities-data/octave-data";
-
+import AddToDriveRoundedIcon from '@mui/icons-material/AddToDriveRounded';
+import {gapi} from "gapi-script";
+import {SaveGoogleDrive} from "./google-drive-save-list-item";
+import {LoadFromGoogleDrive} from "./google-drive-load-list-item";
+import {SettingsPanelExpandableSection} from "../reusable/settings-panel-expandable-section";
 
 export const SettingsSaveLoadSection = () => {
     const {settings, updateSettings} = useContext(SettingsContext);
@@ -116,34 +120,44 @@ export const SettingsSaveLoadSection = () => {
         })
     }
 
+
+
     return (
         <Grid container direction="column" spacing={1}>
-
-            <Download file={`${SAVE_NAME}.json`}
-                      content={JSON.stringify(prepareSaveFile(), null, 2)}
-            >
-                <ListItem button key={"Save"}>
-                    <ListItemIcon>
-                        <SaveRoundedIcon/>
-                    </ListItemIcon>
-                    <ListItemText primary="Сохранить"/>
-                </ListItem>
-            </Download>
-            <label htmlFor="upload-photo">
-                <input
-                    style={{display: 'none'}}
-                    id="upload-photo"
-                    name="upload-photo"
-                    type="file"
-                    onChange={(e) => handleSaveFileSelected(e)}
-                />
-                <ListItem button key={"Load"}>
-                    <ListItemIcon>
-                        <PublishRoundedIcon/>
-                    </ListItemIcon>
-                    <ListItemText primary="Загрузить"/>
-                </ListItem>
-            </label>
+                <SettingsPanelExpandableSection title={"Сохранить"}>
+                    <List>
+                        <Download file={`${SAVE_NAME}.json`}
+                                  content={JSON.stringify(prepareSaveFile(), null, 2)}>
+                            <ListItem button key={"SaveLocalDrive"}>
+                                <ListItemIcon>
+                                    <DownloadRounded/>
+                                </ListItemIcon>
+                                <ListItemText primary="Локальный диск"/>
+                            </ListItem>
+                        </Download>
+                        <SaveGoogleDrive content={JSON.stringify(prepareSaveFile(), null, 2)}/>
+                    </List>
+                </SettingsPanelExpandableSection>
+            <SettingsPanelExpandableSection title={"Загрузить"}>
+                <List>
+                    <label htmlFor="upload-local">
+                        <input
+                            style={{display: 'none'}}
+                            id="upload-local"
+                            name="upload-local"
+                            type="file"
+                            onChange={(e) => handleSaveFileSelected(e)}
+                        />
+                        <ListItem button key={"Load"}>
+                            <ListItemIcon>
+                                <PublishRoundedIcon/>
+                            </ListItemIcon>
+                            <ListItemText primary="Локальный диск"/>
+                        </ListItem>
+                    </label>
+                    <LoadFromGoogleDrive onFileRead={parseSaveFileAndUpdateModel} />
+                </List>
+            </SettingsPanelExpandableSection>
             <ListItem button key={"LoadQuickSave"} onClick={loadFromLocalstorage}>
                 <ListItemIcon>
                     <RefreshRounded/>
@@ -151,30 +165,17 @@ export const SettingsSaveLoadSection = () => {
                 <ListItemText primary="Загрузить автосохранение"/>
             </ListItem>
             <Divider/>
-            <Accordion>
-                <AccordionSummary
-                    style={{padding: 0, margin: 0, maxHeight: "48px"}}
-                    expandIcon={<ExpandMoreIcon/>}
-                >
-                    <ListItem button key={"LoadDemoFile"}>
-                        <ListItemIcon>
-                            <PlaylistPlayRoundedIcon/>
-                        </ListItemIcon>
-                        <ListItemText primary="Загрузить демо"/>
+            <SettingsPanelExpandableSection title={"Загрузить демо"}>
+                <List>
+                    <ListItem button key={"LoadDemoNymph"}
+                              onClick={() => reloadDemoFile(JSON.stringify(NymphScheme))}>
+                        <ListItemText primary="Nymphetamine"/>
                     </ListItem>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <List>
-                        <ListItem button key={"LoadDemoNymph"}
-                                  onClick={() => reloadDemoFile(JSON.stringify(NymphScheme))}>
-                            <ListItemText primary="Nymphetamine"/>
-                        </ListItem>
-                        <ListItem button key={"LoadDemoDDT"} onClick={() => reloadDemoFile(JSON.stringify(DDTScheme))}>
-                            <ListItemText primary="ДДТ - Свобода"/>
-                        </ListItem>
-                    </List>
-                </AccordionDetails>
-            </Accordion>
+                    <ListItem button key={"LoadDemoDDT"} onClick={() => reloadDemoFile(JSON.stringify(DDTScheme))}>
+                        <ListItemText primary="ДДТ - Свобода"/>
+                    </ListItem>
+                </List>
+            </SettingsPanelExpandableSection>
             <Divider/>
         </Grid>
     )

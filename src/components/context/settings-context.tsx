@@ -1,12 +1,14 @@
 import React, {useState} from "react";
 import {SettingContextData} from "../../model/context-data-models/settings-context-data";
 import {HandType} from "../../model/skeleton-entities-data/skeleton-data";
-import {Octaves} from "../../model/skeleton-entities-data/octave-data";
+import {OctaveNotation, Octaves} from "../../model/skeleton-entities-data/octave-data";
 
 const defaultSettings: SettingContextData = {
     playbackTempo: 0.25,
     barSize: 8,
+    fontSize: 23,
     displayApplicature: false,
+    displayLyrics:false,
     alterGainForFeather: true,
     octaveNotation:Octaves.SCIENTIFIC,
     isMenuOpen:false,
@@ -17,6 +19,7 @@ const defaultSettings: SettingContextData = {
     fileName: "Новая блок-схема",
     isMasteringMode:false
 }
+
 
 export const SettingsContext = React.createContext({
     settings: defaultSettings,

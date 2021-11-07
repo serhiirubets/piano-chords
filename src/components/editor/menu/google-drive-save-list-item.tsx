@@ -23,16 +23,17 @@ export const SaveGoogleDrive = ({content}) => {
     const [fileName, setFileName] = useState('')
     const [pickerMetadata, setPickerMetadata] = useState<CallbackDoc | null>(null)
     const {openPicker, data, authResponse} = useDrivePicker();
+
     useEffect(() => {
         if (data) {
-
-            if (data.docs[0].type === 'folder') {
-                setPickerMetadata(data.docs[0])
-                setDialogOpen(true)
-
-            }else {
-                updateExistingFileInGoogleDrive(content, data.docs[0])
-            }
+            setPickerMetadata(data.docs[0])
+            setDialogOpen(true)
+            // if (data.docs[0].type === 'folder') {
+            //     setDialogOpen(true)
+            //
+            // }else {
+            //     updateExistingFileInGoogleDrive(content, data.docs[0])
+            // }
         }
     }, [data])
 
@@ -86,19 +87,19 @@ export const SaveGoogleDrive = ({content}) => {
                 <ListItemText primary="Google drive"/>
             </ListItem>
             <Dialog open={dialogOpen} onClose={handleDialogClose}>
-                <DialogTitle>Subscribe</DialogTitle>
+                <DialogTitle>Сохранение</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Укажите, пожалуйста, имя файла
+                        {pickerMetadata && pickerMetadata.type === 'folder' ? "Укажите, пожалуйста, имя файла" : "Вы уверены, что хотите перезаписать файл? Отменить это действие будет невозможно"}
                     </DialogContentText>
-                    <TextField
+                    {pickerMetadata && pickerMetadata.type === 'folder' && <TextField
                         autoFocus
                         margin="dense"
                         label="Имя файла"
                         fullWidth
                         variant="standard"
                         onChange={(e) => setFileName(e.target.value)}
-                    />
+                    />}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => {

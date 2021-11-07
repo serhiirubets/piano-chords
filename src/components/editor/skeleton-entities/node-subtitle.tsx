@@ -1,17 +1,19 @@
 /** @jsx jsx */
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import {jsx} from "@emotion/react/macro";
 import {INote, Note, PlaybackDuration, PlaybackOffset} from "../../../model/skeleton-entities-data/note-data";
 import {HandType} from "../../../model/skeleton-entities-data/skeleton-data";
 import {SkeletonNodeData} from "../../../model/skeleton-entities-data/skeleton-node-data";
 import {compareByMidiNumbers, getMidiNumber, isChord} from "../../../utils/playback-utils";
 import {HandMidiSummary, TripletHandlingProps} from "./skeleton";
-import {ClickAwayListener} from "@mui/material";
+import {ClickAwayListener, Typography} from "@mui/material";
 import {getOctaveInRussianNotation, getOriginalText} from "../../../utils/skeleton-node-utils";
 import {getTripletEffectiveParameters} from "../../../utils/triplet-utils";
 import {SettingsContext} from "../../context/settings-context";
 import {NoteEditPopupMenu} from "./popup-menus/note-edit-popup-menu";
 import {getQuadratNodeDimension} from "../../../utils/rendering-utils";
+import {position} from "html2canvas/dist/types/css/property-descriptors/position";
+import {deepCopy} from "../../../utils/js-utils";
 
 
 export interface NodeSubtitleProps {
@@ -22,12 +24,12 @@ export interface NodeSubtitleProps {
     handType?: HandType;
     chord?: INote[],
     setNotes: any;
-    tripletProps?: TripletHandlingProps
+    tripletProps?: TripletHandlingProps,
+
 }
 
 
-
-const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizontalOffset}) => {
+const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizontalOffset, lyrics}) => {
     const {settings} = useContext(SettingsContext)
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [isHovered, setIsHovered] = React.useState<boolean>(false);
@@ -55,6 +57,12 @@ const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizon
     return (
         <ClickAwayListener onClickAway={handlePopoverClose}>
             <div>
+
+                {hand === HandType.RIGHT && lyrics && settings.displayLyrics &&
+                <div style={{position: "absolute", top: -10, left: 5, color: "#8b0218"}}>
+                    <Typography fontSize="small">{lyrics}</Typography>
+                </div>}
+
                 <div
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}
@@ -67,27 +75,31 @@ const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizon
                         fontFamily: "serif",
                         fontSize: `${fontHeight}px`,
                         fontWeight: "bold",
-                        cursor:"default",
+                        cursor: "default",
                         border: isHovered ? "solid 1px black" : "none",
                         ...horizontalOffset
                     }}
                     onClick={handleClick}>
-                    {note.displayOctave && <sup css={{fontSize: fontHeight * 0.7,
-                        color:"#6F2DA8",
-                        zIndex:100,
-                        position:"absolute",
-                        top:"-7px",
-                        left:"-7px"
+                    {note.displayOctave && <sup css={{
+                        fontSize: fontHeight * 0.7,
+                        color: "#6F2DA8",
+                        zIndex: 100,
+                        position: "absolute",
+                        top: "-7px",
+                        left: "-7px"
                     }}>{getOctaveInRussianNotation(note.octave)}</sup>}
                     {transformFlatSign(note).note}
                     {transformFlatSign(note).isFlat && <sup css={{fontSize: fontHeight * 0.6}}>♭</sup>}
-                    {settings.displayApplicature && <sup css={{fontSize: fontHeight * 0.7, color:"#D65F24"}}>{note.applicature}</sup>}
+                    {settings.displayApplicature &&
+                    <sup css={{fontSize: fontHeight * 0.7, color: "#D65F24"}}>{note.applicature}</sup>}
                 </div>
                 <NoteEditPopupMenu note={note}
-                                 anchorEl={anchorEl}
-                                 hand={hand}
-                                 onUpdateNote={onUpdateNote}
-                                 onClose={handlePopoverClose}
+                                   anchorEl={anchorEl}
+                                   updateAnchorEl={(newVal) => setAnchorEl(newVal)}
+                                   hand={hand}
+                                   onUpdateNote={onUpdateNote}
+                                   onClose={handlePopoverClose}
+                                   lyrics={lyrics}
                 />
             </div>
         </ClickAwayListener>)
@@ -95,9 +107,10 @@ const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizon
 
 export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: NodeSubtitleProps) => {
     const {settings} = useContext(SettingsContext)
+
     const MAX_HEIGHT = getQuadratNodeDimension(settings.isMasteringMode).quadratWidth * 1.75;
     const RECOMMENDED_SCALE = MAX_HEIGHT / 30; //30 =2.5 octaves
-    const FONT_HEIGHT = 23;
+    const FONT_HEIGHT = settings.fontSize;
     const HAND_MULTIPLIER = midiSummary.hand === HandType.RIGHT ? -1 : 1;
     const optimalScale = (MAX_HEIGHT - FONT_HEIGHT) / Math.abs(midiSummary.lowestMidi - midiSummary.higestMidi)
 
@@ -123,10 +136,10 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: No
         noteDeltaCalculation: (note, scale) => (midiSummary.higestMidi - getMidiNumber(note)) * scale
     }
 
-    const getChordNoteHeights = (chord: INote[], hand:HandType) => {
-        const comparator= hand === HandType.RIGHT ?
-                compareByMidiNumbers :
-                (a,b) => -1*compareByMidiNumbers(a,b)
+    const getChordNoteHeights = (chord: INote[], hand: HandType) => {
+        const comparator = hand === HandType.RIGHT ?
+            compareByMidiNumbers :
+            (a, b) => -1 * compareByMidiNumbers(a, b)
 
         const chordTops = chord
             .sort(comparator)
@@ -144,10 +157,10 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: No
         return chordTops;
     }
 
-    const getChordNoteRelativeTop = (note: INote, allNotes: INote[], hand:HandType) => {
+    const getChordNoteRelativeTop = (note: INote, allNotes: INote[], hand: HandType) => {
         const chord = allNotes.filter(n => n.playbackOffset === note.playbackOffset);
         chord.sort(compareByMidiNumbers)
-        const chordTops = getChordNoteHeights(chord,hand);
+        const chordTops = getChordNoteHeights(chord, hand);
         const noteIndex = chord.indexOf(note);
         return chordTops[noteIndex];
     }
@@ -165,9 +178,9 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: No
             const effectiveProps = getTripletEffectiveParameters(tripletProps);
             const indexOfNoteInTriplet = effectiveProps.standardOffsets.indexOf(note.playbackOffset)
 
-            const middleOffset = (effectiveProps.standardOffsets[2] - effectiveProps.standardOffsets[0])/2
+            const middleOffset = (effectiveProps.standardOffsets[2] - effectiveProps.standardOffsets[0]) / 2
             const offsetLeft = indexOfNoteInTriplet === 1 ?
-                getQuadratNodeDimension(settings.isMasteringMode).quadratWidth * ( middleOffset + paddingOffset):
+                getQuadratNodeDimension(settings.isMasteringMode).quadratWidth * (middleOffset + paddingOffset) :
                 getQuadratNodeDimension(settings.isMasteringMode).quadratWidth * (effectiveProps.standardOffsets[indexOfNoteInTriplet] + paddingOffset);
             return {left: offsetLeft}
         }
@@ -176,11 +189,12 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: No
     }
 
 
-    const handleUpdateOfNode = (oldNote: Note) => (newNote: Note) => {
+    const handleUpdateOfNode = (oldNote: Note) => (newNote: Note, newLyrics?: string) => {
         const updatedNotes = [...nodeData.notes];
         const indexOfOldNote = updatedNotes.indexOf(oldNote);
         updatedNotes[indexOfOldNote] = newNote
-        setNotes(updatedNotes, getOriginalText(updatedNotes, settings.octaveNotation))
+        console.log('Lyrics to update:', newLyrics)
+        setNotes(updatedNotes, getOriginalText(updatedNotes, settings.octaveNotation), newLyrics)
 
     }
 
@@ -201,9 +215,10 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: No
                                 note={note}
                                 onUpdateNote={handleUpdateOfNode(note)}
                                 hand={nodeData.hand}
-                                height={constainsChords ? getChordNoteRelativeTop(note, nodeData.notes,nodeData.hand) : getSingleNoteRelativeTop(note)}
+                                height={constainsChords ? getChordNoteRelativeTop(note, nodeData.notes, nodeData.hand) : getSingleNoteRelativeTop(note)}
                                 fontHeight={FONT_HEIGHT}
                                 horizontalOffset={getNoteHorizontalOffset(note)}
+                                lyrics={nodeData.lyrics}
                             />
                         )
                 }

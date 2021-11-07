@@ -2,7 +2,7 @@ import {PlaybackData, SkeletonNodeData} from "../model/skeleton-entities-data/sk
 import {INote, NoteType} from "../model/skeleton-entities-data/note-data";
 import {HandType, SkeletonData} from "../model/skeleton-entities-data/skeleton-data";
 import {getMidiNumber} from "./playback-utils";
-import {groupBy} from "./js-utils";
+import {deepCopy, groupBy} from "./js-utils";
 import {getOctaveNotationFromScientific, OctaveNotation} from "../model/skeleton-entities-data/octave-data";
 
 export const getEffectiveNodeColor = (data: SkeletonNodeData, isHostingTriplet: boolean) => {
@@ -125,4 +125,23 @@ export const recalculateBarsToNewSize = (bars: SkeletonData[], newBarSize: numbe
     }
 
     return newBars
+}
+
+export const bulkUpdateDisplayOctaveValues = (bars: SkeletonData[], isOctaveDisplayed: boolean) => {
+
+    const result = new Array<SkeletonData>();
+
+    bars.forEach(bar => {
+        const updatedBar = deepCopy(bar);
+        updatedBar.left.forEach(node => {
+            node.notes.forEach(note => note.displayOctave = isOctaveDisplayed)
+        })
+        updatedBar.right.forEach(node => {
+            node.notes.forEach(note => note.displayOctave = isOctaveDisplayed)
+        })
+        result.push(updatedBar)
+    })
+
+    return result;
+
 }

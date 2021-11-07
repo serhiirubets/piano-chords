@@ -69,7 +69,7 @@ export const SkeletonWrapper = ({
 
       intervalId = setInterval(() => {
         playNotes(notes, playFunction, settings.playbackTempo, settings.alterGainForFeather, settings.barSize)
-      }, notes.length * 1000 * settings.playbackTempo);
+      }, notes.length * 1000 * settings.playbackTempo + 1000);
 
     }
 

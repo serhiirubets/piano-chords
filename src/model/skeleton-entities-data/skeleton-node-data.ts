@@ -7,6 +7,7 @@ export interface IBlockSchemeNodeData {
     notes: Note[];
     hand: HandType;
     originalText: string;
+    lyrics?:string;
 }
 
 export interface PlaybackData {
@@ -22,6 +23,7 @@ export class SkeletonNodeData implements IBlockSchemeNodeData {
     public notes = new Array<Note>();
     public isPresent = false;
     public type = NoteType.REGULAR;
+    public lyrics = ''
 
     constructor(initData?: Partial<IBlockSchemeNodeData>) {
         if (initData) {
@@ -30,6 +32,7 @@ export class SkeletonNodeData implements IBlockSchemeNodeData {
             this.type = initData.type || NoteType.REGULAR;
             this.hand = initData.hand || HandType.RIGHT;
             this.originalText = initData.originalText || '';
+            this.lyrics = initData.lyrics || '';
         }
     }
 

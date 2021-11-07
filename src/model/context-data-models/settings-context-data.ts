@@ -4,7 +4,9 @@ import {OctaveNotation} from "../skeleton-entities-data/octave-data";
 export interface SettingContextData {
     playbackTempo: number;
     barSize: number;
+    fontSize: number;
     displayApplicature? : boolean;
+    displayLyrics:boolean,
     alterGainForFeather:boolean;
     octaveNotation:OctaveNotation;
 

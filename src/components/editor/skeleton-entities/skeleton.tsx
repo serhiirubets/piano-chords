@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import React, {useCallback, useContext, useState} from "react";
-import {css, jsx} from "@emotion/react/macro";
+import {css,jsx} from "@emotion/react/macro";
 import {SkeletonNode} from "./skeleton-node";
 import {BarContext} from "../../context/bar-context";
 import {HandType, TripletData} from "../../../model/skeleton-entities-data/skeleton-data";
@@ -63,7 +63,7 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
     const {bars, updateSingleBar, selectionBuffer, sheets} = useContext(BarContext);
     const {settings} = useContext(SettingsContext);
 
-    const skeletonData = (sheets.get(sheetName)|| new SheetData(settings.barSize)).bars[skeletonIndex]
+    const skeletonData = (sheets.get(sheetName) || new SheetData(settings.barSize)).bars[skeletonIndex]
     const [selectedNodes, setSelectedNodes] = useState<SelectionIndex[]>(new Array<SelectionIndex>());
     const [activeNodeIndex, setActiveNodeIndex] = useState<SelectionIndex | null>(null);
     const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
@@ -137,7 +137,7 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
     }, [selectedNodes, activeNodeIndex])
 
     const setNote = useCallback((hand: HandType, index: number) => {
-        return (notes: Note[], originalText: string) => {
+        return (notes: Note[], originalText: string, lyrics?:string) => {
 
             const isAnyFeather = notes.some(note => note.noteType === NoteType.FEATHER);
 
@@ -151,7 +151,8 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
                 isPresent: notes.length > 0,
                 type: isAnyFeather ? NoteType.FEATHER : NoteType.REGULAR,
                 hand: hand,
-                originalText: originalText
+                originalText: originalText,
+                lyrics:lyrics ?  lyrics: ""
             });
 
             const updatedSkeleton = deepCopy(bars[skeletonIndex]);
@@ -206,7 +207,7 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
 
         indices.forEach(selectionIndex => {
             const handDataToUpdate = getSkeletonHandData(updatedSkeletonData, selectionIndex.noteHand)
-            if(handDataToUpdate[selectionIndex.index].isPresent){
+            if (handDataToUpdate[selectionIndex.index].isPresent) {
                 const updatedNode = {...handDataToUpdate[selectionIndex.index]}
                 const updatedNotes = bulkUpdateFunction(updatedNode.notes)
                 updatedNode.notes = updatedNotes
@@ -360,11 +361,14 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
                         {skeletonData.right
                             .map((noteData, idx) => <div css={styles.tempBox}
                                                          key={`${skeletonIndex}-r-${idx}-wrapper`}>
-                                    <NodeSubtitle nodeData={noteData}
+                                    <NodeSubtitle
+                                        key={skeletonIndex + '-r-subtitle-' + idx}
+                                        nodeData={noteData}
                                                   midiSummary={rightHandMidiSummary}
                                                   setNotes={setNote(HandType.RIGHT, idx)}
                                                   tripletProps={getTripletProps(idx, HandType.RIGHT)}
-                                    ></NodeSubtitle>
+                                        nodeKey={skeletonIndex + '-r-subtitle-' + idx}
+                                    />
                                     <div key={`${skeletonIndex}-r-${idx}-contextHandler`}
                                          onContextMenu={handleContextMenuClick}>
                                         <SkeletonNode data={noteData}
@@ -376,7 +380,7 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
                                                       selectionMode={getSelectionMode(idx, HandType.RIGHT)}
                                                       onSelect={(event) => handleNodeSelected(event, idx, HandType.RIGHT)}
                                                       tripletProps={getTripletProps(idx, HandType.RIGHT)}
-                                        ></SkeletonNode>
+                                        />
                                     </div>
                                 </div>
                             )}
@@ -396,12 +400,15 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
                                                   selectionMode={getSelectionMode(idx, HandType.LEFT)}
                                                   key={skeletonIndex + '-l-' + idx}
                                                   tripletProps={getTripletProps(idx, HandType.LEFT)}
-                                    ></SkeletonNode>
-                                    <NodeSubtitle nodeData={noteData}
+                                    />
+                                    <NodeSubtitle
+                                        key={skeletonIndex + '-l-subtitle-' + idx}
+                                        nodeData={noteData}
                                                   midiSummary={leftHandMidiSummary}
                                                   setNotes={setNote(HandType.LEFT, idx)}
                                                   tripletProps={getTripletProps(idx, HandType.LEFT)}
-                                    ></NodeSubtitle>
+                                        nodeKey={skeletonIndex + '-l-subtitle-' + idx}
+                                   />
                                 </div>
                             )}
                     </div>

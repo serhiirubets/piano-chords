@@ -18,6 +18,8 @@ export interface BlockSchemeSkeletonWrapperProps {
     sortableAttributes?: any;
 }
 
+let intervalId;
+
 export const SkeletonWrapper = ({
                                     index,
                                     id,
@@ -26,6 +28,7 @@ export const SkeletonWrapper = ({
                                     sheetName
                                 }: BlockSchemeSkeletonWrapperProps) => {
     const [isHovered, setIsHovered] = useState<boolean>(false);
+    const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
     const {settings} = useContext(SettingsContext);
     const {bars, updateBars} = useContext(BarContext);
@@ -35,8 +38,10 @@ export const SkeletonWrapper = ({
         setIsHovered(true)
     }
 
-    const hadleMouseLeave = () => {
-        setIsHovered(false)
+    const handleMouseLeave = () => {
+        if (!isPlaying) {
+          setIsHovered(false)
+        }
     }
 
     const handleClearButtonClick = () => {
@@ -54,10 +59,18 @@ export const SkeletonWrapper = ({
     }
 
     const handlePlayButtonClick = (playFunction) => {
-        playNotes(getNotesToPlay([{
-            data: bars[index],
-            relativePosition: 0
-        }]), playFunction, settings.playbackTempo, settings.alterGainForFeather, settings.barSize)
+      setIsPlaying(true);
+      const notes = getNotesToPlay([{
+        data: bars[index],
+        relativePosition: 0
+      }]);
+
+      playNotes(notes, playFunction, settings.playbackTempo, settings.alterGainForFeather, settings.barSize);
+
+      intervalId = setInterval(() => {
+        playNotes(notes, playFunction, settings.playbackTempo, settings.alterGainForFeather, settings.barSize)
+      }, notes.length * 1000 * settings.playbackTempo);
+
     }
 
     return (
@@ -69,7 +82,7 @@ export const SkeletonWrapper = ({
             flexDirection: "column",
             display: "flex",
             maxWidth: getQuadratNodeDimension(settings.isMasteringMode).quadratWidth * settings.barSize + 40
-        }} onMouseEnter={handleMouseEnter} onMouseLeave={hadleMouseLeave}>
+        }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
 
             <div style={{display: "flex", justifyContent: "flex-end", flexDirection: "row", width: "100%"}}>
                 {isHovered ? <SoundfontProvider
@@ -80,6 +93,8 @@ export const SkeletonWrapper = ({
                             <div style={{display: "flex", flexDirection: "row", width: "100%"}}>
                                 <SkeletonWrapperControls onStartPlaying={() => handlePlayButtonClick(playNote)}
                                                          onStopPlaying={() => {
+                                                             setIsPlaying(false);
+                                                             clearInterval(intervalId);
                                                              stopNote();
                                                              stopAllNotes();
                                                          }}

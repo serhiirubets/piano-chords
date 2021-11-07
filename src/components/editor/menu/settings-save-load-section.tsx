@@ -94,6 +94,7 @@ export const SettingsSaveLoadSection = () => {
         const saveObject = JSON.parse(stringifiedData)
         const partialSettings = saveObject.settings || {}
         const barData = saveObject.data
+        console.log('restored autosave object',saveObject)
         const processedBarData = (barData || []).map(([key, value]) => {
             const valueAsSheet = new SheetData(value.bars.size)
             valueAsSheet.name = value.name;
@@ -113,9 +114,14 @@ export const SettingsSaveLoadSection = () => {
         updateSheets(restoredSheetsData)
         updateActiveSheet(firstSheet)
         updateActiveSubSheet(firstSubSheet)
+
+
+        console.log(partialSettings.octaveNotation)
+         const restoredOctaveNotationKey = Object.keys(Octaves).filter(key => Octaves[key].name === partialSettings.octaveNotation.name)[0]
+        console.log('Key', restoredOctaveNotationKey)
         partialUpdateSettings({
             fileName: filename,
-            octaveNotation: partialSettings.octaveNotation || Octaves.SCIENTIFIC,
+            octaveNotation: Octaves[restoredOctaveNotationKey],
             barSize: partialSettings.quadratSize || restoredSheetsData.get(firstSheet)!.bars.length
         })
     }

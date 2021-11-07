@@ -136,16 +136,6 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
 
     }, [selectedNodes, activeNodeIndex])
 
-    const setNode = useCallback((newData: SkeletonNodeData, index: number, hand: HandType) => {
-        const updatedSkeletonData = copySkeleton(skeletonData)
-
-        const handToUpdate = hand === HandType.LEFT ? updatedSkeletonData.left : updatedSkeletonData.right;
-        handToUpdate[index] = newData
-        setSkeletonHandData(updatedSkeletonData, handToUpdate, hand);
-
-        updateSingleBar(skeletonIndex, updatedSkeletonData)
-    }, [bars, skeletonIndex])
-
     const setNote = useCallback((hand: HandType, index: number) => {
         return (notes: Note[], originalText: string, lyrics?:string) => {
 
@@ -377,6 +367,7 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
                                                   midiSummary={rightHandMidiSummary}
                                                   setNotes={setNote(HandType.RIGHT, idx)}
                                                   tripletProps={getTripletProps(idx, HandType.RIGHT)}
+                                        nodeKey={skeletonIndex + '-r-subtitle-' + idx}
                                     />
                                     <div key={`${skeletonIndex}-r-${idx}-contextHandler`}
                                          onContextMenu={handleContextMenuClick}>
@@ -416,6 +407,7 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
                                                   midiSummary={leftHandMidiSummary}
                                                   setNotes={setNote(HandType.LEFT, idx)}
                                                   tripletProps={getTripletProps(idx, HandType.LEFT)}
+                                        nodeKey={skeletonIndex + '-l-subtitle-' + idx}
                                    />
                                 </div>
                             )}

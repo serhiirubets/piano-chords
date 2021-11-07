@@ -25,6 +25,7 @@ export interface NodeSubtitleProps {
     chord?: INote[],
     setNotes: any;
     tripletProps?: TripletHandlingProps,
+    nodeKey:string;
 
 }
 
@@ -57,7 +58,6 @@ const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizon
     return (
         <ClickAwayListener onClickAway={handlePopoverClose}>
             <div>
-
                 {hand === HandType.RIGHT && lyrics && settings.displayLyrics &&
                 <div style={{position: "absolute", top: -10, left: 5, color: "#8b0218"}}>
                     <Typography fontSize="small">{lyrics}</Typography>
@@ -105,7 +105,7 @@ const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizon
         </ClickAwayListener>)
 }
 
-export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: NodeSubtitleProps) => {
+export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps, nodeKey}: NodeSubtitleProps) => {
     const {settings} = useContext(SettingsContext)
 
     const MAX_HEIGHT = getQuadratNodeDimension(settings.isMasteringMode).quadratWidth * 1.75;
@@ -212,6 +212,7 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps}: No
                     nodeData.notes
                         .sort((first, second) => getMidiNumber(second) - getMidiNumber(first))
                         .map(note => <NodeSubtitleItem
+                                key={nodeKey+"-"+note.note+"-"+note.octave}
                                 note={note}
                                 onUpdateNote={handleUpdateOfNode(note)}
                                 hand={nodeData.hand}

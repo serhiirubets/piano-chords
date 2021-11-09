@@ -14,28 +14,24 @@ export interface BlockSchemeSkeletonWrapperProps {
   id: string,
   onStartPlaying: any;
   onStopPlaying: any;
-  onLoop: any;
-  onStopLoop: any;
   onCopy: any;
   onClear: any;
   isDisplayed: boolean;
   sortableListeners: any;
   sortableAttributes: any;
-  isLoopPlaying: boolean;
+  loopComponent: any;
 }
 
 export const SkeletonWrapperControls = ({
   id,
   onStartPlaying,
   onStopPlaying,
-  onLoop,
-  onStopLoop,
   onCopy,
   isDisplayed,
   onClear,
-  isLoopPlaying,
   sortableListeners,
-  sortableAttributes
+  sortableAttributes,
+  loopComponent
   }: BlockSchemeSkeletonWrapperProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -88,21 +84,7 @@ export const SkeletonWrapperControls = ({
               </IconButton>
             </Tooltip>
           }
-          {isLoopPlaying ?
-            <Tooltip title="Остановить квадрат">
-              <IconButton size="small" onClick={() => {
-                setIsPlaying(false);
-                onStopLoop();
-              }}>
-                <StopRoundedIcon/>
-              </IconButton>
-            </Tooltip> :
-            <Tooltip title="Зациклить квадрат" placement="top">
-              <IconButton size="small" onClick={onLoop}>
-                <LoopIcon/>
-              </IconButton>
-            </Tooltip>
-          }
+          { loopComponent }
           <Tooltip title="Cкопировать квадрат" placement="top">
             <IconButton size="small" onClick={onCopy}>
               <FileCopyRoundedIcon/>

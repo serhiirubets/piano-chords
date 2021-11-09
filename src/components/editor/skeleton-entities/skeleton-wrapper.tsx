@@ -9,6 +9,7 @@ import {SettingsContext} from "../../../components/context/settings-context";
 import {BarContext} from "../../../components/context/bar-context";
 import {deepCopy} from "../../../utils/js-utils";
 import {getQuadratNodeDimension} from "../../../utils/rendering-utils";
+import {LoopPlay} from '../reusable/LoopPlay';
 
 export interface BlockSchemeSkeletonWrapperProps {
   index: number;
@@ -28,7 +29,6 @@ export const SkeletonWrapper = ({
   sheetName
 }: BlockSchemeSkeletonWrapperProps) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [isLoopPlaying, setIsLoopPlaying] = useState<boolean>(false);
 
   const {settings} = useContext(SettingsContext);
   const {bars, updateBars} = useContext(BarContext);
@@ -38,9 +38,7 @@ export const SkeletonWrapper = ({
   }
 
   const handleMouseLeave = () => {
-    if (!isLoopPlaying) {
-      setIsHovered(false)
-    }
+    setIsHovered(false)
   }
 
   const handleClearButtonClick = () => {
@@ -57,30 +55,13 @@ export const SkeletonWrapper = ({
     updateBars(editedBars);
   }
 
+  const notes = getNotesToPlay([{
+    data: bars[index],
+    relativePosition: 0
+  }]);
+
   const handlePlayButtonClick = (playFunction) => {
-    playNotes(getNotesToPlay([{
-      data: bars[index],
-      relativePosition: 0
-    }]), playFunction, settings.playbackTempo, settings.alterGainForFeather, settings.barSize)
-  }
-
-  const handleLoopClick = (playFunction) => {
-    setIsLoopPlaying(true);
-    const notes = getNotesToPlay([{
-      data: bars[index],
-      relativePosition: 0
-    }]);
-
-    playNotes(notes, playFunction, settings.playbackTempo, settings.alterGainForFeather, settings.barSize);
-
-    intervalId = setInterval(() => {
-      playNotes(notes, playFunction, settings.playbackTempo, settings.alterGainForFeather, settings.barSize)
-    }, notes.length * 1000 * settings.playbackTempo + 1000);
-  }
-
-  const onStopLoop = () => {
-    clearInterval(intervalId);
-    setIsLoopPlaying(false);
+    playNotes(notes, playFunction, settings.playbackTempo, settings.alterGainForFeather, settings.barSize)
   }
 
   return (
@@ -103,8 +84,6 @@ export const SkeletonWrapper = ({
               <div style={{display: "flex", flexDirection: "row", width: "100%"}}>
                 <SkeletonWrapperControls
                   onStartPlaying={() => handlePlayButtonClick(playNote)}
-                  onLoop={() => handleLoopClick(playNote)}
-                  onStopLoop={onStopLoop}
                   onStopPlaying={() => {
                     stopNote();
                     stopAllNotes();
@@ -113,7 +92,7 @@ export const SkeletonWrapper = ({
                   onClear={handleClearButtonClick}
                   isDisplayed={true}
                   id={id}
-                  isLoopPlaying={isLoopPlaying}
+                  loopComponent={<LoopPlay notes={notes} settings={settings} playNote={playNote} />}
                   sortableListeners={sortableListeners}
                   sortableAttributes={sortableAttributes}
                 />

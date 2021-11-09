@@ -9,6 +9,7 @@ import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import StopRoundedIcon from "@mui/icons-material/StopRounded";
 import {BarContext} from "../../context/bar-context";
 import {SkeletonData} from "../../../model/skeleton-entities-data/skeleton-data";
+import {LoopPlay} from './LoopPlay';
 
 export interface PlaybackModuleProps {
     iconColor?: string;
@@ -31,6 +32,8 @@ export const PlaybackModule = ({iconColor, bars}: PlaybackModuleProps) => {
         bars.map(bar => ({data: bar, relativePosition: 0})) :
         collectBarsToPlay(settings.isMasteringMode, activeSubSheet || activeSheet, sheets)
 
+
+    const notes = getNotesToPlay(barsDataToPlay);
     return (
         <SoundfontProvider
             instrumentName={DEFAULT_INSTRUMENT}
@@ -42,11 +45,15 @@ export const PlaybackModule = ({iconColor, bars}: PlaybackModuleProps) => {
 
                         <IconButton
                             onClick={() => {
-                                playNotes(getNotesToPlay(barsDataToPlay), playNote, settings.playbackTempo, settings.alterGainForFeather, settings.barSize)
+                              playNotes(notes, playNote, settings.playbackTempo, settings.alterGainForFeather, settings.barSize)
                             }}
                             size="large">
                             <PlayArrowRoundedIcon fontSize="large" style={{fill: iconColor ? iconColor : "#176503"}}/>
                         </IconButton>
+                        <LoopPlay notes={notes} playNote={playNote} settings={settings} stop={() => {
+                          stopNote();
+                          stopAllNotes();
+                        }} />
                         <IconButton
                             onClick={() => {
                                 stopNote();

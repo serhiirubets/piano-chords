@@ -372,6 +372,7 @@ export const ScrollableTabs = () => {
                 {sheetNames
                     .map((sheetName, idx) => <SortableTabItem
                         style={classes.sheetTabItem}
+                        key={sheetName}
                         sheetName={sheetName}
                         handleNameChange={handleSheetNameChange}
                         onTabSelect={() => {

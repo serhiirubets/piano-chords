@@ -9,7 +9,7 @@ import {SettingsContext} from "../../../components/context/settings-context";
 import {BarContext} from "../../../components/context/bar-context";
 import {deepCopy} from "../../../utils/js-utils";
 import {getQuadratNodeDimension} from "../../../utils/rendering-utils";
-import {LoopPlay} from '../reusable/LoopPlay';
+import {LoopPlay} from '../reusable/loop-play';
 
 export interface BlockSchemeSkeletonWrapperProps {
   index: number;

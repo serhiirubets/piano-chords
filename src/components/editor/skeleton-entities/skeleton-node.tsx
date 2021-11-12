@@ -14,7 +14,7 @@ import {getTripletEffectiveParameters} from "../../../utils/triplet-utils";
 import {getQuadratNodeDimension} from "../../../utils/rendering-utils";
 import {OctaveNotation, parseOctaveNotationToScientific} from "../../../model/skeleton-entities-data/octave-data";
 
-const NOTES_REGEX = /a-gmA-G#\s\/:/
+const NOTES_REGEX = /a-gmA-G#\s\//
 const SIXTEENS_SEPARATOR = '/'
 const CHORD_SEPARATOR = ' '
 const TRIPLET_SEPARATOR = ':'
@@ -42,7 +42,6 @@ const parseInputToTheNotes = (stringValue: string, defaultOctave: number, triple
         return sixteensParts
             .flatMap((sixteens, index) => parseNoteOrChord(sixteens, defaultOctave, PlaybackDuration.HALF, getOffset(index), octaveNotation));
     } else if (stringValue.includes(TRIPLET_SEPARATOR)) {
-
         //Triplets are either 8th (4 nodes) or 16th (2 nodes)
         const tripletRealValues = getTripletEffectiveParameters(tripletProps);
         const getOffset = index => tripletRealValues.standardOffsets[index];
@@ -200,7 +199,7 @@ export const SkeletonNode = ({
         if (event.key === 'Enter') {
             handleSave()
         }
-        const DISALLOWED_KEYS = new RegExp(`[^${NOTES_REGEX.source}${settings.octaveNotation.regexpKeys}]+`)
+        const DISALLOWED_KEYS = new RegExp(`[^${NOTES_REGEX.source}${settings.octaveNotation.regexpKeys}${tripletPropsOrFallback.isHostingTriplet?":":""}]+`)
         const filteredValues = event.target.value.replace(DISALLOWED_KEYS, '');
         event.target.value = filteredValues || "";
         setInputText(filteredValues);

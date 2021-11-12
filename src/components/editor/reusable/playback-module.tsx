@@ -9,7 +9,7 @@ import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import StopRoundedIcon from "@mui/icons-material/StopRounded";
 import {BarContext} from "../../context/bar-context";
 import {SkeletonData} from "../../../model/skeleton-entities-data/skeleton-data";
-import {LoopPlay} from './LoopPlay';
+import {LoopPlay} from './loop-play';
 
 export interface PlaybackModuleProps {
     iconColor?: string;

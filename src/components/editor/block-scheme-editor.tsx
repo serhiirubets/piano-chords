@@ -15,6 +15,8 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import SortRoundedIcon from '@mui/icons-material/SortRounded';
 import GridViewRoundedIcon from '@mui/icons-material/GridViewRounded';
+import {ListItemText, Menu, MenuItem, MenuList} from "@mui/material";
+import {EditableLabel} from "./reusable/editable-label";
 
 
 const drawerWidth = 380
@@ -73,6 +75,8 @@ export const BlockSchemeEditor = () => {
     const {settings, partialUpdateSettings} = useContext(SettingsContext)
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const [menuAnchorEl, setMenuAnchorEl] = React.useState<HTMLElement|null>(null);
+    const [title, setTitle] = React.useState(settings.fileName);
 
     const handleDrawerOpen = () => {
         partialUpdateSettings({isMenuOpen: true})
@@ -83,6 +87,11 @@ export const BlockSchemeEditor = () => {
         partialUpdateSettings({isMenuOpen: false})
         setOpen(false);
     };
+
+    const handleMenuClose = () => {
+        setMenuAnchorEl(null);
+    };
+
     return (
         <div style={{flexDirection: "row", display: "flex", width: "95vw", maxWidth: "100%", backgroundColor: "white"}}>
                     <Box style={{width: "100%"}}>
@@ -96,14 +105,33 @@ export const BlockSchemeEditor = () => {
                                 >
                                     {settings.isMasteringMode? <GridViewRoundedIcon/> : <SortRoundedIcon/>}
                                 </IconButton>
-                                <Typography
-                                    variant="h6"
-                                    noWrap
-                                    component="div"
-                                    sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}
-                                >
-                                    {settings.fileName}
-                                </Typography>
+                                <EditableLabel
+                                    label={settings.fileName}
+                                    onChange={(newValue)=> {partialUpdateSettings({fileName:newValue})}}
+                                    labelProps = {{variant:"h6",
+                                        noWrap:true,
+                                        component:"div",
+                                        sx:{flexGrow: 1, display: {xs: 'none', sm: 'block'}}
+                                    }}
+                                    textfieldProps={{ variant:"standard",
+                                        sx:{color:"white"},
+                                        style:{
+                                        position: "absolute",
+                                        paddingLeft: "1em",
+                                        paddingRight: "1em",
+                                    },
+                                    InputProps:{
+                                        style:{color:"white"}
+                                    }}}
+                                />
+                                {/*<Typography*/}
+                                {/*    variant="h6"*/}
+                                {/*    noWrap*/}
+                                {/*    component="div"*/}
+                                {/*    sx={{flexGrow: 1, display: {xs: 'none', sm: 'block'}}}*/}
+                                {/*>*/}
+                                {/*    {settings.fileName}*/}
+                                {/*</Typography>*/}
 
                                 <IconButton
                                     color="inherit"

@@ -211,8 +211,8 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps, nod
                 }}>{
                     nodeData.notes
                         .sort((first, second) => getMidiNumber(second) - getMidiNumber(first))
-                        .map(note => <NodeSubtitleItem
-                                key={nodeKey+"-"+note.note+"-"+note.octave}
+                        .map((note, index) => <NodeSubtitleItem
+                                key={nodeKey+"-"+index}
                                 note={note}
                                 onUpdateNote={handleUpdateOfNode(note)}
                                 hand={nodeData.hand}

@@ -1,9 +1,5 @@
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {Accordion, AccordionSummary, Divider, Grid, List, ListItem, ListItemIcon, ListItemText} from "@mui/material";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
+import {Divider, Grid, List, ListItem, ListItemIcon, ListItemText} from "@mui/material";
 import PublishRoundedIcon from "@mui/icons-material/PublishRounded";
-import PlaylistPlayRoundedIcon from "@mui/icons-material/PlaylistPlayRounded";
 import React, {useContext, useEffect} from "react";
 import Download from '@axetroy/react-download';
 import {SettingsContext} from "../../context/settings-context";
@@ -14,11 +10,11 @@ import {SheetData} from "../../../model/skeleton-entities-data/sheet-data";
 import {DownloadRounded, RefreshRounded} from "@mui/icons-material";
 import {NymphScheme} from "../../../resources/Nymph-recording";
 import {Octaves} from "../../../model/skeleton-entities-data/octave-data";
-import AddToDriveRoundedIcon from '@mui/icons-material/AddToDriveRounded';
-import {gapi} from "gapi-script";
 import {SaveGoogleDrive} from "./google-drive-save-list-item";
 import {LoadFromGoogleDrive} from "./google-drive-load-list-item";
 import {SettingsPanelExpandableSection} from "../reusable/settings-panel-expandable-section";
+import FiberNewIcon from '@mui/icons-material/FiberNew';
+import {SkeletonData} from "../../../model/skeleton-entities-data/skeleton-data";
 
 export const SettingsSaveLoadSection = () => {
     const {settings, updateSettings} = useContext(SettingsContext);
@@ -31,7 +27,6 @@ export const SettingsSaveLoadSection = () => {
         updateBars
     } = useContext(BarContext);
     const SHEETS_LOCALSTORAGE_KEY = "sheets_autosave";
-    const SAVE_NAME = 'Новая блок-схема'
 
     let fileReader;
     let filename;
@@ -94,7 +89,7 @@ export const SettingsSaveLoadSection = () => {
         const saveObject = JSON.parse(stringifiedData)
         const partialSettings = saveObject.settings || {}
         const barData = saveObject.data
-        console.log('restored autosave object',saveObject)
+        console.log('restored autosave object', saveObject)
         const processedBarData = (barData || []).map(([key, value]) => {
             const valueAsSheet = new SheetData(value.bars.size)
             valueAsSheet.name = value.name;
@@ -117,7 +112,7 @@ export const SettingsSaveLoadSection = () => {
 
 
         console.log(partialSettings.octaveNotation)
-         const restoredOctaveNotationKey = Object.keys(Octaves).filter(key => Octaves[key].name === partialSettings.octaveNotation.name)[0]
+        const restoredOctaveNotationKey = Object.keys(Octaves).filter(key => Octaves[key].name === partialSettings.octaveNotation.name)[0]
         console.log('Key', restoredOctaveNotationKey)
         partialUpdateSettings({
             fileName: filename,
@@ -126,24 +121,38 @@ export const SettingsSaveLoadSection = () => {
         })
     }
 
+    const resetContext = () => {
+        const defaultSheet = new SheetData(settings.barSize);
+        defaultSheet.name = "Часть 1";
+        defaultSheet.index = 0;
+        defaultSheet.bars = [new SkeletonData(settings.barSize)];
+        const newSheetData = new Map().set(defaultSheet.name, defaultSheet)
+        updateSheets(newSheetData)
 
+    }
 
     return (
         <Grid container direction="column" spacing={1}>
-                <SettingsPanelExpandableSection title={"Сохранить"}>
-                    <List>
-                        <Download file={`${SAVE_NAME}.json`}
-                                  content={JSON.stringify(prepareSaveFile(), null, 2)}>
-                            <ListItem button key={"SaveLocalDrive"}>
-                                <ListItemIcon>
-                                    <DownloadRounded/>
-                                </ListItemIcon>
-                                <ListItemText primary="Локальный диск"/>
-                            </ListItem>
-                        </Download>
-                        <SaveGoogleDrive content={JSON.stringify(prepareSaveFile(), null, 2)}/>
-                    </List>
-                </SettingsPanelExpandableSection>
+            <ListItem button key={"NewScheme"} onClick={resetContext}>
+                <ListItemIcon>
+                    <FiberNewIcon/>
+                </ListItemIcon>
+                <ListItemText primary="Новая блок-схема"/>
+            </ListItem>
+            <SettingsPanelExpandableSection title={"Сохранить"}>
+                <List>
+                    <Download file={`${settings.fileName}.json`}
+                              content={JSON.stringify(prepareSaveFile(), null, 2)}>
+                        <ListItem button key={"SaveLocalDrive"}>
+                            <ListItemIcon>
+                                <DownloadRounded/>
+                            </ListItemIcon>
+                            <ListItemText primary="Локальный диск"/>
+                        </ListItem>
+                    </Download>
+                    <SaveGoogleDrive content={JSON.stringify(prepareSaveFile(), null, 2)}/>
+                </List>
+            </SettingsPanelExpandableSection>
             <SettingsPanelExpandableSection title={"Загрузить"}>
                 <List>
                     <label htmlFor="upload-local">
@@ -161,7 +170,7 @@ export const SettingsSaveLoadSection = () => {
                             <ListItemText primary="Локальный диск"/>
                         </ListItem>
                     </label>
-                    <LoadFromGoogleDrive onFileRead={parseSaveFileAndUpdateModel} />
+                    <LoadFromGoogleDrive onFileRead={parseSaveFileAndUpdateModel}/>
                 </List>
             </SettingsPanelExpandableSection>
             <ListItem button key={"LoadQuickSave"} onClick={loadFromLocalstorage}>

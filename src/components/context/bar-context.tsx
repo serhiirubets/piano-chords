@@ -30,9 +30,6 @@ const defaultSettings: BarContextData = {
 
     updateSheets: (newSheets: Map<string, SheetData>) => {
     },
-    barSize: 8,
-    updateBarSize: (newValue) => {
-    },
     undo: () => {
     }
 }
@@ -171,8 +168,6 @@ export const BarContextProvider = (props: any) => {
                 updateActiveTrack: setActiveTrack,
                 updateSheets: setSheets,
                 editableSheetName: getActiveEditableSheet(),
-                barSize: quadSize,
-                updateBarSize: setQuadSize,
                 undo: rollbackHistory
             }
         }>

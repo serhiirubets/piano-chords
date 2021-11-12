@@ -6,7 +6,16 @@ import {BarContext} from "../../context/bar-context";
 import {SheetData} from "../../../model/skeleton-entities-data/sheet-data";
 import {TabElement} from "./tab-element";
 import {deepCopy, deepCopyMap} from "../../../utils/js-utils";
-import {Divider} from "@mui/material";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Divider,
+    TextField
+} from "@mui/material";
 import {
     closestCenter,
     DndContext,
@@ -21,6 +30,7 @@ import {CSS} from "@dnd-kit/utilities";
 
 import {restrictToHorizontalAxis, restrictToWindowEdges,} from '@dnd-kit/modifiers';
 import {SettingsContext} from "../../context/settings-context";
+import {sheet} from "@emotion/css";
 
 const SortableTabItem = ({sheetName, onTabSelect, handleNameChange, onRemoveTriggered, style, onDuplicate}) => {
     const {
@@ -165,6 +175,7 @@ export const ScrollableTabs = () => {
     const {settings}=useContext(SettingsContext)
     const [sheetValue, setSheetValue] = React.useState(0);
     const [subSheetValue, setSubSheetValue] = React.useState(0);
+    const [subsheetDialogAnchorEl, setSubsheetDialogAnchorEl] = React.useState<HTMLElement|null>(null);
 
     const sheetNames = Array.from(sheets.entries())
         .filter(([key, value]) => {
@@ -244,16 +255,39 @@ export const ScrollableTabs = () => {
         updateActiveSheet(newSheet.name)
     }
 
-    const handleAdditionOfSubSheet = () => {
+    const handleAdditionOfSubSheet = (e) => {
+
         const newSheet = new SheetData(settings.barSize);
         newSheet.index = subSheetNames.length;
         newSheet.name = activeSheet + "-" + (newSheet.index + 1);
         newSheet.parentName = activeSheet
 
+        if(subSheetNames.length === 0){
+            setSubsheetDialogAnchorEl(e)
+        }
+
         const updatedSheets = new Map(sheets);
         updatedSheets.set(newSheet.name, newSheet);
         updateSheets(updatedSheets)
         updateActiveSubSheet(newSheet.name)
+    }
+
+    const moveQuadratsFromSheetToSubSheet = () => {
+        //TODO: add logic here
+        const justCreatedSubsheetName = subSheetNames[0]
+        const justCreatedSubsheet =sheets.get(justCreatedSubsheetName)
+        const originalSheet = sheets.get(activeSheet)
+        if(justCreatedSubsheet && originalSheet) {
+            const updatedSubSheet = deepCopy(justCreatedSubsheet)
+            const updatedSheet = deepCopy(originalSheet)
+            updatedSubSheet.bars = sheets.get(activeSheet)?.bars || []
+            updatedSheet.bars = []
+            const updatedSheets = deepCopyMap(sheets);
+            updatedSheets.set(justCreatedSubsheetName, updatedSubSheet);
+            updatedSheets.set(updatedSheet.name, updatedSheet);
+            updateSheets(updatedSheets)
+            setSubsheetDialogAnchorEl(null)
+        }
     }
 
     const handleCopyOfSheet = (sheetNameToCopy: string) => {
@@ -352,6 +386,10 @@ export const ScrollableTabs = () => {
         }
     }
 
+    const handleDialogClose = () => {
+        setSubsheetDialogAnchorEl(null)
+    }
+
     return (
         <div style={{
             display: "flex",
@@ -405,6 +443,25 @@ export const ScrollableTabs = () => {
                     />)}
                 <Tab icon={<AddRoundedIcon/>} onClick={handleAdditionOfSubSheet}/>
             </SortableTabContainer>
+            <Dialog open={Boolean(subsheetDialogAnchorEl)} onClose={handleDialogClose}>
+                <DialogTitle>Новый лист</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Вы желаете перенести существующие квадраты из части в под-часть? <br/>
+                        В случае ответа "Нет" квадраты под-части будут отображаться поверх существующих квадратов. <br/>
+                        Вы сможете увидеть изначальные квадраты части если удалите все под-части.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => {
+                        handleDialogClose()
+                    }}>Нет</Button>
+                    <Button onClick={() => {
+                        moveQuadratsFromSheetToSubSheet()
+                        handleDialogClose()
+                    }}>Да</Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 }

@@ -9,6 +9,7 @@ import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import StopRoundedIcon from '@mui/icons-material/StopRounded';
 import LoopIcon from '@mui/icons-material/Loop';
 import {DRAGGABLE_CLASSNAME} from "../../../model/global-constants";
+import CopyAllIcon from '@mui/icons-material/CopyAll';
 
 export interface BlockSchemeSkeletonWrapperProps {
   id: string,
@@ -85,9 +86,15 @@ export const SkeletonWrapperControls = ({
             </Tooltip>
           }
           { loopComponent }
-          <Tooltip title="Cкопировать квадрат" placement="top">
+          <Tooltip title="Дублировать квадрат" placement="top">
             <IconButton size="small" onClick={onCopy}>
               <FileCopyRoundedIcon/>
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Cкопировать квадрат в буфер обмена" placement="top">
+            <IconButton size="small" onClick={() => alert("Not implemented yet")}>
+              <CopyAllIcon/>
             </IconButton>
           </Tooltip>
 

@@ -6,6 +6,8 @@ import {deepCopy, groupBy} from "./js-utils";
 import {getOctaveNotationFromScientific, OctaveNotation} from "../model/skeleton-entities-data/octave-data";
 
 export const getEffectiveNodeColor = (data: SkeletonNodeData, isHostingTriplet: boolean) => {
+    console.log("note type ", data.type)
+    console.log("note data ", data)
     return isHostingTriplet ? "yellow" :
         data.hand === HandType.LEFT ? "green" :
             data.type === NoteType.FEATHER ? "#2196f3" : "red";

@@ -15,6 +15,7 @@ export interface BlockSchemeSkeletonWrapperProps {
   id: string,
   onStartPlaying: any;
   onStopPlaying: any;
+  onDuplicate: any;
   onCopy: any;
   onClear: any;
   isDisplayed: boolean;
@@ -27,6 +28,7 @@ export const SkeletonWrapperControls = ({
   id,
   onStartPlaying,
   onStopPlaying,
+  onDuplicate,
   onCopy,
   isDisplayed,
   onClear,
@@ -87,13 +89,13 @@ export const SkeletonWrapperControls = ({
           }
           { loopComponent }
           <Tooltip title="Дублировать квадрат" placement="top">
-            <IconButton size="small" onClick={onCopy}>
+            <IconButton size="small" onClick={onDuplicate}>
               <FileCopyRoundedIcon/>
             </IconButton>
           </Tooltip>
 
           <Tooltip title="Cкопировать квадрат в буфер обмена" placement="top">
-            <IconButton size="small" onClick={() => alert("Not implemented yet")}>
+            <IconButton size="small" onClick={onCopy}>
               <CopyAllIcon/>
             </IconButton>
           </Tooltip>

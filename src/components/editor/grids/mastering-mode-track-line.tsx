@@ -199,7 +199,7 @@ const MasteringLineHeader = ({trackName, dragListeners, dragAttributes}) => {
 
 export const MasteringModeTrackLine = (props) => {
     const {trackName, isAddMoreDisplayed} = props;
-    const {updateBars, updateActiveTrack, sheets, activeTrack} = useContext(BarContext);
+    const {updateBars, updateActiveTrack, sheets, activeTrack, selectionBuffer} = useContext(BarContext);
     const {settings} = useContext(SettingsContext)
     const bars = (sheets.get(trackName) || new SheetData(settings.barSize)).bars
     const barIds = bars.map(data => data.id);
@@ -280,7 +280,14 @@ export const MasteringModeTrackLine = (props) => {
                                                      sheetName={trackName}/>
                             ))}
                             {isAddMoreDisplayed &&
-                            <AddMoreButton onClick={() => {
+                            <AddMoreButton
+                                onPasteFromBuffer={() => {
+                                    const barToPaste = selectionBuffer.current.getBar()
+                                    if (barToPaste) {
+                                        updateBars([...bars, barToPaste])
+                                    }
+                                }}
+                                onClick={() => {
                                 updateBars([...bars, new SkeletonData(settings.barSize)])
                             }}
                                            opacity={settings.isExportingInProgress ? 0 : 100}/>

@@ -38,7 +38,7 @@ export const getScaleSize = (barSize: number) => {
         case 6:
             return 4
         case 8:
-            return 3.5
+            return 3.4
         case 12:
             return 2.9
     }
@@ -61,7 +61,7 @@ export const getExportViewportWidth = (barSize: number, isExporting: boolean) =>
     return "100%";
 }
 
-export const getQuadratNodeDimension = (isMasteringMode: boolean) => {
+export const getQuadratNodeDimension = (isMasteringMode: boolean,) => {
     return {
         quadratWidth: isMasteringMode ? 35 : 40,
         quadratDotWidth: isMasteringMode ? 17 : 20,

@@ -189,7 +189,6 @@ export const SkeletonNode = ({
         setEditMode(true)
     };
 
-
     const handleNoteInput = (event) => {
         if (!event.target.value) {
             setInputText("")

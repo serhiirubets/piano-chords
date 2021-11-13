@@ -1,15 +1,23 @@
 import {SelectionIndex} from "./selection-index";
 import {SkeletonNodeData} from "../skeleton-entities-data/skeleton-node-data";
-import {TripletData} from "../skeleton-entities-data/skeleton-data";
+import {SkeletonData, TripletData} from "../skeleton-entities-data/skeleton-data";
 import {deepCopy} from "../../utils/js-utils";
+import {v4 as uuid} from 'uuid';
 import {getIndicesLengthAndMinPosition, prepareFootprintFromIndices} from "../../utils/selection-buffer-utils";
 
 export class SelectionBuffer {
     private storage = new Map<SelectionIndex, SkeletonNodeData>()
     private tripletStorage = new Map<SelectionIndex, TripletData>()
+    private barStorage: SkeletonData | null = null;
 
     put = (key: SelectionIndex, value: SkeletonNodeData) => {
         this.storage.set(key, value)
+    }
+
+    putBar = (bar:SkeletonData) => {
+        const barToPaste = deepCopy(bar);
+        barToPaste.id = uuid();
+        this.barStorage = barToPaste;
     }
 
     putTriplet = (key: SelectionIndex, value: TripletData) => {
@@ -26,6 +34,10 @@ export class SelectionBuffer {
         return this.tripletStorage.get(presentKey)
     }
 
+    getBar = () => {
+        return this.barStorage;
+    }
+
     getAllKeys = () => {
         return Array.from(this.storage.keys())
     }
@@ -34,7 +46,7 @@ export class SelectionBuffer {
         const leftMostBufferEntryIndex = getIndicesLengthAndMinPosition(this.getAllKeys()).maxLengthMinIndex
         const transformedIndex = {noteHand: selectionIndex.noteHand, index: relativePosition + leftMostBufferEntryIndex}
         const originalData = this.get(transformedIndex);
-        if(originalData){
+        if (originalData) {
             return deepCopy(originalData)
         }
         return undefined
@@ -44,11 +56,11 @@ export class SelectionBuffer {
     getTripletByPositionAndIndex = (relativePosition: number, selectionIndex: SelectionIndex) => {
         const leftMostBufferEntryIndex = getIndicesLengthAndMinPosition(this.getAllKeys()).maxLengthMinIndex
         const transformedIndex = {noteHand: selectionIndex.noteHand, index: relativePosition + leftMostBufferEntryIndex}
-        const originalTriplet =  this.getTriplet(transformedIndex)
-        if(originalTriplet){
+        const originalTriplet = this.getTriplet(transformedIndex)
+        if (originalTriplet) {
             const updatedTriplet = deepCopy(originalTriplet)
             updatedTriplet.start = selectionIndex.index
-            return  updatedTriplet
+            return updatedTriplet
         }
         return undefined
     }

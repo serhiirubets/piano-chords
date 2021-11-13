@@ -30,7 +30,7 @@ export interface NodeSubtitleProps {
 }
 
 
-const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizontalOffset, lyrics}) => {
+const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizontalOffset, nodeType, lyrics}) => {
     const {settings} = useContext(SettingsContext)
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [isHovered, setIsHovered] = React.useState<boolean>(false);
@@ -77,6 +77,7 @@ const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizon
                         fontWeight: "bold",
                         cursor: "default",
                         border: isHovered ? "solid 1px black" : "none",
+                        zIndex:10,
                         ...horizontalOffset
                     }}
                     onClick={handleClick}>
@@ -85,8 +86,8 @@ const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizon
                         color: "#6F2DA8",
                         zIndex: 100,
                         position: "absolute",
-                        top: "-7px",
-                        left: "-7px"
+                        top: `-7px`,
+                        left: `-${fontHeight*0.9}px`
                     }}>{getOctaveInRussianNotation(note.octave)}</sup>}
                     {transformFlatSign(note).note}
                     {transformFlatSign(note).isFlat && <sup css={{fontSize: fontHeight * 0.6}}>♭</sup>}
@@ -99,6 +100,7 @@ const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizon
                                    hand={hand}
                                    onUpdateNote={onUpdateNote}
                                    onClose={handlePopoverClose}
+                                   nodeType={nodeType}
                                    lyrics={lyrics}
                 />
             </div>
@@ -193,7 +195,6 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps, nod
         const updatedNotes = [...nodeData.notes];
         const indexOfOldNote = updatedNotes.indexOf(oldNote);
         updatedNotes[indexOfOldNote] = newNote
-        console.log('Lyrics to update:', newLyrics)
         setNotes(updatedNotes, getOriginalText(updatedNotes, settings.octaveNotation), newLyrics)
 
     }
@@ -219,6 +220,7 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps, nod
                                 height={constainsChords ? getChordNoteRelativeTop(note, nodeData.notes, nodeData.hand) : getSingleNoteRelativeTop(note)}
                                 fontHeight={FONT_HEIGHT}
                                 horizontalOffset={getNoteHorizontalOffset(note)}
+                                nodeType={note.noteType}
                                 lyrics={nodeData.lyrics}
                             />
                         )

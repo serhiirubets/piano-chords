@@ -31,7 +31,7 @@ export const SkeletonWrapper = ({
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
   const {settings} = useContext(SettingsContext);
-  const {bars, updateBars} = useContext(BarContext);
+  const {bars, updateBars, selectionBuffer} = useContext(BarContext);
 
   const handleMouseEnter = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     setIsHovered(true)
@@ -47,12 +47,16 @@ export const SkeletonWrapper = ({
     updateBars(editedBars);
   }
 
-  const handleCopyButtonClick = () => {
+  const handleDuplicateButtonClick = () => {
     const barCopy = deepCopy(bars[index]);
     barCopy.id = uuid();
     const editedBars = [...bars];
     editedBars.push(barCopy)
     updateBars(editedBars);
+  }
+
+  const handleCopyButtonClick = () => {
+    selectionBuffer.current.putBar(bars[index])
   }
 
   const notes = getNotesToPlay([{
@@ -88,6 +92,7 @@ export const SkeletonWrapper = ({
                     stopNote();
                     stopAllNotes();
                   }}
+                  onDuplicate={handleDuplicateButtonClick}
                   onCopy={handleCopyButtonClick}
                   onClear={handleClearButtonClick}
                   isDisplayed={true}
@@ -98,7 +103,7 @@ export const SkeletonWrapper = ({
                 />
               </div>
             )}/>
-          : (<div style={{height: 44, width: '100%'}}></div>)}
+          : (<div style={{height: settings.isExportingInProgress?65: 44, width: '100%'}}></div>)}
       </div>
       <Skeleton skeletonIndex={index} sheetName={sheetName}></Skeleton>
     </div>)

@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import React, {useState} from "react";
-import {jsx} from "@emotion/react/macro";
+import React, {useEffect, useState} from "react";
+import {css, jsx} from "@emotion/react/macro";
 import {INote, Note, NoteType} from "../../../../model/skeleton-entities-data/note-data";
 import {HandType} from "../../../../model/skeleton-entities-data/skeleton-data";
 import {
@@ -8,7 +8,8 @@ import {
     Checkbox,
     FormControl,
     FormControlLabel,
-    InputLabel, MenuItem,
+    InputLabel,
+    MenuItem,
     Popover,
     Select,
     TextField,
@@ -31,15 +32,26 @@ export const NoteEditPopupMenu = ({
                                       updateAnchorEl,
                                       onClose,
                                       lyrics,
+    nodeType
                                   }) => {
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
     const [noteName, setNoteName] = useState<string | undefined>(note.note);
     const [octave, setNoteOctave] = useState<number | undefined>(note.octave);
     const [applicature, setApplicature] = useState<string | undefined>(note.applicature);
-    const [noteType, setNoteType] = useState<NoteType | undefined>(note.noteType);
+    const [noteType, setNoteType] = useState<NoteType | undefined>(nodeType);
     const [skeletonNodeLyrics, setSkeletonNodeLyrics] = useState<string|undefined>(lyrics);
     const [displayOctaveValue, setDisplayOctaveValue] = useState(note.displayOctave);
+    console.log('types')
+    console.log(noteType)
+    console.log(nodeType)
+    useEffect(() => {
+        setNoteType(nodeType)
+    }, [ nodeType])
+
+    useEffect(() => {
+        setDisplayOctaveValue(note.displayOctave)
+    }, [ note])
 
     const handleNoteUpdate = (data: Partial<INote>, lyrics?:string) => {
         const updatedNote = new Note({
@@ -49,10 +61,9 @@ export const NoteEditPopupMenu = ({
             applicature: data.applicature || note.applicature,
             duration: note.duration,
             playbackOffset: note.playbackOffset,
-            noteType: data.noteType || note.noteType
         });
         console.log('Новая нота', updatedNote)
-        onUpdateNote(updatedNote, lyrics)
+        onUpdateNote(updatedNote, noteType, lyrics)
     }
 
     return (

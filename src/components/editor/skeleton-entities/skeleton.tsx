@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import React, {useCallback, useContext, useState} from "react";
-import {css,jsx} from "@emotion/react/macro";
+import {css, jsx} from "@emotion/react/macro";
 import {SkeletonNode} from "./skeleton-node";
 import {BarContext} from "../../context/bar-context";
 import {HandType, TripletData} from "../../../model/skeleton-entities-data/skeleton-data";
@@ -137,19 +137,20 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
     }, [selectedNodes, activeNodeIndex])
 
     const setNote = useCallback((hand: HandType, index: number) => {
-        return (notes: Note[], originalText: string, lyrics?:string) => {
+        return (notes: Note[], originalText: string, noteType?:NoteType, lyrics?:string) => {
 
-            const isAnyFeather = notes.some(note => note.noteType === NoteType.FEATHER);
+            const preTransformedNotes = noteType ? notes.map(note => {
+                const updatedNote = deepCopy(note)
+                updatedNote.noteType = noteType
+                return updatedNote
+            }) : notes;
 
-            const preTransformedNotes = notes.map(note => {
-                note.noteType = isAnyFeather ? NoteType.FEATHER : note.noteType
-                return note
-            })
+            console.log(`nodeType ${hand} ${index}`, noteType)
 
             const skeletonNodeDataData = new SkeletonNodeData({
                 notes: preTransformedNotes,
                 isPresent: notes.length > 0,
-                type: isAnyFeather ? NoteType.FEATHER : NoteType.REGULAR,
+                type: noteType,
                 hand: hand,
                 originalText: originalText,
                 lyrics:lyrics ?  lyrics: ""

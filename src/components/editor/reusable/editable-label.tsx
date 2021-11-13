@@ -52,7 +52,7 @@ export const EditableLabel = ({label, labelProps, textfieldProps, onChange}) => 
                 </MenuItem>
             </MenuList>
         </Menu>
-            <div style={{flex: "1", flexDirection: "row"}}>
+            <div style={{flex: "1"}}>
                 {<> <TextField
                     {...textfieldProps}
                     style={{

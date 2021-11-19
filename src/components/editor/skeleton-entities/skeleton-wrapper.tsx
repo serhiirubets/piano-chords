@@ -19,8 +19,6 @@ export interface BlockSchemeSkeletonWrapperProps {
   sortableAttributes?: any;
 }
 
-let intervalId;
-
 export const SkeletonWrapper = ({
   index,
   id,
@@ -31,6 +29,7 @@ export const SkeletonWrapper = ({
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
   const {settings} = useContext(SettingsContext);
+  console.log(settings);
   const {bars, updateBars} = useContext(BarContext);
 
   const handleMouseEnter = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {

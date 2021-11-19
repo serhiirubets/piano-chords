@@ -1,7 +1,7 @@
 import {SkeletonData} from "../skeleton-entities-data/skeleton-data";
 import {SheetData} from "../skeleton-entities-data/sheet-data";
 import {SelectionBuffer} from "../selection/selection-buffer";
-import {MutableRefObject} from "react";
+import React, {MutableRefObject} from "react";
 
 export interface BarContextData {
     sheets : Map<string, SheetData>
@@ -9,6 +9,7 @@ export interface BarContextData {
     activeSheet:string;
     activeSubSheet:string|null;
     activeTrack:string|null;
+    currentPlaying: [number, number];
 
     bars: SkeletonData[];
     updateBars: (newBars: SkeletonData[]) => any;
@@ -19,6 +20,7 @@ export interface BarContextData {
     updateActiveSubSheet : (sheetName:string|null) => any;
     updateActiveTrack : (sheetName:string|null) => any;
     updateSheets:( newSheets:Map<string, SheetData>) => any;
+    setCurrentPlaying: React.Dispatch<React.SetStateAction<[number, number]>>
 
     editableSheetName:string
 

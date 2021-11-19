@@ -20,7 +20,7 @@ export const getNotesToPlay = (bars: Array<{ data: SkeletonData, relativePositio
     return notes;
 }
 
-export const playNotes = (beatsToPlay: { data: PlaybackData[], relativePosition: number }[], playFunction, tempo, doDistinguishFeatherGain, quadratSize) => {
+export const playNotes = (beatsToPlay: { data: PlaybackData[], relativePosition: number }[], playFunction, tempo, doDistinguishFeatherGain, quadratSize, setCurrentPlayingData = (i: number, j: number): void => {}) => {
     const STANDARD_DURATION = tempo * 1;
     const getGain = (beatPlayback) => doDistinguishFeatherGain ? beatPlayback.gain : 1
     for (let i = 0; i < beatsToPlay.length; i++) {
@@ -30,9 +30,10 @@ export const playNotes = (beatsToPlay: { data: PlaybackData[], relativePosition:
         }
         const index = beatsToPlay[i].relativePosition * quadratSize + i % quadratSize
 
-        currentBeat.forEach((playback) => {
+        currentBeat.forEach((playback, j) => {
             const offset = STANDARD_DURATION * (index + playback.playbackOffset);
             playFunction(playback.midiNumber, offset, {duration: playback.duration, gain: getGain(playback)});
+            setCurrentPlayingData(i, j);
         })
     }
 }

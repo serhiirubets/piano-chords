@@ -13,6 +13,7 @@ const defaultSettings: BarContextData = {
     activeSubSheet: null,
     activeTrack: null,
     editableSheetName: "Часть 1",
+    currentPlaying: [0, 0],
 
     bars: [new SkeletonData(8)],
     updateBars: (newValue) => {
@@ -34,7 +35,8 @@ const defaultSettings: BarContextData = {
     updateBarSize: (newValue) => {
     },
     undo: () => {
-    }
+    },
+    setCurrentPlaying() {},
 }
 
 export const BarContext = React.createContext(defaultSettings);
@@ -57,6 +59,7 @@ export const BarContextProvider = (props: any) => {
         .set("Часть 1", defaultSheet))
     const [isTouched, setIsTouched] = useState(false);
     const [historyRecords, setHistoryRecords] = useState<HistoricalData[]>(new Array<HistoricalData>())
+    const [currentPlaying, setCurrentPlaying] = useState<[number, number]>([0, 0]);
 
     const getActiveSheet = () => {
         const allSheetNames = Array.from(sheets.keys());
@@ -173,7 +176,9 @@ export const BarContextProvider = (props: any) => {
                 editableSheetName: getActiveEditableSheet(),
                 barSize: quadSize,
                 updateBarSize: setQuadSize,
-                undo: rollbackHistory
+                undo: rollbackHistory,
+                currentPlaying,
+                setCurrentPlaying
             }
         }>
             {props.children}

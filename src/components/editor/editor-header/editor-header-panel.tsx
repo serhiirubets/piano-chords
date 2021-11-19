@@ -147,9 +147,25 @@ export const EditorHeaderPanel = () => {
                 paddingLeft: "5px",
                 paddingRight: "10px"
             }}> Темп: </Typography>
+                <input
+                    min={30}
+                    max={200}
+                    placeholder="100"
+                    type="number"
+                    onChange={(e) => {
+
+                        const value = +e.target.value / 200;
+                        console.log(value);
+                        partialUpdateSettings({playbackTempo: value})
+
+                    }}
+                />
                 <StyledSlider
                     style={{width: '90%'}}
-                    onChange={(value, newValue)=>partialUpdateSettings({playbackTempo: (newValue as number) * -1})}
+                    onChange={(value, newValue)=> {
+                        // т.е. значение должно считаться как-то так BPM_number * playbackTempo = 60000 (1 minute)
+                        partialUpdateSettings({playbackTempo: (newValue as number) * -1})
+                    }}
                     defaultValue={-0.25}
                     step={0.05}
                     min={-1}

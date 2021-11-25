@@ -45,6 +45,7 @@ export const PlaybackModule = ({iconColor, bars}: PlaybackModuleProps) => {
 
                         <IconButton
                             onClick={() => {
+                                console.log('playback tempo', settings.playbackTempo)
                               playNotes(notes, playNote, settings.playbackTempo, settings.alterGainForFeather, settings.barSize)
                             }}
                             size="large">

@@ -12,8 +12,6 @@ import {getTripletEffectiveParameters} from "../../../utils/triplet-utils";
 import {SettingsContext} from "../../context/settings-context";
 import {NoteEditPopupMenu} from "./popup-menus/note-edit-popup-menu";
 import {getQuadratNodeDimension} from "../../../utils/rendering-utils";
-import {position} from "html2canvas/dist/types/css/property-descriptors/position";
-import {deepCopy} from "../../../utils/js-utils";
 
 
 export interface NodeSubtitleProps {

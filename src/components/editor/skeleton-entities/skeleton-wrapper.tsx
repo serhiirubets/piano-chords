@@ -29,7 +29,6 @@ export const SkeletonWrapper = ({
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
   const {settings} = useContext(SettingsContext);
-
   const {bars, updateBars} = useContext(BarContext);
 
   const handleMouseEnter = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {

@@ -28,7 +28,7 @@ export const PlaybackModule = ({iconColor, bars}: PlaybackModuleProps) => {
     const {settings} = useContext(SettingsContext);
     const {activeSheet, activeSubSheet, sheets} = useContext(BarContext);
 
-  const barsDataToPlay = bars ?
+    const barsDataToPlay = bars ?
         bars.map(bar => ({data: bar, relativePosition: 0})) :
         collectBarsToPlay(settings.isMasteringMode, activeSubSheet || activeSheet, sheets)
 

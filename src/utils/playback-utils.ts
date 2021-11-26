@@ -30,7 +30,7 @@ export const playNotes = (beatsToPlay: { data: PlaybackData[], relativePosition:
         }
         const index = beatsToPlay[i].relativePosition * quadratSize + i % quadratSize
 
-        currentBeat.forEach((playback, j) => {
+        currentBeat.forEach((playback) => {
             const offset = STANDARD_DURATION * (index + playback.playbackOffset);
             playFunction(playback.midiNumber, offset, {duration: playback.duration, gain: getGain(playback)});
         })

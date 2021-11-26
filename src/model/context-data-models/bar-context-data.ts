@@ -1,7 +1,7 @@
 import {SkeletonData} from "../skeleton-entities-data/skeleton-data";
 import {SheetData} from "../skeleton-entities-data/sheet-data";
 import {SelectionBuffer} from "../selection/selection-buffer";
-import React, {MutableRefObject} from "react";
+import {MutableRefObject} from "react";
 
 export interface BarContextData {
     sheets : Map<string, SheetData>

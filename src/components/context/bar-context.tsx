@@ -173,7 +173,7 @@ export const BarContextProvider = (props: any) => {
                 editableSheetName: getActiveEditableSheet(),
                 barSize: quadSize,
                 updateBarSize: setQuadSize,
-                undo: rollbackHistory,
+                undo: rollbackHistory
             }
         }>
             {props.children}

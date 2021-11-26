@@ -9,7 +9,6 @@ export interface BarContextData {
     activeSheet:string;
     activeSubSheet:string|null;
     activeTrack:string|null;
-    currentPlaying: [number, number];
 
     bars: SkeletonData[];
     updateBars: (newBars: SkeletonData[]) => any;
@@ -20,7 +19,6 @@ export interface BarContextData {
     updateActiveSubSheet : (sheetName:string|null) => any;
     updateActiveTrack : (sheetName:string|null) => any;
     updateSheets:( newSheets:Map<string, SheetData>) => any;
-    setCurrentPlaying: React.Dispatch<React.SetStateAction<[number, number]>>
 
     editableSheetName:string
 

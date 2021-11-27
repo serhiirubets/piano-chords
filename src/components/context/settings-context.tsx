@@ -5,6 +5,7 @@ import {OctaveNotation, Octaves} from "../../model/skeleton-entities-data/octave
 
 const defaultSettings: SettingContextData = {
     playbackTempo: 0.25,
+    bmpValue: 100,
     barSize: 8,
     fontSize: 23,
     displayApplicature: false,

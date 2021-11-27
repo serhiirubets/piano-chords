@@ -12,8 +12,6 @@ import {deepCopyMap} from "../../../utils/js-utils";
 export const EditorHeaderPanel = () => {
     const {settings, partialUpdateSettings} = useContext(SettingsContext);
     const {bars,undo, sheets, updateSheets, updateBars} = useContext(BarContext);
-    const [displayOctaves, setDisplayOctaves] = useState(false);
-    const [displayLyrics, setDisplayLyrics] = useState(false);
     const [barSize, setBarSize] = useState<number>(settings.barSize);
     const [fontSize, setFontSize] = useState<number>(settings.fontSize);
     useEffect(() => {setBarSize(settings.barSize); setFontSize(settings.fontSize)}, [settings])
@@ -25,11 +23,6 @@ export const EditorHeaderPanel = () => {
             value.bars = updatedBars
         })
         updateSheets(updatedSheets)
-    }
-
-    const recalculateDisplayOctaves = (displayOctaveValue: boolean) => {
-        const updatedSheets = bulkUpdateDisplayOctaveValues(bars, displayOctaveValue)
-        updateBars(updatedSheets)
     }
 
     const handleQuadratSizeChange = (event) => {
@@ -67,15 +60,6 @@ export const EditorHeaderPanel = () => {
                         onChange={(e) => partialUpdateSettings({displayApplicature: e.target.checked})}
                     />}
                     label={<Typography style={{fontSize: "small"}}>Aппликатурa</Typography>}/>
-                <Divider orientation="vertical" flexItem/>
-                <FormControlLabel
-                    value="top"
-                    control={<Checkbox
-                        style={{paddingLeft:"10px"}}
-                        checked={displayOctaves}
-                        onChange={(e) => {setDisplayOctaves(e.target.checked); recalculateDisplayOctaves(e.target.checked)}}
-                    />}
-                    label={<Typography style={{fontSize: "small"}}>Октавы</Typography>}/>
                 <Divider orientation="vertical" flexItem/>
                 <FormControlLabel
                     value="top"

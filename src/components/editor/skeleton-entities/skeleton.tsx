@@ -137,7 +137,7 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
     }, [selectedNodes, activeNodeIndex])
 
     const setNote = useCallback((hand: HandType, index: number) => {
-        return (notes: Note[], originalText: string, noteType?:NoteType, lyrics?:string) => {
+        return (notes: Note[], originalText: string, noteType?: NoteType, lyrics?: string) => {
 
             const preTransformedNotes = noteType ? notes.map(note => {
                 const updatedNote = deepCopy(note)
@@ -153,7 +153,7 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
                 type: noteType,
                 hand: hand,
                 originalText: originalText,
-                lyrics:lyrics ?  lyrics: ""
+                lyrics: lyrics ? lyrics : ""
             });
 
             const updatedSkeleton = deepCopy(bars[skeletonIndex]);
@@ -180,8 +180,21 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
 
     }
 
-    const rightHandMidiSummary = getSkeletonMidiSummary(HandType.RIGHT);
-    const leftHandMidiSummary = getSkeletonMidiSummary(HandType.LEFT);
+    const getSheetMidiSummary = (hand: HandType) => {
+        const handNotes = bars.flatMap(skeleton => getSkeletonHandData(skeleton, hand))
+            .flatMap(nodeData => nodeData.notes)
+            .map(note => getMidiNumber(note));
+
+        return {
+            lowestMidi: Math.min(...handNotes),
+            higestMidi: Math.max(...handNotes),
+            hand: hand
+        }
+
+    }
+
+    const rightHandMidiSummary = getSheetMidiSummary(HandType.RIGHT);
+    const leftHandMidiSummary = getSheetMidiSummary(HandType.LEFT);
 
     const handleContextMenuClick = (e) => {
         if (selectedNodes.length > 0) {
@@ -203,7 +216,7 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
         setBulkEditMenuAnchorEl(null);
     }
 
-    const bulkUpdateNotes = (indices: SelectionIndex[], bulkUpdateFunction: (notes: INote[]) => INote[]) => {
+    const bulkUpdateNotes = (indices: SelectionIndex[], bulkUpdateFunction: (notes: INote[]) => Note[]) => {
         const updatedSkeletonData = copySkeleton(skeletonData)
 
         indices.forEach(selectionIndex => {
@@ -365,9 +378,9 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
                                     <NodeSubtitle
                                         key={skeletonIndex + '-r-subtitle-' + idx}
                                         nodeData={noteData}
-                                                  midiSummary={rightHandMidiSummary}
-                                                  setNotes={setNote(HandType.RIGHT, idx)}
-                                                  tripletProps={getTripletProps(idx, HandType.RIGHT)}
+                                        midiSummary={rightHandMidiSummary}
+                                        setNotes={setNote(HandType.RIGHT, idx)}
+                                        tripletProps={getTripletProps(idx, HandType.RIGHT)}
                                         nodeKey={skeletonIndex + '-r-subtitle-' + idx}
                                     />
                                     <div key={`${skeletonIndex}-r-${idx}-contextHandler`}
@@ -405,11 +418,11 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
                                     <NodeSubtitle
                                         key={skeletonIndex + '-l-subtitle-' + idx}
                                         nodeData={noteData}
-                                                  midiSummary={leftHandMidiSummary}
-                                                  setNotes={setNote(HandType.LEFT, idx)}
-                                                  tripletProps={getTripletProps(idx, HandType.LEFT)}
+                                        midiSummary={leftHandMidiSummary}
+                                        setNotes={setNote(HandType.LEFT, idx)}
+                                        tripletProps={getTripletProps(idx, HandType.LEFT)}
                                         nodeKey={skeletonIndex + '-l-subtitle-' + idx}
-                                   />
+                                    />
                                 </div>
                             )}
                     </div>

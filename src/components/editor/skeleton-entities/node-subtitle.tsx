@@ -26,7 +26,9 @@ export interface NodeSubtitleProps {
     nodeKey:string;
 
 }
-
+const handAwareNoteByMidiComparator =  (hand:HandType) => hand === HandType.RIGHT ?
+    compareByMidiNumbers :
+    (a, b) => -1 * compareByMidiNumbers(a, b)
 
 const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizontalOffset, nodeType, lyrics}) => {
     const {settings} = useContext(SettingsContext)
@@ -79,18 +81,34 @@ const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizon
                         ...horizontalOffset
                     }}
                     onClick={handleClick}>
-                    {note.displayOctave && <sup css={{
-                        fontSize: fontHeight * 0.7,
-                        color: "#6F2DA8",
-                        zIndex: 100,
-                        position: "absolute",
-                        top: `-7px`,
-                        left: `-${fontHeight*0.9}px`
-                    }}>{getOctaveInRussianNotation(note.octave)}</sup>}
-                    {transformFlatSign(note).note}
-                    {transformFlatSign(note).isFlat && <sup css={{fontSize: fontHeight * 0.6}}>♭</sup>}
-                    {settings.displayApplicature &&
-                    <sup css={{fontSize: fontHeight * 0.7, color: "#D65F24"}}>{note.applicature}</sup>}
+                    <div style={{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center"}}>
+                        {note.displayOctave && <sup css={{
+                            fontSize: fontHeight * 0.6,
+                            color: "#6F2DA8",
+                            zIndex: 100,
+                            position: "absolute",
+                            left: 0,
+                            right: 0,
+                            top: hand === HandType.RIGHT ? `-7px`: `${fontHeight*0.6 + 7}px`
+                        }}>{getOctaveInRussianNotation(note.octave)}</sup>}
+                      <div style={{display:"flex", flexDirection:"row", alignItems:"center", justifyContent:"center"}}>
+                          {transformFlatSign(note).note}
+                          {transformFlatSign(note).isFlat && <sup css={{fontSize: fontHeight * 0.6}}>♭</sup>}
+                          {settings.displayApplicature &&
+                          <sup css={{fontSize: fontHeight * 0.6, color: "#D65F24"}}>{note.applicature}</sup>}
+                      </div>
+                    </div>
+                    {/*{note.displayOctave && <sup css={{*/}
+                    {/*    fontSize: fontHeight * 0.7,*/}
+                    {/*    color: "#6F2DA8",*/}
+                    {/*    zIndex: 100,*/}
+                    {/*    position: "absolute",*/}
+                    {/*    top: `-7px`,*/}
+                    {/*    left: `-${fontHeight*0.9}px`*/}
+                    {/*}}>{getOctaveInRussianNotation(note.octave)}</sup>}*/}
+                    {/*{transformFlatSign(note).note}*/}
+                    {/*{transformFlatSign(note).isFlat && <sup css={{fontSize: fontHeight * 0.6}}>♭</sup>}*/}
+
                 </div>
                 <NoteEditPopupMenu note={note}
                                    anchorEl={anchorEl}
@@ -137,21 +155,19 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps, nod
     }
 
     const getChordNoteHeights = (chord: INote[], hand: HandType) => {
-        const comparator = hand === HandType.RIGHT ?
-            compareByMidiNumbers :
-            (a, b) => -1 * compareByMidiNumbers(a, b)
 
         const chordTops = chord
-            .sort(comparator)
             .map(note => getSingleNoteRelativeTop(note));
 
         const isSpreadRequired = chordTops
-            .map((value, i) => (chordTops[i + 1] - value))
-            .some(value => value < FONT_HEIGHT / 2);
+            .map((value, i) => {
+                return chordTops[i + 1] - value})
+            .filter(value => value!==NaN)
+            .some(value => Math.abs(value) < FONT_HEIGHT / 2);
 
         if (isSpreadRequired) {
             for (let i = 1; i < chordTops.length; i++) {
-                chordTops[i] = chordTops[i - 1] + HAND_MULTIPLIER * FONT_HEIGHT * 0.7;
+                chordTops[i] = chordTops[i - 1] + HAND_MULTIPLIER * FONT_HEIGHT * 0.5;
             }
         }
         return chordTops;
@@ -159,9 +175,11 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps, nod
 
     const getChordNoteRelativeTop = (note: INote, allNotes: INote[], hand: HandType) => {
         const chord = allNotes.filter(n => n.playbackOffset === note.playbackOffset);
-        chord.sort(compareByMidiNumbers)
         const chordTops = getChordNoteHeights(chord, hand);
         const noteIndex = chord.indexOf(note);
+        console.log('note index', noteIndex, 'note', note.note+note.octave)
+        console.log('chordTops',chordTops)
+        console.log('chord', chord.map(n => n.note+n.octave))
         return chordTops[noteIndex];
     }
 
@@ -198,6 +216,7 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps, nod
     }
 
     const constainsChords = isChord(nodeData.notes);
+    const notesSortedByMidi = nodeData.notes.sort(handAwareNoteByMidiComparator(nodeData.hand))
     return (
         <div>
 
@@ -208,14 +227,13 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps, nod
                     position: "relative",
                     textAlign: "center",
                 }}>{
-                    nodeData.notes
-                        .sort((first, second) => getMidiNumber(second) - getMidiNumber(first))
+                    notesSortedByMidi
                         .map((note, index) => <NodeSubtitleItem
-                                key={nodeKey+"-"+index}
+                                // key={nodeKey+"-"+index}
                                 note={note}
                                 onUpdateNote={handleUpdateOfNode(note)}
                                 hand={nodeData.hand}
-                                height={constainsChords ? getChordNoteRelativeTop(note, nodeData.notes, nodeData.hand) : getSingleNoteRelativeTop(note)}
+                                height={constainsChords ? getChordNoteRelativeTop(note, notesSortedByMidi, nodeData.hand) : getSingleNoteRelativeTop(note)}
                                 fontHeight={FONT_HEIGHT}
                                 horizontalOffset={getNoteHorizontalOffset(note)}
                                 nodeType={note.noteType}

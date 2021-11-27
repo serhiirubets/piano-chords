@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import React, {useContext, useEffect, useRef, useState} from "react";
+// import {jsx} from "@emotion/react/macro";
 import {jsx} from "@emotion/react/macro";
 import {SkeletonNodeData} from "../../../model/skeleton-entities-data/skeleton-node-data";
 import {TextField} from "@mui/material";
@@ -91,9 +92,9 @@ const computeBackgroundValue = (noteData: SkeletonNodeData, isEditMode: boolean,
         const sixteensSeparator = `
            linear-gradient(to top left,
            transparent 0%,
-           transparent calc(50% - 0.5px),
+           transparent calc(50% - 1.5px),
            black 50%,
-           transparent calc(50% + 0.5px),
+           transparent calc(50% + 1.5px),
            transparent 100%)
             `
         return [sixteensSeparator, ...noteData.notes.map(note => {
@@ -111,19 +112,34 @@ const computeBackgroundValue = (noteData: SkeletonNodeData, isEditMode: boolean,
     return getEffectiveNodeColor(noteData, isHostingTriplet);
 }
 
-function computeBorderStyle(selectionMode: NodeSelectionMode | string | undefined) {
+function computeBorderStyle(nodeIndex: number, hand: HandType, barSize: number, selectionMode: NodeSelectionMode | string | undefined) {
+    console.log('selection mode', selectionMode)
+    const thinBorder = '0.5px solid #4e4e4e '
+    const normalBorder = '2px solid #4e4e4e '
+    const selectedBorder = '3px solid #381D2A '
+    // "#4e4e4e"
     const getBorderStyleForValue = (index) => {
-        return selectionMode && selectionMode[index] === '1' ? 'solid #381D2A 3px' : 'solid black 1px'
+        return selectionMode && selectionMode[index] === '1' ? selectedBorder : thinBorder
     }
-    return {
-        borderLeft: getBorderStyleForValue(0),
-        borderTop: getBorderStyleForValue(1),
-        borderBottom: getBorderStyleForValue(2),
-        borderRight: getBorderStyleForValue(3)
-    }
+     if (selectionMode === NodeSelectionMode.NONE) {
+        return {
+            borderLeft: nodeIndex === 0  ? normalBorder : thinBorder,
+            borderTop: hand === HandType.RIGHT ? normalBorder : thinBorder,
+            borderBottom: hand === HandType.LEFT ? normalBorder : thinBorder,
+            borderRight: nodeIndex === barSize -1 ? normalBorder : thinBorder
+        }
+    }else {
+         return {
+             borderLeft: getBorderStyleForValue(0),
+             borderTop: getBorderStyleForValue(1),
+             borderBottom: getBorderStyleForValue(2),
+             borderRight: getBorderStyleForValue(3)
+         }
+     }
+
 }
 
-const computeTripletDisplayProps = (tripletPropsOrFallback: TripletHandlingProps, isMasteringMode:boolean) => {
+const computeTripletDisplayProps = (tripletPropsOrFallback: TripletHandlingProps, isMasteringMode: boolean) => {
     return {
         left: 0,
         width: tripletPropsOrFallback.isHostingTriplet ? getQuadratNodeDimension(isMasteringMode).quadratWidth * tripletPropsOrFallback.tripletDuration : getQuadratNodeDimension(isMasteringMode).quadratWidth,
@@ -274,7 +290,7 @@ export const SkeletonNode = ({
                     background: computeBackgroundValue(data, isEditMode, tripletPropsOrFallback.isHostingTriplet),
 
                 },
-                ...computeBorderStyle(selectionMode),
+                ...computeBorderStyle(nodeIndex, handType, settings.barSize, selectionMode),
                 ...computeTripletDisplayProps(tripletPropsOrFallback, settings.isMasteringMode)
             }}
                  tabIndex={-1}

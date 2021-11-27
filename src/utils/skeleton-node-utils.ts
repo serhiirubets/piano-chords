@@ -6,8 +6,6 @@ import {deepCopy, groupBy} from "./js-utils";
 import {getOctaveNotationFromScientific, OctaveNotation} from "../model/skeleton-entities-data/octave-data";
 
 export const getEffectiveNodeColor = (data: SkeletonNodeData, isHostingTriplet: boolean) => {
-    console.log("note type ", data.type)
-    console.log("note data ", data)
     return isHostingTriplet ? "yellow" :
         data.hand === HandType.LEFT ? "green" :
             data.type === NoteType.FEATHER ? "#2196f3" : "red";
@@ -53,28 +51,28 @@ export const getOriginalText = (noteArray: INote[], octaveNotation: OctaveNotati
 export const getOctaveInRussianNotation = (octave: number) => {
     switch (octave) {
         case 0:
-            return "с.к.о"
+            return "с.к"
         case 1:
-            return "к.о"
+            return "к"
         case 2:
-            return "б.о"
+            return "б"
         case 3:
-            return "м.о"
+            return "м"
         case 4:
-            return "1.о"
+            return "1"
         case 5:
-            return "2.о"
+            return "2"
         case 6:
-            return "3.о"
+            return "3"
         case 7:
-            return "4.о"
+            return "4"
         default:
             return ""
     }
 }
 
 
-export const getSkeletonHandData = (data: SkeletonData, hand: HandType) => {
+export const getSkeletonHandData = (data: SkeletonData, hand: HandType) : SkeletonNodeData[] => {
     return hand === HandType.LEFT ? data.left : data.right;
 }
 

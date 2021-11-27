@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import React, {useContext, useEffect, useRef, useState} from "react";
+// import {jsx} from "@emotion/react/macro";
 import {jsx} from "@emotion/react/macro";
 import {SkeletonNodeData} from "../../../model/skeleton-entities-data/skeleton-node-data";
 import {TextField} from "@mui/material";
@@ -14,7 +15,7 @@ import {getTripletEffectiveParameters} from "../../../utils/triplet-utils";
 import {getQuadratNodeDimension} from "../../../utils/rendering-utils";
 import {OctaveNotation, parseOctaveNotationToScientific} from "../../../model/skeleton-entities-data/octave-data";
 
-const NOTES_REGEX = /a-gmA-G#\s\/:/
+const NOTES_REGEX = /a-gmA-G#\s\//
 const SIXTEENS_SEPARATOR = '/'
 const CHORD_SEPARATOR = ' '
 const TRIPLET_SEPARATOR = ':'
@@ -42,7 +43,6 @@ const parseInputToTheNotes = (stringValue: string, defaultOctave: number, triple
         return sixteensParts
             .flatMap((sixteens, index) => parseNoteOrChord(sixteens, defaultOctave, PlaybackDuration.HALF, getOffset(index), octaveNotation));
     } else if (stringValue.includes(TRIPLET_SEPARATOR)) {
-
         //Triplets are either 8th (4 nodes) or 16th (2 nodes)
         const tripletRealValues = getTripletEffectiveParameters(tripletProps);
         const getOffset = index => tripletRealValues.standardOffsets[index];
@@ -92,9 +92,9 @@ const computeBackgroundValue = (noteData: SkeletonNodeData, isEditMode: boolean,
         const sixteensSeparator = `
            linear-gradient(to top left,
            transparent 0%,
-           transparent calc(50% - 0.5px),
+           transparent calc(50% - 1.5px),
            black 50%,
-           transparent calc(50% + 0.5px),
+           transparent calc(50% + 1.5px),
            transparent 100%)
             `
         return [sixteensSeparator, ...noteData.notes.map(note => {
@@ -112,19 +112,32 @@ const computeBackgroundValue = (noteData: SkeletonNodeData, isEditMode: boolean,
     return getEffectiveNodeColor(noteData, isHostingTriplet);
 }
 
-function computeBorderStyle(selectionMode: NodeSelectionMode | string | undefined) {
+function computeBorderStyle(nodeIndex: number, hand: HandType, barSize: number, selectionMode: NodeSelectionMode | string | undefined) {
+    const thinBorder = '0.5px solid black '
+    const normalBorder = '2px solid black '
+    const selectedBorder = '3px solid #381D2A '
     const getBorderStyleForValue = (index) => {
-        return selectionMode && selectionMode[index] === '1' ? 'solid #381D2A 3px' : 'solid black 1px'
+        return selectionMode && selectionMode[index] === '1' ? selectedBorder : thinBorder
     }
-    return {
-        borderLeft: getBorderStyleForValue(0),
-        borderTop: getBorderStyleForValue(1),
-        borderBottom: getBorderStyleForValue(2),
-        borderRight: getBorderStyleForValue(3)
-    }
+     if (selectionMode === NodeSelectionMode.NONE) {
+        return {
+            borderLeft: nodeIndex === 0  ? normalBorder : thinBorder,
+            borderTop: hand === HandType.RIGHT ? normalBorder : thinBorder,
+            borderBottom: hand === HandType.LEFT ? normalBorder : thinBorder,
+            borderRight: nodeIndex === barSize -1 ? normalBorder : thinBorder
+        }
+    }else {
+         return {
+             borderLeft: getBorderStyleForValue(0),
+             borderTop: getBorderStyleForValue(1),
+             borderBottom: getBorderStyleForValue(2),
+             borderRight: getBorderStyleForValue(3)
+         }
+     }
+
 }
 
-const computeTripletDisplayProps = (tripletPropsOrFallback: TripletHandlingProps, isMasteringMode:boolean) => {
+const computeTripletDisplayProps = (tripletPropsOrFallback: TripletHandlingProps, isMasteringMode: boolean) => {
     return {
         left: 0,
         width: tripletPropsOrFallback.isHostingTriplet ? getQuadratNodeDimension(isMasteringMode).quadratWidth * tripletPropsOrFallback.tripletDuration : getQuadratNodeDimension(isMasteringMode).quadratWidth,
@@ -190,7 +203,6 @@ export const SkeletonNode = ({
         setEditMode(true)
     };
 
-
     const handleNoteInput = (event) => {
         if (!event.target.value) {
             setInputText("")
@@ -200,7 +212,7 @@ export const SkeletonNode = ({
         if (event.key === 'Enter') {
             handleSave()
         }
-        const DISALLOWED_KEYS = new RegExp(`[^${NOTES_REGEX.source}${settings.octaveNotation.regexpKeys}]+`)
+        const DISALLOWED_KEYS = new RegExp(`[^${NOTES_REGEX.source}${settings.octaveNotation.regexpKeys}${tripletPropsOrFallback.isHostingTriplet?":":""}]+`)
         const filteredValues = event.target.value.replace(DISALLOWED_KEYS, '');
         event.target.value = filteredValues || "";
         setInputText(filteredValues);
@@ -276,7 +288,7 @@ export const SkeletonNode = ({
                     background: computeBackgroundValue(data, isEditMode, tripletPropsOrFallback.isHostingTriplet),
 
                 },
-                ...computeBorderStyle(selectionMode),
+                ...computeBorderStyle(nodeIndex, handType, settings.barSize, selectionMode),
                 ...computeTripletDisplayProps(tripletPropsOrFallback, settings.isMasteringMode)
             }}
                  tabIndex={-1}

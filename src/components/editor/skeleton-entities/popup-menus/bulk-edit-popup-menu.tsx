@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import {INote, Note, NoteType} from "../../../../model/skeleton-entities-data/note-data";
 import {
     Button,
@@ -25,12 +25,17 @@ export interface BulkEditPopupMenu {
 
 export const BulkEditPopupMenu = ({bulkUpdateOperationChange, anchorEl, onClose}: BulkEditPopupMenu) => {
     const open = Boolean(anchorEl);
+    const saveButtonRef = useRef<HTMLButtonElement|null>(null)
     const [octave, setOctave] = useState<number | undefined>(undefined)
     const [displayOctave, setDisplayOctave] = useState<boolean | undefined>(undefined)
     const [applicature, setApplicature] = useState<string | undefined>(undefined)
     const [noteType, setNoteType] = useState<NoteType | undefined>(undefined)
 
     const id = open ? 'bulk-edit-menu-popover' : undefined;
+
+    const focusSaveButton = () => {
+        saveButtonRef.current && saveButtonRef.current.focus()
+    }
 
     const handleNotesUpdate = (data: Partial<INote>) => {
         const updateOperation = (notes: INote[]) => {
@@ -130,6 +135,7 @@ export const BulkEditPopupMenu = ({bulkUpdateOperationChange, anchorEl, onClose}
                     label={<Typography
                         style={{color: "gray", fontSize: "small"}}>Показывать октаву</Typography>}/>
                 <Button
+                    ref={saveButtonRef}
                     variant={"outlined"}
                     onClick={() => handleNotesUpdate({
                         octave: octave,

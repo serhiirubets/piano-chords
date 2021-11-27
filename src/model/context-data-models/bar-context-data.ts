@@ -4,25 +4,22 @@ import {SelectionBuffer} from "../selection/selection-buffer";
 import {MutableRefObject} from "react";
 
 export interface BarContextData {
-    sheets : Map<string, SheetData>
-    isTouched:boolean;
-    activeSheet:string;
-    activeSubSheet:string|null;
-    activeTrack:string|null;
+    sheets: Map<string, SheetData>
+    isTouched: boolean;
+    activeSheet: string;
+    activeSubSheet: string | null;
+    activeTrack: string | null;
 
     bars: SkeletonData[];
     updateBars: (newBars: SkeletonData[]) => any;
-    updateSingleBar: (barIndex: number, barDara:SkeletonData) => any;
-    selectionBuffer:MutableRefObject<SelectionBuffer>;
+    updateSingleBar: (barIndex: number, barDara: SkeletonData) => any;
+    selectionBuffer: MutableRefObject<SelectionBuffer>;
 
-    updateActiveSheet : (sheetName:string) => any;
-    updateActiveSubSheet : (sheetName:string|null) => any;
-    updateActiveTrack : (sheetName:string|null) => any;
-    updateSheets:( newSheets:Map<string, SheetData>) => any;
+    updateActiveSheet: (sheetName: string) => any;
+    updateActiveSubSheet: (sheetName: string | null) => any;
+    updateActiveTrack: (sheetName: string | null) => any;
+    updateSheets: (newSheets: Map<string, SheetData>) => any;
 
-    editableSheetName:string
-
-    barSize: number;
-    updateBarSize: (newSize: number) => any;
+    editableSheetName: string
     undo: () => any;
 }

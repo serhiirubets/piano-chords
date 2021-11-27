@@ -10,14 +10,16 @@ import {
     TextField
 } from "@mui/material";
 import AddToDriveRoundedIcon from "@mui/icons-material/AddToDriveRounded";
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {REACT_APP_GOOGLE_DRIVE_API_KEY, REACT_APP_GOOGLE_DRIVE_CLIENT_ID} from "../../../env";
 import {useDrivePicker} from "../reusable/google-api/google-api-picker";
 import {updateExistingFileInGoogleDrive, uploadNewFileToGoogleDrive} from "../reusable/google-api/google-api-requests";
 import {CallbackDoc} from "../reusable/google-api/typeDefs";
+import {SettingsContext} from "../../context/settings-context";
 
 
 export const SaveGoogleDrive = ({content}) => {
+    const {settings} = useContext(SettingsContext)
     const [token, setToken] = useState('')
     const [dialogOpen, setDialogOpen] = useState(false)
     const [fileName, setFileName] = useState('')
@@ -28,12 +30,6 @@ export const SaveGoogleDrive = ({content}) => {
         if (data) {
             setPickerMetadata(data.docs[0])
             setDialogOpen(true)
-            // if (data.docs[0].type === 'folder') {
-            //     setDialogOpen(true)
-            //
-            // }else {
-            //     updateExistingFileInGoogleDrive(content, data.docs[0])
-            // }
         }
     }, [data])
 
@@ -96,6 +92,7 @@ export const SaveGoogleDrive = ({content}) => {
                         autoFocus
                         margin="dense"
                         label="Имя файла"
+                        defaultValue={settings.fileName}
                         fullWidth
                         variant="standard"
                         onChange={(e) => setFileName(e.target.value)}

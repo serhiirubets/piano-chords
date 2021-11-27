@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react"
 import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
-import {Button, Snackbar, SnackbarOrigin, Typography} from "@mui/material";
+import {Button, ListItemText, Menu, MenuItem, MenuList, Snackbar, SnackbarOrigin, Typography} from "@mui/material";
 import {SettingsContext} from "../../context/settings-context";
 import {QUADRAT_WIDTH} from "../../../model/global-constants";
 import {
@@ -19,8 +19,18 @@ import {SkeletonData} from "../../../model/skeleton-entities-data/skeleton-data"
 import {getExportViewportWidth, getFlexBasisValue, getPaddingValue} from "../../../utils/rendering-utils";
 
 
-export const AddMoreButton = ({onClick, opacity}) => {
+export const AddMoreButton = ({onClick, onPasteFromBuffer, opacity}) => {
+
     const {settings} = useContext(SettingsContext);
+    const {selectionBuffer} = useContext(BarContext)
+    const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(null);
+
+    const handleMenuClose = () => {
+
+        setMenuAnchorEl(null)
+    }
+
+
     return (<div key="addMoreButton" style={{
         marginTop: "20px",
         marginLeft: "20px",
@@ -36,9 +46,38 @@ export const AddMoreButton = ({onClick, opacity}) => {
                     width: QUADRAT_WIDTH * settings.barSize,
                     opacity: opacity
                 }}
-                onClick={onClick}>
+                onClick={onClick}
+                onContextMenu={(e) => {
+                    e.preventDefault()
+                    setMenuAnchorEl(e.currentTarget)
+                }}>
             <PlaylistAddRoundedIcon color="action" style={{fontSize: 60}}></PlaylistAddRoundedIcon>
         </Button>
+        <Menu
+            id="insert-bar-menu"
+            anchorEl={menuAnchorEl}
+            keepMounted
+            open={Boolean(menuAnchorEl)}
+            onClose={handleMenuClose}
+            transformOrigin={{
+                vertical: 'center',
+                horizontal: 'center',
+            }}
+            anchorOrigin={{
+                vertical: 'center',
+                horizontal: 'center',
+            }}
+        >
+            <MenuList dense>
+                <MenuItem onClick={() => {
+                    onPasteFromBuffer();
+                    handleMenuClose();
+                }}
+                          disabled={selectionBuffer.current.getBar() === null}>
+                    <ListItemText primary="Вставить из буффера"/>
+                </MenuItem>
+            </MenuList>
+        </Menu>
     </div>)
 }
 
@@ -47,7 +86,7 @@ export interface SnackbarState extends SnackbarOrigin {
 }
 
 export const BlockSchemeGrid = () => {
-    const {bars, activeSheet, activeTrack, updateBars, editableSheetName} = useContext(BarContext);
+    const {bars, activeSheet, activeTrack, updateBars, editableSheetName, selectionBuffer} = useContext(BarContext);
     const {settings} = useContext(SettingsContext)
     const barIds = bars.map(data => data.id);
 
@@ -84,7 +123,7 @@ export const BlockSchemeGrid = () => {
     };
 
     return (
-        <div ref={settings.editorElementRef} style={{height: "100%", position: "relative"}}>
+        <div style={{height: "100%", position: "relative"}}>
             <Snackbar
                 anchorOrigin={{
                     vertical: 'bottom',
@@ -94,58 +133,66 @@ export const BlockSchemeGrid = () => {
                 onClose={() =>
                     setSnackbarOpen(false)
                 }
-                message={"Ceйчас открыто: "+activeTrack?.replace("#", ">")}
+                message={"Ceйчас открыто: " + activeTrack?.replace("#", ">")}
                 key="changeModeNotification"
             />
             <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
                 onDragEnd={handleDragEnd}
-                onDragStart={handleDragStart}>
-
-                <div style={{
-                    alignSelf: "right",
-                    marginTop: 10,
-                    display: settings.isExportingInProgress ? "inherit" : "none"
-                }}>
-                    <Typography variant="h6"
-                                style={{fontFamily: "Times New Roman", fontWeight: "bold"}}> {activeSheet}</Typography>
-                </div>
-                <div style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                    width: getExportViewportWidth(settings.barSize, settings.isExportingInProgress),
-                    padding: getPaddingValue(settings.barSize, settings.isExportingInProgress),
-                }}>
-
-                    <SortableContext items={bars} strategy={rectSortingStrategy}>
-
-                        {bars.map((data, index) => (
-                            <BlockSchemeGridItem key={data.id} id={data.id} handle={true} value={data} idx={index}
-                                                 sheetName={editableSheetName}/>
-                        ))}
-                        <AddMoreButton onClick={() => {
-                            updateBars
-                            ([
-                                ...bars, new SkeletonData
-                                (
-                                    settings.barSize)])
-                        }}
-                                       opacity={settings.isExportingInProgress ? 0 : 100}/>
-                        <DragOverlay>
-                            {activeId ? (
-                                <div
+                onDragStart={handleDragStart}
+            >
+                <div ref={settings.editorElementRef}>
+                    <div style={{
+                        alignSelf: "right",
+                        marginTop: 10,
+                        display: settings.isExportingInProgress ? "inherit" : "none"
+                    }}>
+                        <Typography variant="h6"
                                     style={{
-                                        height: 284,
-                                        width: QUADRAT_WIDTH * settings.barSize,
-                                        backgroundColor: "silver",
-                                        opacity: "50%"
-                                    }}
-                                ></div>
-                            ) : null}
-                        </DragOverlay>
-                    </SortableContext>
+                                        fontFamily: "Times New Roman",
+                                        fontWeight: "bold"
+                                    }}> {activeSheet}</Typography>
+                    </div>
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        flexWrap: "wrap",
+                        width: getExportViewportWidth(settings.barSize, settings.isExportingInProgress),
+                        padding: getPaddingValue(settings.barSize, settings.isExportingInProgress),
+                    }}>
+
+                        <SortableContext items={bars} strategy={rectSortingStrategy}>
+
+                            {bars.map((data, index) => (
+                                <BlockSchemeGridItem key={data.id} id={data.id} handle={true} value={data} idx={index}
+                                                     sheetName={editableSheetName}/>
+                            ))}
+                            <AddMoreButton
+                                onPasteFromBuffer={() => {
+                                    const barToPaste = selectionBuffer.current.getBar()
+                                    if (barToPaste) {
+                                        updateBars([...bars, barToPaste])
+                                    }
+                                }}
+                                onClick={() => {
+                                    updateBars([...bars, new SkeletonData(settings.barSize)])
+                                }}
+                                opacity={settings.isExportingInProgress ? 0 : 100}/>
+                            <DragOverlay>
+                                {activeId ? (
+                                    <div
+                                        style={{
+                                            height: 284,
+                                            width: QUADRAT_WIDTH * settings.barSize,
+                                            backgroundColor: "silver",
+                                            opacity: "50%"
+                                        }}
+                                    />
+                                ) : null}
+                            </DragOverlay>
+                        </SortableContext>
+                    </div>
                 </div>
             </DndContext>
         </div>

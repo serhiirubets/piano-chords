@@ -113,8 +113,8 @@ const computeBackgroundValue = (noteData: SkeletonNodeData, isEditMode: boolean,
 }
 
 function computeBorderStyle(nodeIndex: number, hand: HandType, barSize: number, selectionMode: NodeSelectionMode | string | undefined) {
-    const thinBorder = '0.5px solid #4e4e4e '
-    const normalBorder = '2px solid #4e4e4e '
+    const thinBorder = '0.5px solid black '
+    const normalBorder = '2px solid black '
     const selectedBorder = '3px solid #381D2A '
     const getBorderStyleForValue = (index) => {
         return selectionMode && selectionMode[index] === '1' ? selectedBorder : thinBorder

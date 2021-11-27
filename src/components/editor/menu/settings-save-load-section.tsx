@@ -15,6 +15,7 @@ import {LoadFromGoogleDrive} from "./google-drive-load-list-item";
 import {SettingsPanelExpandableSection} from "../reusable/settings-panel-expandable-section";
 import FiberNewIcon from '@mui/icons-material/FiberNew';
 import {SkeletonData} from "../../../model/skeleton-entities-data/skeleton-data";
+import {PoraDomoyScheme} from "../../../resources/PoraDomoyScheme";
 
 export const SettingsSaveLoadSection = () => {
     const {settings, updateSettings} = useContext(SettingsContext);
@@ -47,11 +48,12 @@ export const SettingsSaveLoadSection = () => {
     }, [sheets, isTouched]);
 
     const reloadDemoFile = (fileString) => {
-        const memorizedScheme = (fileString ? new Map(JSON.parse(fileString)) : []) as Map<string, SheetData>;
-        const firstSheet = Array.from(memorizedScheme.keys())[0]
-        updateSheets(memorizedScheme)
-        updateActiveSheet(firstSheet)
-        partialUpdateSettings({barSize: memorizedScheme.get(firstSheet)!.bars[0].size})
+        // const memorizedScheme = (fileString ? new Map(JSON.parse(fileString)) : []) as Map<string, SheetData>;
+        // const firstSheet = Array.from(memorizedScheme.keys())[0]
+        // updateSheets(memorizedScheme)
+        // updateActiveSheet(firstSheet)
+        // partialUpdateSettings({barSize: memorizedScheme.get(firstSheet)!.bars[0].size})
+        parseSaveFileAndUpdateModel(fileString)
     }
 
     const partialUpdateSettings = (value: Partial<SettingContextData>) => {
@@ -85,7 +87,7 @@ export const SettingsSaveLoadSection = () => {
         return saveObject
     }
 
-    const parseSaveFileAndUpdateModel = (stringifiedData) => {
+    const parseSaveFileAndUpdateModel = (stringifiedData:string) => {
         const saveObject = JSON.parse(stringifiedData)
         const partialSettings = saveObject.settings || {}
         const barData = saveObject.data
@@ -112,7 +114,7 @@ export const SettingsSaveLoadSection = () => {
 
 
         console.log(partialSettings.octaveNotation)
-        const restoredOctaveNotationKey = Object.keys(Octaves).filter(key => Octaves[key].name === partialSettings.octaveNotation.name)[0]
+        const restoredOctaveNotationKey = partialSettings.octaveNotation ? Object.keys(Octaves).filter(key => Octaves[key].name === partialSettings.octaveNotation.name)[0] : "NAME"
         console.log('Key', restoredOctaveNotationKey)
         partialUpdateSettings({
             fileName: filename,
@@ -188,6 +190,9 @@ export const SettingsSaveLoadSection = () => {
                     </ListItem>
                     <ListItem button key={"LoadDemoDDT"} onClick={() => reloadDemoFile(JSON.stringify(DDTScheme))}>
                         <ListItemText primary="ДДТ - Свобода"/>
+                    </ListItem>
+                    <ListItem button key={"LoadDemoSektor"} onClick={() => reloadDemoFile(JSON.stringify(PoraDomoyScheme))}>
+                        <ListItemText primary="Cектор Газа - Пора домой"/>
                     </ListItem>
                 </List>
             </SettingsPanelExpandableSection>

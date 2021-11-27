@@ -259,8 +259,8 @@ export const SkeletonNode = ({
 
 
     return (
-        <div css={{justifyContent: "flex-end", display: "flex", position: "relative"}}>
-            <div css={{
+        <div css={{justifyContent: "flex-end", display: "flex", position: "relative"}} className="active-skeleton-node">
+            <div  css={{
                 ...{
                     position: tripletPropsOrFallback.isHostingTriplet ? "absolute" : "relative",
                     height: quadratWidth,

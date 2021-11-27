@@ -3,6 +3,7 @@ import {OctaveNotation} from "../skeleton-entities-data/octave-data";
 
 export interface SettingContextData {
     playbackTempo: number;
+    bmpValue: number;
     barSize: number;
     fontSize: number;
     displayApplicature? : boolean;

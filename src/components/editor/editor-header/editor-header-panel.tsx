@@ -4,7 +4,7 @@ import {SettingsContext} from "../../context/settings-context";
 import {BarContext} from "../../context/bar-context";
 import UndoRoundedIcon from '@mui/icons-material/UndoRounded';
 import {OctaveNotationSelector} from "./octave-notation-selector";
-import {StyledSlider} from "../reusable/playback-module";
+// import {StyledSlider} from "../reusable/playback-module";
 import {bulkUpdateDisplayOctaveValues, recalculateBarsToNewSize} from "../../../utils/skeleton-node-utils";
 import {deepCopyMap} from "../../../utils/js-utils";
 
@@ -16,7 +16,11 @@ export const EditorHeaderPanel = () => {
     const [displayLyrics, setDisplayLyrics] = useState(false);
     const [barSize, setBarSize] = useState<number>(settings.barSize);
     const [fontSize, setFontSize] = useState<number>(settings.fontSize);
+    const [bmpValue, setBmpValue] = useState<number>(settings.bmpValue);
     useEffect(() => {setBarSize(settings.barSize); setFontSize(settings.fontSize)}, [settings])
+    useEffect(() => {
+        partialUpdateSettings({playbackTempo:  60 / bmpValue})
+    }, [bmpValue]);
 
     const recalculateBars = (newBarSize: number) => {
         const updatedSheets = deepCopyMap(sheets);
@@ -147,14 +151,24 @@ export const EditorHeaderPanel = () => {
                 paddingLeft: "5px",
                 paddingRight: "10px"
             }}> Темп: </Typography>
-                <StyledSlider
-                    style={{width: '90%'}}
-                    onChange={(value, newValue)=>partialUpdateSettings({playbackTempo: (newValue as number) * -1})}
-                    defaultValue={-0.25}
-                    step={0.05}
-                    min={-1}
-                    max={-0.05}
-                />
+                <TextField
+                  type="number"
+                  variant="outlined"
+                  value={bmpValue}
+                  size="small"
+                  InputProps={{ inputProps: { min: 0, max: 200 } }}
+                  onChange={({ target: { value }}) => +setBmpValue(+value)} />
+                {/*<StyledSlider*/}
+                {/*    style={{width: '90%'}}*/}
+                {/*    onChange={(value, newValue)=> {*/}
+                {/*        // т.е. значение должно считаться как-то так BPM_number * playbackTempo = 60000 (1 minute)*/}
+                {/*        partialUpdateSettings({playbackTempo: (newValue as number) * -1})*/}
+                {/*    }}*/}
+                {/*    defaultValue={-0.25}*/}
+                {/*    step={0.05}*/}
+                {/*    min={-1}*/}
+                {/*    max={-0.05}*/}
+                {/*/>*/}
             </div>
         </div>
     );

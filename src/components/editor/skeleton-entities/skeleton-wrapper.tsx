@@ -19,8 +19,6 @@ export interface BlockSchemeSkeletonWrapperProps {
   sortableAttributes?: any;
 }
 
-let intervalId;
-
 export const SkeletonWrapper = ({
   index,
   id,

@@ -68,6 +68,7 @@ export const NoteEditPopupMenu = ({
             playbackOffset: note.playbackOffset,
         });
         console.log('Новая нота', updatedNote)
+        console.log('Новый текст', lyrics)
         onUpdateNote(updatedNote, noteType, lyrics)
     }
 
@@ -88,7 +89,6 @@ export const NoteEditPopupMenu = ({
     }
 
     return (
-        // <ClickAwayListener onClickAway={handleSave}>
             <Popover
                 id={id}
                 open={open}
@@ -218,6 +218,5 @@ export const NoteEditPopupMenu = ({
                     </Button>
                 </div>
             </Popover>
-        // </ClickAwayListener>
     )
 }

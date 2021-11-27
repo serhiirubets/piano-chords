@@ -146,7 +146,7 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
             }) : notes;
 
             console.log(`nodeType ${hand} ${index}`, noteType)
-
+            console.log('passed lyrics', lyrics)
             const skeletonNodeDataData = new SkeletonNodeData({
                 notes: preTransformedNotes,
                 isPresent: notes.length > 0,

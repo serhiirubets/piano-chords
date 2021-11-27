@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import React, {useContext, useState} from "react";
 import {jsx} from "@emotion/react/macro";
-import {INote, Note, PlaybackDuration, PlaybackOffset} from "../../../model/skeleton-entities-data/note-data";
+import {INote, Note, NoteType, PlaybackDuration, PlaybackOffset} from "../../../model/skeleton-entities-data/note-data";
 import {HandType} from "../../../model/skeleton-entities-data/skeleton-data";
 import {SkeletonNodeData} from "../../../model/skeleton-entities-data/skeleton-node-data";
 import {compareByMidiNumbers, getMidiNumber, isChord} from "../../../utils/playback-utils";
@@ -98,17 +98,6 @@ const NodeSubtitleItem = ({note, hand, onUpdateNote, height, fontHeight, horizon
                           <sup css={{fontSize: fontHeight * 0.6, color: "#D65F24"}}>{note.applicature}</sup>}
                       </div>
                     </div>
-                    {/*{note.displayOctave && <sup css={{*/}
-                    {/*    fontSize: fontHeight * 0.7,*/}
-                    {/*    color: "#6F2DA8",*/}
-                    {/*    zIndex: 100,*/}
-                    {/*    position: "absolute",*/}
-                    {/*    top: `-7px`,*/}
-                    {/*    left: `-${fontHeight*0.9}px`*/}
-                    {/*}}>{getOctaveInRussianNotation(note.octave)}</sup>}*/}
-                    {/*{transformFlatSign(note).note}*/}
-                    {/*{transformFlatSign(note).isFlat && <sup css={{fontSize: fontHeight * 0.6}}>♭</sup>}*/}
-
                 </div>
                 <NoteEditPopupMenu note={note}
                                    anchorEl={anchorEl}
@@ -131,6 +120,7 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps, nod
     const FONT_HEIGHT = settings.fontSize;
     const HAND_MULTIPLIER = midiSummary.hand === HandType.RIGHT ? -1 : 1;
     const optimalScale = (MAX_HEIGHT - FONT_HEIGHT) / Math.abs(midiSummary.lowestMidi - midiSummary.higestMidi)
+    const CHORD_EXTRA_SPREAD = 0.7
 
     const getSingleNoteRelativeTop = (note: INote) => {
         const scale = RECOMMENDED_SCALE <= optimalScale ? RECOMMENDED_SCALE : optimalScale;
@@ -167,7 +157,7 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps, nod
 
         if (isSpreadRequired) {
             for (let i = 1; i < chordTops.length; i++) {
-                chordTops[i] = chordTops[i - 1] + HAND_MULTIPLIER * FONT_HEIGHT * 0.5;
+                chordTops[i] = chordTops[i - 1] + HAND_MULTIPLIER * FONT_HEIGHT * CHORD_EXTRA_SPREAD;
             }
         }
         return chordTops;
@@ -177,9 +167,6 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps, nod
         const chord = allNotes.filter(n => n.playbackOffset === note.playbackOffset);
         const chordTops = getChordNoteHeights(chord, hand);
         const noteIndex = chord.indexOf(note);
-        console.log('note index', noteIndex, 'note', note.note+note.octave)
-        console.log('chordTops',chordTops)
-        console.log('chord', chord.map(n => n.note+n.octave))
         return chordTops[noteIndex];
     }
 
@@ -207,11 +194,11 @@ export const NodeSubtitle = ({nodeData, midiSummary, setNotes, tripletProps, nod
     }
 
 
-    const handleUpdateOfNode = (oldNote: Note) => (newNote: Note, newLyrics?: string) => {
+    const handleUpdateOfNode = (oldNote: Note) => (newNote: Note, nodeType:NoteType,  newLyrics?: string) => {
         const updatedNotes = [...nodeData.notes];
         const indexOfOldNote = updatedNotes.indexOf(oldNote);
         updatedNotes[indexOfOldNote] = newNote
-        setNotes(updatedNotes, getOriginalText(updatedNotes, settings.octaveNotation), newLyrics)
+        setNotes(updatedNotes, getOriginalText(updatedNotes, settings.octaveNotation), nodeType, newLyrics)
 
     }
 

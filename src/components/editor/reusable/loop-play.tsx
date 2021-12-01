@@ -5,13 +5,13 @@ import IconButton from '@mui/material/IconButton';
 import StopRoundedIcon from '@mui/icons-material/StopRounded';
 import LoopIcon from '@mui/icons-material/Loop';
 
-export const LoopPlay = ({notes, settings, playNote, stop = () => {}}) => {
+export const LoopPlay = ({notes, settings, playNote, onPlayToggle = (isPlaying: boolean) => {}, stop = () => {}}) => {
   const [isLoopPlaying, setIsLoopPlaying] = useState<boolean>(false);
   const intervalId = useRef<any>(null)
 
   const onLoopPlay = () => {
     setIsLoopPlaying(true);
-
+    onPlayToggle(true);
     playNotes(notes, playNote, settings.playbackTempo, settings.alterGainForFeather, settings.barSize);
 
     intervalId.current = setInterval(() => {
@@ -22,6 +22,7 @@ export const LoopPlay = ({notes, settings, playNote, stop = () => {}}) => {
   const onLoopStop = () => {
     clearInterval(intervalId.current);
     setIsLoopPlaying(false);
+    onPlayToggle(false);
     stop();
   }
 

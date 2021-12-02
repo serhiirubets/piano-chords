@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import React, {useContext, useEffect, useRef, useState} from "react";
-// import {jsx} from "@emotion/react/macro";
 import {jsx} from "@emotion/react/macro";
 import {SkeletonNodeData} from "../../../model/skeleton-entities-data/skeleton-node-data";
 import {TextField} from "@mui/material";
@@ -29,7 +28,9 @@ export interface BlockSchemeNodeProps {
     selectionMode?: string;
     nodeIndex: number;
     skeletonIndex: number;
-    tripletProps?: TripletHandlingProps
+    tripletProps?: TripletHandlingProps,
+    dataId: number,
+    isActive: boolean;
 }
 
 
@@ -79,7 +80,7 @@ const parseNote = (stringValue: string, defaultOctave: number, octaveNotation: O
     return new Note({note: noteText, octave})
 }
 
-const computeBackgroundValue = (noteData: SkeletonNodeData, isEditMode: boolean, isHostingTriplet: boolean) => {
+const computeBackgroundValue = (noteData: SkeletonNodeData, isEditMode: boolean, isHostingTriplet: boolean, isActive = false) => {
     //No note at all
     if (!noteData.isPresent || isEditMode) {
         return
@@ -109,13 +110,14 @@ const computeBackgroundValue = (noteData: SkeletonNodeData, isEditMode: boolean,
     }
 
     //Regular note
-    return getEffectiveNodeColor(noteData, isHostingTriplet);
+    return getEffectiveNodeColor(noteData, isHostingTriplet, isActive);
 }
 
-function computeBorderStyle(nodeIndex: number, hand: HandType, barSize: number, selectionMode: NodeSelectionMode | string | undefined) {
+function computeBorderStyle(nodeIndex: number, hand: HandType, barSize: number, selectionMode: NodeSelectionMode | string | undefined, isActive = false) {
     const thinBorder = '0.5px solid black '
     const normalBorder = '2px solid black '
     const selectedBorder = '3px solid #381D2A '
+    // const borderOpacity = isActive ? 1 : 0.8;
     const getBorderStyleForValue = (index) => {
         return selectionMode && selectionMode[index] === '1' ? selectedBorder : thinBorder
     }
@@ -174,7 +176,8 @@ export const SkeletonNode = ({
                                  handType,
                                  selectionMode,
                                  onSelect,
-                                 tripletProps
+                                 tripletProps,
+                                 isActive,
                              }: BlockSchemeNodeProps) => {
     const transientInputValue = useRef(data.originalText);
     const {settings} = useContext(SettingsContext);
@@ -188,9 +191,9 @@ export const SkeletonNode = ({
     const {quadratWidth, quadratDotWidth, quadratSmallDotWidth} = getQuadratNodeDimension(settings.isMasteringMode)
 
     useEffect(() => {
-        setInputText(data.originalText || getOriginalText(data.notes, settings.octaveNotation))
-        transientInputValue.current = data.originalText
-    }, [data, settings.octaveNotation])
+          setInputText(data.originalText || getOriginalText(data.notes, settings.octaveNotation))
+          transientInputValue.current = data.originalText
+      }, [data, settings.octaveNotation])
 
     const handeSelection = (event) => {
         if (!event.shiftKey && !event.ctrlKey && !event.metaKey) {
@@ -270,9 +273,9 @@ export const SkeletonNode = ({
     }
 
 
-    return (
-        <div css={{justifyContent: "flex-end", display: "flex", position: "relative"}} className="active-skeleton-node">
-            <div  css={{
+  return (
+        <div css={{justifyContent: "flex-end", display: "flex", position: "relative"}} className="skeleton-node">
+            <div css={{
                 ...{
                     position: tripletPropsOrFallback.isHostingTriplet ? "absolute" : "relative",
                     height: quadratWidth,
@@ -285,10 +288,10 @@ export const SkeletonNode = ({
                     backgroundColor:
                         tripletPropsOrFallback.isHostingTriplet ? "yellow" :
                             selectionMode === NodeSelectionMode.NONE ? 'none' : '#DAE2DF',
-                    background: computeBackgroundValue(data, isEditMode, tripletPropsOrFallback.isHostingTriplet),
+                    background: computeBackgroundValue(data, isEditMode, tripletPropsOrFallback.isHostingTriplet, isActive),
 
                 },
-                ...computeBorderStyle(nodeIndex, handType, settings.barSize, selectionMode),
+                ...computeBorderStyle(nodeIndex, handType, settings.barSize, selectionMode, isActive),
                 ...computeTripletDisplayProps(tripletPropsOrFallback, settings.isMasteringMode)
             }}
                  tabIndex={-1}

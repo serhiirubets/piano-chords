@@ -18,7 +18,8 @@ const defaultSettings: SettingContextData = {
     editorElementRef: React.createRef<HTMLDivElement | null>(),
     isExportingInProgress: false,
     fileName: "Новая блок-схема",
-    isMasteringMode:false
+    isMasteringMode:false,
+    currentActiveNodeId: -1
 }
 
 

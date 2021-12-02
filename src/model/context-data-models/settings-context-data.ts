@@ -20,5 +20,5 @@ export interface SettingContextData {
     fileName:string;
 
     isMasteringMode:boolean;
-
+    currentActiveNodeId: number;
 }

@@ -364,13 +364,15 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
         }
     }
 
+    const isActive = settings.currentActiveNodeId === skeletonIndex;
+
     return (
         <div>
             <ClickAwayListener onClickAway={() => {
                 setSelectedNodes([]);
                 setMenuAnchorEl(null);
             }}>
-                <div css={styles.wrapper}>
+                <div css={styles.wrapper} className={isActive ? 'skeleton-active' : 'skeleton'}>
                     <div className="rightHandRow" css={styles.row}>
                         {skeletonData.right
                             .map((noteData, idx) => <div css={styles.tempBox}
@@ -394,6 +396,8 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
                                                       selectionMode={getSelectionMode(idx, HandType.RIGHT)}
                                                       onSelect={(event) => handleNodeSelected(event, idx, HandType.RIGHT)}
                                                       tripletProps={getTripletProps(idx, HandType.RIGHT)}
+                                                      dataId={(skeletonData.right.length * skeletonIndex) + idx }
+                                                      isActive={isActive}
                                         />
                                     </div>
                                 </div>
@@ -414,6 +418,8 @@ export const Skeleton = ({skeletonIndex, sheetName}) => {
                                                   selectionMode={getSelectionMode(idx, HandType.LEFT)}
                                                   key={skeletonIndex + '-l-' + idx}
                                                   tripletProps={getTripletProps(idx, HandType.LEFT)}
+                                                  dataId={(skeletonData.left.length * skeletonIndex) + idx }
+                                                  isActive={isActive}
                                     />
                                     <NodeSubtitle
                                         key={skeletonIndex + '-l-subtitle-' + idx}

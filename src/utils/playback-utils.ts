@@ -5,6 +5,7 @@ import {MidiNumbers} from 'react-piano';
 import {getPlaybackData} from "./skeleton-node-utils";
 import {groupBy} from "./js-utils";
 import {SheetData} from "../model/skeleton-entities-data/sheet-data";
+import {STANDARD_OFFSET_DURATION} from '../model/global-constants';
 
 
 export const getNotesToPlay = (bars: Array<{ data: SkeletonData, relativePosition: number }>) => {

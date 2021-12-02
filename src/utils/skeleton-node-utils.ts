@@ -5,10 +5,14 @@ import {getMidiNumber} from "./playback-utils";
 import {deepCopy, groupBy} from "./js-utils";
 import {getOctaveNotationFromScientific, OctaveNotation} from "../model/skeleton-entities-data/octave-data";
 
-export const getEffectiveNodeColor = (data: SkeletonNodeData, isHostingTriplet: boolean) => {
-    return isHostingTriplet ? "yellow" :
-        data.hand === HandType.LEFT ? "green" :
-            data.type === NoteType.FEATHER ? "#2196f3" : "red";
+export const getEffectiveNodeColor = (data: SkeletonNodeData, isHostingTriplet: boolean, isActive = false) => {
+    const red = isActive ? "red" : "#ff7b7b";
+    const green = isActive ? "green" : "#41bf41";
+    const yellow = isActive ? "yellow" : "#f3f383";
+    const blue = isActive ? "blue" : "#2196f3";
+    return isHostingTriplet ? yellow :
+        data.hand === HandType.LEFT ? green :
+            data.type === NoteType.FEATHER ? blue : red;
 }
 
 export const getAllMidiNumbers = (data: SkeletonNodeData) => {

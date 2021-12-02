@@ -10,6 +10,7 @@ import StopRoundedIcon from "@mui/icons-material/StopRounded";
 import {BarContext} from "../../context/bar-context";
 import {SkeletonData} from "../../../model/skeleton-entities-data/skeleton-data";
 import {LoopPlay} from './loop-play';
+import set = Reflect.set;
 
 export interface PlaybackModuleProps {
     iconColor?: string;
@@ -23,18 +24,23 @@ export const StyledSlider = styled(Slider)(({theme}) => ({
     }
 }));
 
+let intervalId;
 
 export const PlaybackModule = ({iconColor, bars}: PlaybackModuleProps) => {
-    const {settings} = useContext(SettingsContext);
+    const {settings, partialUpdateSettings} = useContext(SettingsContext);
     const {activeSheet, activeSubSheet, sheets} = useContext(BarContext);
 
     const barsDataToPlay = bars ?
         bars.map(bar => ({data: bar, relativePosition: 0})) :
         collectBarsToPlay(settings.isMasteringMode, activeSubSheet || activeSheet, sheets)
 
+  const notes = getNotesToPlay(barsDataToPlay);
 
-    const notes = getNotesToPlay(barsDataToPlay);
-    return (
+    function stopPlay() {
+      clearInterval(intervalId);
+      partialUpdateSettings({ currentActiveNodeId: -1 })
+    }
+  return (
         <SoundfontProvider
             instrumentName={DEFAULT_INSTRUMENT}
             audioContext={audioContext}
@@ -45,8 +51,26 @@ export const PlaybackModule = ({iconColor, bars}: PlaybackModuleProps) => {
 
                         <IconButton
                             onClick={() => {
-                                console.log('playback tempo', settings.playbackTempo)
-                              playNotes(notes, playNote, settings.playbackTempo, settings.alterGainForFeather, settings.barSize)
+                              let counter = 0;
+                              let currentSkeletonIndex = ++settings.currentActiveNodeId;
+
+                              intervalId = setInterval(() => {
+                                if (settings.currentActiveNodeId > settings.barSize || counter > (barsDataToPlay.length * settings.barSize) ) {
+                                  stopPlay();
+                                  return;
+                                }
+
+                                if (counter % settings.barSize === 0 && counter !== 0) {
+                                  currentSkeletonIndex += settings.currentActiveNodeId + 1;
+                                  partialUpdateSettings({ currentActiveNodeId: currentSkeletonIndex })
+                                }
+                                counter++
+
+                              }, 60 / settings.bmpValue * 1000);
+                              setTimeout(() => {
+                                playNotes(notes, playNote, settings.playbackTempo, settings.alterGainForFeather, settings.barSize);
+                              }, 750)
+
                             }}
                             size="large">
                             <PlayArrowRoundedIcon fontSize="large" style={{fill: iconColor ? iconColor : "#176503"}}/>
@@ -54,11 +78,13 @@ export const PlaybackModule = ({iconColor, bars}: PlaybackModuleProps) => {
                         <LoopPlay notes={notes} playNote={playNote} settings={settings} stop={() => {
                           stopNote();
                           stopAllNotes();
+                          stopPlay();
                         }} />
                         <IconButton
                             onClick={() => {
                                 stopNote();
                                 stopAllNotes();
+                                stopPlay();
                             }}
                             size="large">
                             <StopRoundedIcon fontSize="large" style={{fill: iconColor ? iconColor : "#ac0707"}}/>

@@ -17,7 +17,7 @@ export const EditorHeaderPanel = () => {
     const [bmpValue, setBmpValue] = useState<number>(settings.bmpValue);
     useEffect(() => {setBarSize(settings.barSize); setFontSize(settings.fontSize)}, [settings])
     useEffect(() => {
-        partialUpdateSettings({playbackTempo:  60 / bmpValue})
+        partialUpdateSettings({playbackTempo:  60 / bmpValue, bmpValue})
     }, [bmpValue]);
 
     const recalculateBars = (newBarSize: number) => {

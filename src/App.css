@@ -36,3 +36,16 @@
     transform: rotate(360deg);
   }
 }
+
+.skeleton {
+  opacity: 0.9;
+}
+
+.skeleton-active {
+  opacity: 1;
+}
+
+.skeleton-active .skeleton-node {
+  border-color: #61dafb;
+}
+

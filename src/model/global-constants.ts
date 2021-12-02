@@ -13,3 +13,4 @@ export const soundfontHostname = 'https://d1pzp51pvbm36p.cloudfront.net';
 export const DEFAULT_INSTRUMENT = "bright_acoustic_piano"
 export const SOUNDFONT_FORMAT = "mp3"
 export const SOUNDFONT_FONT = "MusyngKite"
+export const STANDARD_OFFSET_DURATION = 5;

@@ -27,6 +27,7 @@ export const SkeletonWrapper = ({
   sheetName
 }: BlockSchemeSkeletonWrapperProps) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   const {settings} = useContext(SettingsContext);
   const {bars, updateBars, selectionBuffer} = useContext(BarContext);
@@ -36,7 +37,9 @@ export const SkeletonWrapper = ({
   }
 
   const handleMouseLeave = () => {
-    setIsHovered(false)
+    if (!isPlaying) {
+      setIsHovered(false)
+    }
   }
 
   const handleClearButtonClick = () => {
@@ -64,6 +67,10 @@ export const SkeletonWrapper = ({
 
   const handlePlayButtonClick = (playFunction) => {
     playNotes(notes, playFunction, settings.playbackTempo, settings.alterGainForFeather, settings.barSize)
+  }
+
+  const handlePlayToggle = (isPlaying: boolean) => {
+    setIsPlaying(isPlaying);
   }
 
   return (
@@ -95,7 +102,7 @@ export const SkeletonWrapper = ({
                   onClear={handleClearButtonClick}
                   isDisplayed={true}
                   id={id}
-                  loopComponent={<LoopPlay notes={notes} settings={settings} playNote={playNote} />}
+                  loopComponent={<LoopPlay notes={notes} settings={settings} playNote={playNote} onPlayToggle={handlePlayToggle} />}
                   sortableListeners={sortableListeners}
                   sortableAttributes={sortableAttributes}
                 />

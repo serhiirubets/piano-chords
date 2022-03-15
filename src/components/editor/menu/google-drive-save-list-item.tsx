@@ -43,8 +43,8 @@ export const SaveGoogleDrive = ({content}) => {
     const handleOpenPicker = () => {
         openPicker({
 
-            clientId: REACT_APP_GOOGLE_DRIVE_CLIENT_ID,
-            developerKey: REACT_APP_GOOGLE_DRIVE_API_KEY,
+            clientId: REACT_APP_GOOGLE_DRIVE_CLIENT_ID!,
+            developerKey: REACT_APP_GOOGLE_DRIVE_API_KEY!,
             viewId: "DOCS",
             viewMimeTypes: 'application/pianotab,application/vnd.google-apps.folder',
             ...auth_to_use,
